@@ -2,6 +2,7 @@
 import base64
 from contextlib import contextmanager
 import importlib.util
+import io
 import json
 import os
 from pathlib import Path
@@ -13,6 +14,7 @@ import tempfile
 import time
 from urllib.error import HTTPError
 from urllib.request import Request, urlopen
+from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parent.parent
 SOURCE = ROOT / 'gdg hackathon sharing/workshop/server.py'
@@ -25,6 +27,7 @@ with tempfile.TemporaryDirectory(prefix='gdg-hosting-') as folder:
     env = dict(os.environ, WORKSHOP_DATA_DIR=str(test_root/'data'),
         WORKSHOP_HOST_PASSWORD=PASSWORD, WORKSHOP_REQUIRE_AUTH='1',
         GEMINI_API_KEY='test-only-not-a-real-key', RAILWAY_PUBLIC_DOMAIN='workshop.example.com')
+    env.pop('GEMINI_MODEL', None)
     spec = importlib.util.spec_from_file_location('hosting_check', SOURCE)
     app = importlib.util.module_from_spec(spec)
     previous = dict(os.environ)
@@ -35,6 +38,21 @@ with tempfile.TemporaryDirectory(prefix='gdg-hosting-') as folder:
         os.environ.clear()
         os.environ.update(previous)
     assert app.DB.parent == test_root/'data', 'Database must use the configured persistent directory'
+    assert app.MODEL == 'gemini-3.5-flash-lite', 'Flash-Lite must be the default judging model'
+    sample = [dict(id=1,title='Pocket Pantry',idea='Help people use food before it expires.')]
+    def gemini_response(req, timeout):
+        assert req.full_url.endswith('/gemini-3.5-flash-lite:generateContent')
+        payload = json.loads(req.data)
+        config = payload['generationConfig']
+        assert not {'temperature','topP','topK'} & config.keys(), 'Flash-Lite rejects deprecated sampling controls'
+        assert config['responseFormat']['text']['mimeType'] == 'application/json'
+        prompt = payload['contents'][0]['parts'][0]['text']
+        assert sample[0]['title'] in prompt and sample[0]['idea'] in prompt
+        result = json.dumps(dict(ratings=[dict(id=1,scores=[9,8,9],strength='Useful',improve='Validate')]))
+        return io.BytesIO(json.dumps(dict(candidates=[dict(content=dict(parts=[dict(text=result)]))])).encode())
+    with patch.object(app,'urlopen',gemini_response):
+        ratings = app.judge_with_gemini(app.initial_state(),sample)
+    assert ratings[0]['scores'] == [9,8,9]
 
     (test_root/'workshop').mkdir()
     (test_root/'output/assets').mkdir(parents=True)

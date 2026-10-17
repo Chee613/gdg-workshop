@@ -17,7 +17,7 @@ In the service's **Variables** tab, add:
 |---|---|
 | `GEMINI_API_KEY` | Your Gemini API key |
 | `WORKSHOP_HOST_PASSWORD` | A unique presenter password of at least 16 characters |
-| `GEMINI_MODEL` | Optional; defaults to `gemini-3.8-flash` |
+| `GEMINI_MODEL` | Optional; defaults to `gemini-3.5-flash-lite` |
 
 Enter secrets directly in Railway. The service connects to Gemini at startup. Keep the generated password available for signing in; do not put it in participant links.
 
