@@ -1,0 +1,27 @@
+node_modules/
+__pycache__/
+*.py[cod]
+.env
+.env.*
+!.env.example
+*.log
+
+# Workshop submissions and machine-specific connection details.
+/gdg hackathon sharing/workshop/.data/
+/gdg hackathon sharing/output/session-config.json
+
+# Keep the current authoring/test sources; omit earlier build experiments and captures.
+/.hack-build/*
+!/.hack-build/package.json
+!/.hack-build/package-lock.json
+!/.hack-build/rearrange-deck.py
+!/.hack-build/build-html.mjs
+!/.hack-build/bundle-motion.mjs
+!/.hack-build/challenge-slide.js
+!/.hack-build/galleries.js
+!/.hack-build/photos.json
+!/.hack-build/ai-logo-sources.json
+!/.hack-build/deck-spec.json
+!/.hack-build/verify-html.mjs
+!/.hack-build/verify-workshop.mjs
+!/.hack-build/workshop-fixture.py

@@ -1,0 +1,25 @@
+[
+  {
+    "name": "gemini",
+    "url": "https://www.gstatic.com/lamda/images/gemini_sparkle_4g_512_lt_f94943af3be039176192d.png",
+    "file": "brand-gemini.png",
+    "bytes": 61823
+  },
+  {
+    "name": "chatgpt",
+    "url": "https://cdn.oaistatic.com/assets/favicon-eex17e9e.ico",
+    "file": "brand-chatgpt.ico",
+    "bytes": 15086
+  },
+  {
+    "name": "grok",
+    "url": "https://grok.com/images/favicon.svg",
+    "file": "brand-grok.svg",
+    "bytes": 9758
+  },
+  {
+    "name": "claude",
+    "url": "https://claude.ai/favicon.ico",
+    "file": "brand-claude.ico"
+  }
+]

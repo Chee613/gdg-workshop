@@ -1,0 +1,1103 @@
+[
+  {
+    "name": "Intro",
+    "elements": [
+      {
+        "kind": "text",
+        "text": "Meet the builders.",
+        "x": 72,
+        "y": 117,
+        "w": 1110,
+        "h": 83,
+        "size": 68,
+        "color": "#111315",
+        "bold": true
+      },
+      {
+        "kind": "text",
+        "text": "Hackathon masterclass",
+        "x": 76,
+        "y": 208,
+        "w": 1080,
+        "h": 40,
+        "size": 28,
+        "color": "#5F6368",
+        "bold": false
+      },
+      {
+        "kind": "image",
+        "file": "assets/zayn.png",
+        "x": 72,
+        "y": 271,
+        "w": 347,
+        "h": 300,
+        "alt": "Zayn, photographed beside a shop window",
+        "crop": {
+          "left": 0.32,
+          "right": 0.13,
+          "top": 0.1,
+          "bottom": 0.5433717579250721
+        }
+      },
+      {
+        "kind": "image",
+        "file": "assets/shawn.jpg",
+        "x": 457,
+        "y": 271,
+        "w": 347,
+        "h": 300,
+        "alt": "Shawn, photographed outdoors in a suit",
+        "fit": "cover",
+        "focus": "50% 30%"
+      },
+      {
+        "kind": "image",
+        "file": "assets/edmund.png",
+        "x": 842,
+        "y": 271,
+        "w": 347,
+        "h": 300,
+        "alt": "Edmund, photographed at an award event",
+        "crop": {
+          "left": 0.2,
+          "right": 0.34,
+          "top": 0.36,
+          "bottom": 0.3417291066282421
+        }
+      },
+      {
+        "kind": "text",
+        "text": "Zayn",
+        "x": 72,
+        "y": 589,
+        "w": 347,
+        "h": 47,
+        "size": 34,
+        "color": "#4285F4",
+        "bold": true
+      },
+      {
+        "kind": "text",
+        "text": "Shawn",
+        "x": 457,
+        "y": 589,
+        "w": 347,
+        "h": 47,
+        "size": 34,
+        "color": "#EA4335",
+        "bold": true
+      },
+      {
+        "kind": "text",
+        "text": "Edmund",
+        "x": 842,
+        "y": 589,
+        "w": 347,
+        "h": 47,
+        "size": 34,
+        "color": "#34A853",
+        "bold": true
+      }
+    ],
+    "notes": "Introduce Zayn, Shawn and Edmund, using the three portraits and names provided by the user. Keep the introduction brief. Do not invent roles, qualifications or individual achievements."
+  },
+  {
+    "name": "Stories",
+    "elements": [
+      {
+        "kind": "text",
+        "text": "Hackathon",
+        "x": 72,
+        "y": 117,
+        "w": 330,
+        "h": 85,
+        "size": 72,
+        "color": "#111315",
+        "bold": true
+      },
+      {
+        "kind": "text",
+        "text": "11 hackathons   9 wins",
+        "x": 76,
+        "y": 218,
+        "w": 750,
+        "h": 44,
+        "size": 32,
+        "color": "#4285F4",
+        "bold": true
+      },
+      {
+        "kind": "image",
+        "file": "assets/sticker-trophy.png",
+        "x": 412,
+        "y": 106,
+        "w": 108,
+        "h": 108,
+        "alt": "Soft 3D trophy sticker",
+        "sticker": true
+      },
+      {
+        "kind": "image",
+        "file": "assets/photo-05.jpg",
+        "x": 72,
+        "y": 296,
+        "w": 180,
+        "h": 240,
+        "alt": "Team with a hackathon award",
+        "source": "P3291631.JPG"
+      },
+      {
+        "kind": "image",
+        "file": "assets/photo-06.jpg",
+        "x": 266,
+        "y": 341,
+        "w": 260,
+        "h": 195,
+        "alt": "Team holding a competition award",
+        "source": "P3311713 (1) (1).JPG"
+      },
+      {
+        "kind": "image",
+        "file": "assets/photo-10.jpg",
+        "x": 540,
+        "y": 341,
+        "w": 260,
+        "h": 195,
+        "alt": "Team at an AI for Society event",
+        "source": "P9063427.jpeg"
+      },
+      {
+        "kind": "image",
+        "file": "assets/upload-award.jpg",
+        "x": 814,
+        "y": 296,
+        "w": 180,
+        "h": 240,
+        "alt": "Newly uploaded hardware prototype photograph on the award board",
+        "source": "P4021779.JPG"
+      },
+      {
+        "kind": "image",
+        "file": "assets/upload-demo.jpg",
+        "x": 1008,
+        "y": 296,
+        "w": 180,
+        "h": 240,
+        "alt": "Newly uploaded presenter photograph showing the Agent Beaver Clever app",
+        "source": "P4151781.jpeg"
+      },
+      {
+        "kind": "text",
+        "text": "Teams. Prototypes. Demos.",
+        "x": 76,
+        "y": 574,
+        "w": 1080,
+        "h": 42,
+        "size": 28,
+        "color": "#5F6368",
+        "bold": false
+      }
+    ],
+    "notes": "The previous opening slide is now the second slide, with the two newly uploaded photos added. The totals are the presenter’s own claims from Hack.pptx; they are not independently verified. Tell one short story behind an award, prototype or demo."
+  },
+  {
+    "name": "Brainstorm",
+    "buildTitle": "Hackathon tips",
+    "elements": [
+      {
+        "kind": "text",
+        "text": "Idea Brainstorming",
+        "x": 72,
+        "y": 192,
+        "w": 1100,
+        "h": 40,
+        "size": 30,
+        "color": "#111315",
+        "bold": true
+      },
+      {
+        "kind": "image",
+        "file": "assets/brainstorm-drake.png",
+        "x": 72,
+        "y": 236,
+        "w": 530,
+        "h": 423.75291375291374,
+        "alt": "Drake rejecting an AI-only idea and approving your own brainstormed ideas"
+      },
+      {
+        "kind": "text",
+        "text": "Idea from AI",
+        "x": 284,
+        "y": 305,
+        "w": 310,
+        "h": 44,
+        "size": 30,
+        "color": "#EA4335",
+        "bold": true,
+        "align": "center"
+      },
+      {
+        "kind": "image",
+        "file": "assets/brand-gemini.png",
+        "x": 310,
+        "y": 366,
+        "w": 42,
+        "h": 42,
+        "alt": "Gemini logo"
+      },
+      {
+        "kind": "image",
+        "file": "assets/brand-chatgpt.ico",
+        "x": 378,
+        "y": 366,
+        "w": 42,
+        "h": 42,
+        "alt": "ChatGPT logo"
+      },
+      {
+        "kind": "image",
+        "file": "assets/brand-claude.ico",
+        "x": 446,
+        "y": 366,
+        "w": 42,
+        "h": 42,
+        "alt": "Claude logo"
+      },
+      {
+        "kind": "image",
+        "file": "assets/brand-grok.svg",
+        "x": 514,
+        "y": 366,
+        "w": 42,
+        "h": 42,
+        "alt": "Grok logo"
+      },
+      {
+        "kind": "text",
+        "text": "Gemini",
+        "x": 299,
+        "y": 414,
+        "w": 64,
+        "h": 22,
+        "size": 13,
+        "color": "#5F6368",
+        "bold": false,
+        "align": "center"
+      },
+      {
+        "kind": "text",
+        "text": "ChatGPT",
+        "x": 367,
+        "y": 414,
+        "w": 64,
+        "h": 22,
+        "size": 13,
+        "color": "#5F6368",
+        "bold": false,
+        "align": "center"
+      },
+      {
+        "kind": "text",
+        "text": "Claude",
+        "x": 435,
+        "y": 414,
+        "w": 64,
+        "h": 22,
+        "size": 13,
+        "color": "#5F6368",
+        "bold": false,
+        "align": "center"
+      },
+      {
+        "kind": "text",
+        "text": "Grok",
+        "x": 503,
+        "y": 414,
+        "w": 64,
+        "h": 22,
+        "size": 13,
+        "color": "#5F6368",
+        "bold": false,
+        "align": "center"
+      },
+      {
+        "kind": "text",
+        "text": "Your own ideas",
+        "x": 284,
+        "y": 485,
+        "w": 310,
+        "h": 44,
+        "size": 30,
+        "color": "#34A853",
+        "bold": true,
+        "align": "center"
+      },
+      {
+        "kind": "image",
+        "file": "assets/sticker-idea.png",
+        "x": 393,
+        "y": 544,
+        "w": 80,
+        "h": 80,
+        "alt": "Soft 3D idea sticker",
+        "sticker": true
+      },
+      {
+        "kind": "check",
+        "x": 658,
+        "y": 299,
+        "w": 30,
+        "h": 30
+      },
+      {
+        "kind": "text",
+        "text": "Brainstorm ideas",
+        "x": 704,
+        "y": 291,
+        "w": 500,
+        "h": 46,
+        "size": 32,
+        "color": "#4285F4",
+        "bold": true
+      },
+      {
+        "kind": "check",
+        "x": 658,
+        "y": 383,
+        "w": 30,
+        "h": 30
+      },
+      {
+        "kind": "text",
+        "text": "Daily life",
+        "x": 704,
+        "y": 375,
+        "w": 500,
+        "h": 46,
+        "size": 32,
+        "color": "#34A853",
+        "bold": true
+      },
+      {
+        "kind": "check",
+        "x": 658,
+        "y": 467,
+        "w": 30,
+        "h": 30
+      },
+      {
+        "kind": "text",
+        "text": "Solve a niche problem",
+        "x": 704,
+        "y": 459,
+        "w": 500,
+        "h": 46,
+        "size": 30,
+        "color": "#111315",
+        "bold": true
+      },
+      {
+        "kind": "image",
+        "file": "assets/no-thanks-ai.png",
+        "x": 1062,
+        "y": 540,
+        "w": 140,
+        "h": 140,
+        "alt": "No thanks I use AI meme, marked with a ban sign"
+      },
+      {
+        "kind": "ban",
+        "x": 1055,
+        "y": 533,
+        "w": 154,
+        "h": 154
+      }
+    ],
+    "notes": "Begin with the centred Hackathon tips title, then morph it upward to reveal Idea Brainstorming. The supplied Drake meme contrasts Idea from AI with Your own ideas and a light bulb. Brainstorm, notice problems in daily life and solve a niche problem. The second supplied meme sits in the bottom corner with a red ban overlay, warning against outsourcing your thinking to AI."
+  },
+  {
+    "name": "Idea",
+    "elements": [
+      {
+        "kind": "text",
+        "text": "Simple wins.",
+        "x": 72,
+        "y": 117,
+        "w": 940,
+        "h": 83,
+        "size": 68,
+        "color": "#111315",
+        "bold": true
+      },
+      {
+        "kind": "text",
+        "text": "Simple app",
+        "x": 76,
+        "y": 254,
+        "w": 510,
+        "h": 49,
+        "size": 36,
+        "color": "#4285F4",
+        "bold": true
+      },
+      {
+        "kind": "text",
+        "text": "One useful task",
+        "x": 76,
+        "y": 307,
+        "w": 500,
+        "h": 39,
+        "size": 27,
+        "color": "#5F6368",
+        "bold": false
+      },
+      {
+        "kind": "text",
+        "text": "Beyond a chatbot",
+        "x": 76,
+        "y": 382,
+        "w": 525,
+        "h": 48,
+        "size": 34,
+        "color": "#EA4335",
+        "bold": true
+      },
+      {
+        "kind": "text",
+        "text": "Machine learning",
+        "x": 76,
+        "y": 455,
+        "w": 510,
+        "h": 45,
+        "size": 32,
+        "color": "#34A853",
+        "bold": true
+      },
+      {
+        "kind": "text",
+        "text": "AI + IoT = AIoT",
+        "x": 76,
+        "y": 549,
+        "w": 550,
+        "h": 50,
+        "size": 38,
+        "color": "#4285F4",
+        "bold": true
+      },
+      {
+        "kind": "image",
+        "file": "assets/photo-03.jpg",
+        "x": 658,
+        "y": 254,
+        "w": 246,
+        "h": 328,
+        "alt": "Electronics connected beside a laptop",
+        "source": "P3261499.JPG"
+      },
+      {
+        "kind": "image",
+        "file": "assets/photo-04.jpg",
+        "x": 928,
+        "y": 254,
+        "w": 230,
+        "h": 328,
+        "alt": "A printer making the prototype enclosure",
+        "source": "P3261504 (1).JPG"
+      },
+      {
+        "kind": "image",
+        "file": "assets/photo-02.png",
+        "x": 464,
+        "y": 454,
+        "w": 145,
+        "h": 145,
+        "alt": "Supplied generated concept illustration",
+        "source": "Gemini_Generated_Image_mcsnd8mcsnd8mcsn.png",
+        "crop": {
+          "top": 0.22,
+          "bottom": 0.18,
+          "left": 0.04,
+          "right": 0.04
+        }
+      },
+      {
+        "kind": "image",
+        "file": "assets/sticker-idea.png",
+        "x": 1050,
+        "y": 116,
+        "w": 108,
+        "h": 108,
+        "alt": "Soft 3D idea sticker",
+        "sticker": true
+      }
+    ],
+    "notes": "Based on uploaded screenshot 3 and Hack.pptx slide 2. Prefer a simple app over a cluttered dashboard. Go beyond a generic chatbot by delivering a useful result, using machine learning or AI plus IoT where relevant. This is the presenter’s advice, not a universal ban on chat interfaces. The small mint device visual is a supplied generated concept."
+  },
+  {
+    "name": "Build",
+    "elements": [
+      {
+        "kind": "text",
+        "text": "Make it real.",
+        "x": 72,
+        "y": 117,
+        "w": 1040,
+        "h": 83,
+        "size": 68,
+        "color": "#111315",
+        "bold": true
+      },
+      {
+        "kind": "text",
+        "text": "Build. Test. Improve.",
+        "x": 76,
+        "y": 211,
+        "w": 1020,
+        "h": 42,
+        "size": 30,
+        "color": "#5F6368",
+        "bold": false
+      },
+      {
+        "kind": "image",
+        "file": "assets/phone-closed.jpg",
+        "x": 72,
+        "y": 303,
+        "w": 300,
+        "h": 225,
+        "alt": "A completed phone-mounted hardware enclosure",
+        "source": "Hack.pptx phone exterior"
+      },
+      {
+        "kind": "image",
+        "file": "assets/phone-open.jpg",
+        "x": 394,
+        "y": 303,
+        "w": 300,
+        "h": 225,
+        "alt": "The working electronics inside the phone enclosure",
+        "source": "Hack.pptx phone electronics"
+      },
+      {
+        "kind": "image",
+        "file": "assets/photo-07.jpg",
+        "x": 720,
+        "y": 245,
+        "w": 212,
+        "h": 283,
+        "alt": "A completed mint hardware prototype",
+        "source": "P4021743.JPG"
+      },
+      {
+        "kind": "image",
+        "file": "assets/upload-award.jpg",
+        "x": 952,
+        "y": 245,
+        "w": 212,
+        "h": 283,
+        "alt": "The completed device on an award board",
+        "source": "Uploaded award photograph"
+      },
+      {
+        "kind": "text",
+        "text": "Build",
+        "x": 76,
+        "y": 552,
+        "w": 300,
+        "h": 42,
+        "size": 29,
+        "color": "#4285F4",
+        "bold": true
+      },
+      {
+        "kind": "text",
+        "text": "Test",
+        "x": 398,
+        "y": 552,
+        "w": 300,
+        "h": 42,
+        "size": 29,
+        "color": "#EA4335",
+        "bold": true
+      },
+      {
+        "kind": "text",
+        "text": "Prototype",
+        "x": 720,
+        "y": 552,
+        "w": 212,
+        "h": 42,
+        "size": 29,
+        "color": "#34A853",
+        "bold": true
+      },
+      {
+        "kind": "text",
+        "text": "Result",
+        "x": 952,
+        "y": 552,
+        "w": 212,
+        "h": 42,
+        "size": 29,
+        "color": "#4285F4",
+        "bold": true
+      }
+    ],
+    "notes": "Based on uploaded screenshot 4. The two original phone-prototype photographs were recovered from Hack.pptx rather than taking a screenshot of a screenshot. Show the enclosure, then the internals, and explain the useful task that really works."
+  },
+  {
+    "name": "Showcase",
+    "elements": [
+      {
+        "kind": "text",
+        "text": "Project Showcase",
+        "x": 72,
+        "y": 304,
+        "w": 1136,
+        "h": 120,
+        "size": 88,
+        "color": "#111315",
+        "bold": true,
+        "align": "center"
+      }
+    ],
+    "notes": "Project Showcase section divider. Show the projects before moving into UI and slide design."
+  },
+  {
+    "name": "Demo",
+    "buildTitle": "UI / Slide Design",
+    "elements": [
+      {
+        "kind": "image",
+        "file": "assets/bad-design-meme.png",
+        "x": 550,
+        "y": 114,
+        "w": 150,
+        "h": 92,
+        "alt": "Winnie the Pooh looking unimpressed while reading a sheet of paper"
+      },
+      {
+        "kind": "text",
+        "text": "Bad UI",
+        "x": 24,
+        "y": 214,
+        "w": 604,
+        "h": 42,
+        "size": 30,
+        "color": "#EA4335",
+        "bold": true
+      },
+      {
+        "kind": "text",
+        "text": "Bad slides",
+        "x": 652,
+        "y": 214,
+        "w": 380,
+        "h": 42,
+        "size": 30,
+        "color": "#EA4335",
+        "bold": true
+      },
+      {
+        "kind": "gallery",
+        "x": 24,
+        "y": 270,
+        "w": 1232,
+        "h": 382,
+        "label": "Bad design examples",
+        "items": [
+          [
+            {
+              "file": "bad-ui-finance.png",
+              "alt": "Bad UI: procurement and contract risk dashboard"
+            },
+            {
+              "file": "bad-slide-inbound.png",
+              "alt": "Bad slide: Inbound Paradox"
+            }
+          ],
+          [
+            {
+              "file": "bad-ui-oasis.png",
+              "alt": "Bad UI: OASIS security workspace"
+            },
+            {
+              "file": "bad-slide-architecture.png",
+              "alt": "Bad slide: Bi-Modal Architecture"
+            }
+          ]
+        ]
+      }
+    ],
+    "notes": "Start with the centred title, then morph it upward to reveal one large bad UI and one large bad slide. Next examples swipes the second pair to the front; Previous examples swipes back. Touch swiping and arrow keys inside the gallery also work. Screenshots remain intact and borderless. Click a screenshot for a full-screen view; Escape returns."
+  },
+  {
+    "name": "Design",
+    "certify": true,
+    "elements": [
+      {
+        "kind": "text",
+        "text": "UI / Slide Design",
+        "x": 72,
+        "y": 117,
+        "w": 1100,
+        "h": 83,
+        "size": 64,
+        "color": "#111315",
+        "bold": true
+      },
+      {
+        "kind": "text",
+        "text": "Good UI",
+        "x": 72,
+        "y": 214,
+        "w": 1136,
+        "h": 42,
+        "size": 30,
+        "color": "#4285F4",
+        "bold": true,
+        "align": "center"
+      },
+      {
+        "kind": "gallery",
+        "x": 72,
+        "y": 270,
+        "w": 1136,
+        "h": 394,
+        "columns": 1,
+        "label": "Good UI examples",
+        "items": [
+          [
+            {
+              "file": "good-ui-house.png",
+              "alt": "Good UI: the supplied illustrated housemate dashboard"
+            }
+          ],
+          [
+            {
+              "file": "good-ui-sign.jpg",
+              "alt": "Good UI: the supplied sign-to-voice mobile interface"
+            }
+          ]
+        ]
+      },
+      {
+        "kind": "certify",
+        "x": 1090,
+        "y": 110,
+        "w": 160,
+        "h": 160
+      }
+    ],
+    "notes": "Show one supplied Good UI picture at a time and swipe between the illustrated housemate dashboard and the sign-to-voice app. This presentation itself is the good-slide example. The first click anywhere on this slide pastes a playful Good Slide — Certified badge into the top-right corner with a stamp animation; this is a workshop joke, not an external certification. Advance again to continue. There is no Good slides heading or placeholder."
+  },
+  {
+    "name": "Pitch",
+    "buildTitle": "if (Pitch || Presentation_Video) {",
+    "buildCode": true,
+    "elements": [
+      {
+        "kind": "text",
+        "text": "if (pace === \"Too Slow\") {",
+        "x": 72,
+        "y": 208,
+        "w": 546,
+        "h": 42,
+        "size": 28,
+        "color": "#EA4335",
+        "bold": true,
+        "code": true
+      },
+      {
+        "kind": "image",
+        "file": "assets/pace-too-slow.png",
+        "x": 72,
+        "y": 259,
+        "w": 546,
+        "h": 230,
+        "alt": "Too Slow: the supplied blinking-listener meme"
+      },
+      {
+        "kind": "text",
+        "text": "console.log(\"Audience: 😴\");",
+        "x": 96,
+        "y": 503,
+        "w": 520,
+        "h": 32,
+        "size": 22,
+        "color": "#5F6368",
+        "bold": false,
+        "code": true
+      },
+      {
+        "kind": "text",
+        "text": "}",
+        "x": 72,
+        "y": 534,
+        "w": 60,
+        "h": 32,
+        "size": 26,
+        "color": "#EA4335",
+        "bold": false,
+        "code": true
+      },
+      {
+        "kind": "text",
+        "text": "else if (pace === \"Too Fast\") {",
+        "x": 662,
+        "y": 208,
+        "w": 546,
+        "h": 42,
+        "size": 28,
+        "color": "#4285F4",
+        "bold": true,
+        "code": true
+      },
+      {
+        "kind": "image",
+        "file": "assets/pace-too-fast.png",
+        "x": 759,
+        "y": 259,
+        "w": 351,
+        "h": 229.788,
+        "alt": "Too Fast: the supplied confused-listener meme",
+        "crop": {
+          "top": 0.254,
+          "bottom": 0.255,
+          "left": 0,
+          "right": 0
+        }
+      },
+      {
+        "kind": "text",
+        "text": "console.log(\"Audience: 🤯\");",
+        "x": 686,
+        "y": 503,
+        "w": 520,
+        "h": 32,
+        "size": 22,
+        "color": "#5F6368",
+        "bold": false,
+        "code": true
+      },
+      {
+        "kind": "text",
+        "text": "}",
+        "x": 662,
+        "y": 534,
+        "w": 60,
+        "h": 32,
+        "size": 26,
+        "color": "#4285F4",
+        "bold": false,
+        "code": true
+      },
+      {
+        "kind": "text",
+        "text": "else { console.log(\"Audience: 😎\"); }\n}",
+        "x": 72,
+        "y": 576,
+        "w": 1136,
+        "h": 60,
+        "size": 22,
+        "color": "#34A853",
+        "bold": false,
+        "code": true
+      }
+    ],
+    "notes": "Start with the centred code title. Advance once to morph the title to the top and reveal both pace memes on the same slide. Advance again for judging criteria. The displayed JavaScript is syntactically valid when Pitch and Presentation_Video are defined booleans and pace is a defined string. The first meme corresponds to pace === \"Too Slow\" and the second to pace === \"Too Fast\". The else branch is the comfortable pace. The second picture’s blank margins are cropped in the layout; the original file is preserved."
+  },
+  {
+    "name": "Criteria",
+    "elements": [
+      {
+        "kind": "text",
+        "text": "Pitch for the points.",
+        "x": 72,
+        "y": 117,
+        "w": 1100,
+        "h": 83,
+        "size": 64,
+        "color": "#111315",
+        "bold": true
+      },
+      {
+        "kind": "text",
+        "text": "Pitch / Presentation Video",
+        "x": 76,
+        "y": 208,
+        "w": 980,
+        "h": 40,
+        "size": 28,
+        "color": "#5F6368",
+        "bold": false
+      },
+      {
+        "kind": "image",
+        "file": "assets/photo-01.jpg",
+        "x": 72,
+        "y": 273,
+        "w": 186,
+        "h": 330,
+        "alt": "An audience at a technology event",
+        "source": "20260907_145201.jpg"
+      },
+      {
+        "kind": "image",
+        "file": "assets/photo-11.jpg",
+        "x": 285,
+        "y": 315,
+        "w": 248,
+        "h": 186,
+        "alt": "Presenters explaining a simple app on stage",
+        "source": "PC021661.jpg"
+      },
+      {
+        "kind": "text",
+        "text": "Judging criteria",
+        "x": 601,
+        "y": 292,
+        "w": 550,
+        "h": 54,
+        "size": 39,
+        "color": "#4285F4",
+        "bold": true
+      },
+      {
+        "kind": "text",
+        "text": "Show evidence",
+        "x": 601,
+        "y": 394,
+        "w": 550,
+        "h": 54,
+        "size": 39,
+        "color": "#EA4335",
+        "bold": true
+      },
+      {
+        "kind": "text",
+        "text": "One clear story",
+        "x": 601,
+        "y": 496,
+        "w": 530,
+        "h": 54,
+        "size": 39,
+        "color": "#34A853",
+        "bold": true
+      },
+      {
+        "kind": "image",
+        "file": "assets/sticker-microphone.png",
+        "x": 1100,
+        "y": 500,
+        "w": 105,
+        "h": 135,
+        "alt": "Soft 3D microphone sticker",
+        "sticker": true
+      }
+    ],
+    "notes": "Match the pitch and presentation video to the actual judging criteria. Give each criterion clear evidence. Explain the problem, the solution and the result in language a new listener can follow. Rehearse with the event’s actual time limit."
+  },
+  {
+    "name": "Challenge",
+    "elements": [
+      {
+        "kind": "text",
+        "text": "AI for Everyday Life",
+        "x": 72,
+        "y": 127,
+        "w": 1136,
+        "h": 60,
+        "size": 42,
+        "color": "#4285F4",
+        "bold": true,
+        "align": "center",
+        "liveTheme": true
+      },
+      {
+        "kind": "image",
+        "file": "assets/challenge-qr.png",
+        "x": 450,
+        "y": 140,
+        "w": 380,
+        "h": 380,
+        "alt": "Scan to submit a workshop idea"
+      },
+      {
+        "kind": "rankButton",
+        "x": 480,
+        "y": 534,
+        "w": 320,
+        "h": 66
+      },
+      {
+        "kind": "text",
+        "text": "",
+        "x": 265,
+        "y": 608,
+        "w": 750,
+        "h": 40,
+        "size": 18,
+        "color": "#5F6368",
+        "bold": false,
+        "align": "center",
+        "liveStatus": true
+      },
+      {
+        "kind": "link",
+        "text": "Open dashboard",
+        "href": "/board",
+        "dashboard": true,
+        "x": 72,
+        "y": 603,
+        "w": 190,
+        "h": 40
+      }
+    ],
+    "notes": "Set the theme, judging criteria and Gemini connection in the presenter dashboard. The saved theme appears above the large central QR code; leave it blank until ready. Participants scan and submit. Press the GDG Reveal rankings button to analyse all ideas and reveal the top three with the existing countdown and podium inside the presentation. It requires at least three ideas and a real Gemini connection. Existing ranked results can be shown again without re-analysing. Open dashboard plays the dinosaur warp-pipe jump, then opens the public title wall. Presenter controls stay at /host."
+  },
+  {
+    "name": "Thanks",
+    "elements": [
+      {
+        "kind": "text",
+        "text": "Thank You",
+        "x": 72,
+        "y": 117,
+        "w": 1136,
+        "h": 132,
+        "size": 100,
+        "color": "#111315",
+        "bold": true,
+        "align": "center"
+      },
+      {
+        "kind": "firework",
+        "x": 180,
+        "y": 285,
+        "w": 240,
+        "h": 260,
+        "delay": 0
+      },
+      {
+        "kind": "firework",
+        "x": 860,
+        "y": 285,
+        "w": 240,
+        "h": 260,
+        "delay": 0.35
+      },
+      {
+        "kind": "image",
+        "file": "assets/black-cat-cat-meme.gif",
+        "x": 480,
+        "y": 267,
+        "w": 320,
+        "h": 320,
+        "alt": "The supplied animated black cat celebrating",
+        "chroma": true
+      }
+    ],
+    "notes": "Thank the audience. The original cat GIF keeps its animation, with its green background removed by a live chroma-key filter. GDG-coloured fireworks play on either side of the cat. The Chrome dinosaur keeps its trophy below without the earlier surrounding confetti."
+  }
+]
