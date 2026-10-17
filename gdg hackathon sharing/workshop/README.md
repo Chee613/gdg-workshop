@@ -9,11 +9,11 @@ Run `python server.py` from this folder. The presenter dashboard is at **http://
 5. Review the scores, then **Reveal top three** for the countdown and podium. The public board shows no scores before this action.
 6. **New round** opens another challenge. Earlier submissions remain archived in `.data/session.sqlite3`.
 
-Presenter controls accept requests only from this computer. A real Gemini key and network access are required for real AI judging; no simulated rankings are used in the live app. The tests use an isolated temporary database and test provider.
+Local presenter controls accept requests only from this computer unless `WORKSHOP_HOST_PASSWORD` is set. When it is set, sign in as `presenter` using that password. A real Gemini key and network access are required for real AI judging; no simulated rankings are used in the live app. The tests use an isolated temporary database and test provider.
 
 The slide’s **Open dashboard** link plays the dinosaur’s warp-pipe jump and opens `/board`, the audience view. It shows only project titles in floating GDG-coloured bubbles; incoming titles nudge their neighbours. Reduced motion uses a still layout. Brief introductions remain in presenter controls and are used for judging. The presenter dashboard stays at `/host`; it is not linked from the audience board.
 
-The address is local to the workshop network. A public hosted version requires separate deployment. `WORKSHOP_PUBLIC_URL` can override the QR target when an actual public URL or tunnel is available; setting it alone does not publish the app.
+The local address is available on the workshop network. Follow [the Railway guide](../RAILWAY.md) for public hosting. The server accepts `PORT`, saves data under `WORKSHOP_DATA_DIR` when configured, and generates a public QR from `RAILWAY_PUBLIC_DOMAIN` or `WORKSHOP_PUBLIC_URL`. Setting a URL alone does not publish the app. The Docker image requires a presenter password of at least 16 characters.
 
 Gemini request format: [Google’s structured-output documentation](https://ai.google.dev/gemini-api/docs/generate-content/structured-output).
 

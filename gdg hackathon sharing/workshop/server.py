@@ -1,9 +1,13 @@
-"""Local workshop: shared submissions, presenter controls, real Gemini judging."""
+"""Workshop slides, shared submissions, protected presenter controls and Gemini judging."""
 import argparse
+import base64
+import binascii
+import hmac
 import ipaddress
 import json
 import math
 import os
+import posixpath
 from pathlib import Path
 import re
 import socket
@@ -13,17 +17,19 @@ import time
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
+from urllib.parse import unquote, urlsplit
 
 ROOT = Path(__file__).resolve().parent
 STATIC = ROOT.parent / 'output'
-DB = ROOT / '.data/session.sqlite3'
+DB = Path(os.environ.get('WORKSHOP_DATA_DIR', str(ROOT / '.data'))) / 'session.sqlite3'
 LOCK = threading.RLock()
 KEY = os.environ.get('GEMINI_API_KEY', '') or os.environ.get('GOOGLE_API_KEY', '')
 MODEL = os.environ.get('GEMINI_MODEL', 'gemini-3.8-flash')
+HOST_PASSWORD = os.environ.get('WORKSHOP_HOST_PASSWORD', '')
 JOIN_URL = ''
 
 def initial_state():
-    return dict(round=1, theme='', criteria=[
+    return dict(round=1, theme='AI for Everyday Life', criteria=[
         dict(name='Impact', weight=40), dict(name='Feasibility', weight=30),
         dict(name='Clarity', weight=30)], phase='collecting', results=[], revealAt=0, error='')
 
@@ -147,45 +153,69 @@ class Handler(SimpleHTTPRequestHandler):
     def list_directory(self, path):
         self.send_error(403)
 
-    def reply(self, data, status=200):
+    def reply(self, data, status=200, headers=None):
         body = json.dumps(data).encode()
         self.send_response(status)
         self.send_header('Content-Type','application/json; charset=utf-8')
         self.send_header('Cache-Control','no-store')
         self.send_header('X-Content-Type-Options','nosniff')
         self.send_header('Content-Length',str(len(body)))
+        for name, value in (headers or {}).items():
+            self.send_header(name, value)
         self.end_headers()
         self.wfile.write(body)
 
     def host_allowed(self, write=False):
-        return ipaddress.ip_address(self.client_address[0]).is_loopback and (not write or self.headers.get('X-Workshop-Host')=='1')
+        if HOST_PASSWORD:
+            try:
+                scheme, encoded = self.headers.get('Authorization', '').split(' ', 1)
+                authenticated = scheme.lower() == 'basic' and hmac.compare_digest(
+                    base64.b64decode(encoded, validate=True), ('presenter:' + HOST_PASSWORD).encode())
+            except (ValueError, binascii.Error):
+                authenticated = False
+        else:
+            authenticated = ipaddress.ip_address(self.client_address[0]).is_loopback
+        return authenticated and (not write or self.headers.get('X-Workshop-Host')=='1')
+
+    def deny_host(self):
+        if HOST_PASSWORD and not self.host_allowed():
+            return self.reply(dict(error='Open /host and sign in as presenter first.'),401,
+                {'WWW-Authenticate':'Basic realm="GDG presenter", charset="UTF-8"'})
+        return self.reply(dict(error='Presenter access required.'),403)
+
+    def request_path(self):
+        return '/' + posixpath.normpath(unquote(urlsplit(self.path).path)).lstrip('/')
 
     def do_GET(self):
-        path = self.path.split('?')[0]
+        path = self.request_path()
+        if path == '/healthz':
+            return self.reply(dict(ok=True))
         if path in ('/api/state','/api/host'):
             host = path=='/api/host'
             if host and not self.host_allowed():
-                return self.reply(dict(error='Presenter controls are available on this computer.'),403)
+                return self.deny_host()
             with LOCK:
                 state = get_state()
                 ideas = ideas_for(state)
                 data = {k:state[k] for k in ('round','theme','criteria','phase','revealAt')}
-                data.update(ideas=ideas, count=len(ideas), joinUrl=JOIN_URL,
-                    results=state['results'] if host or state['phase']=='revealed' else [])
+                results = state['results'] if host or state['phase']=='revealed' else []
+                data.update(ideas=ideas if host else [{k:i[k] for k in ('id','title','created')} for i in ideas],
+                    count=len(ideas), joinUrl=JOIN_URL,
+                    results=results if host else [{k:v for k,v in r.items() if k not in ('idea','created')} for r in results])
                 if host:
                     data.update(aiReady=bool(KEY), model=MODEL, error=state['error'])
             return self.reply(data)
-        if path in ('/host','/host/') and not self.host_allowed():
-            return self.reply(dict(error='Open the presenter dashboard on the workshop computer.'),403)
+        if path in ('/host','/session/host.html') and not self.host_allowed():
+            return self.deny_host()
         aliases={'/':'/Hackathon-Tips.html','/join':'/session/join.html','/host':'/session/host.html','/board':'/session/board.html'}
-        self.path = aliases.get(path,self.path)
+        self.path = aliases.get(path,path)
         return super().do_GET()
 
     def do_POST(self):
         global KEY, MODEL
-        path = self.path.split('?')[0]
+        path = self.request_path()
         if path!='/api/ideas' and not self.host_allowed(write=True):
-            return self.reply(dict(error='Presenter access required.'),403)
+            return self.deny_host()
         try:
             length = int(self.headers.get('Content-Length','0'))
             if not 0<length<=65536:
@@ -259,6 +289,8 @@ class Handler(SimpleHTTPRequestHandler):
 def prepare_join_url(host, port):
     global JOIN_URL
     address=os.environ.get('WORKSHOP_PUBLIC_URL','').rstrip('/')
+    if not address and os.environ.get('RAILWAY_PUBLIC_DOMAIN'):
+        address='https://'+os.environ['RAILWAY_PUBLIC_DOMAIN']
     if not address:
         probe=socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
         try:
@@ -274,16 +306,21 @@ def prepare_join_url(host, port):
     import cv2
     from PIL import Image, ImageOps
     encoded=cv2.QRCodeEncoder_create().encode(JOIN_URL)
-    qr=ImageOps.expand(Image.fromarray(encoded),border=4,fill=255).resize((370,370),Image.Resampling.NEAREST)
+    qr=ImageOps.expand(Image.fromarray(encoded),border=4,fill=255)
+    qr=qr.resize((qr.width*10,qr.height*10),Image.Resampling.NEAREST)
     qr.save(STATIC/'assets/challenge-qr.png')
     (STATIC/'session-config.json').write_text(json.dumps(dict(joinUrl=JOIN_URL,localDashboard=f'http://127.0.0.1:{port}/host')))
 
 if __name__=='__main__':
+    if os.environ.get('WORKSHOP_REQUIRE_AUTH')=='1' or os.environ.get('RAILWAY_ENVIRONMENT_ID'):
+        if len(HOST_PASSWORD) < 16:
+            raise ValueError('Set WORKSHOP_HOST_PASSWORD to at least 16 characters before deploying.')
     parser=argparse.ArgumentParser()
     parser.add_argument('--host',default='0.0.0.0')
-    parser.add_argument('--port',default=8776,type=int)
+    parser.add_argument('--port',default=int(os.environ.get('PORT',8776)),type=int)
     args=parser.parse_args()
     setup()
-    prepare_join_url(args.host,args.port)
-    print(f'Presenter: http://127.0.0.1:{args.port}/host\nParticipants: {JOIN_URL}',flush=True)
-    ThreadingHTTPServer((args.host,args.port),Handler).serve_forever()
+    server=ThreadingHTTPServer((args.host,args.port),Handler)
+    prepare_join_url(args.host,server.server_port)
+    print(f'Listening on {args.host}:{server.server_port}\nParticipants: {JOIN_URL}\nPresenter: {JOIN_URL.removesuffix("/join")}/host',flush=True)
+    server.serve_forever()

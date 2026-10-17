@@ -2,6 +2,8 @@
 
 Twelve interactive slides, an animated Chrome dinosaur, and a live idea challenge.
 
+For online hosting, follow the [Railway deployment guide](RAILWAY.md). It uses one service, a persistent volume, and password-protected presenter controls.
+
 ## Run the workshop
 
 From the repository root, with Python 3 installed:

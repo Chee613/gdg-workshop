@@ -24,4 +24,5 @@ __pycache__/
 !/.hack-build/deck-spec.json
 !/.hack-build/verify-html.mjs
 !/.hack-build/verify-workshop.mjs
+!/.hack-build/verify-hosting.py
 !/.hack-build/workshop-fixture.py
