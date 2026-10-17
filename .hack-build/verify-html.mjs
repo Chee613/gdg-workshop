@@ -2,20 +2,61 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
+import {spawn} from 'node:child_process';
 import {chromium} from 'playwright';
 const root=fileURLToPath(new URL('../',import.meta.url)),dir=path.join(root,'.hack-build');
 const spec=JSON.parse(await fs.readFile(path.join(dir,'deck-spec.json'),'utf8'));
+const fixture=spawn('python',[path.join(dir,'workshop-fixture.py')],{cwd:root,env:{...process.env,WORKSHOP_HOST_PASSWORD:''},windowsHide:true,stdio:['ignore','pipe','ignore']});
+const base=await new Promise((resolve,reject)=>{fixture.stdout.once('data',data=>resolve(data.toString().trim().split('\n')[0]));fixture.once('error',reject);fixture.once('exit',code=>reject(Error(`Fixture exited ${code}`)));});
 const browser=await chromium.launch({headless:true,channel:'chrome'});
-const page=await browser.newPage({viewport:{width:1280,height:720}}),errors=[];
+const page=await browser.newPage({viewport:{width:1280,height:720},hasTouch:true}),errors=[];
 page.on('pageerror',e=>errors.push(e.message));
 const active=()=>page.locator('.slide.active').getAttribute('aria-label');
 const settle=()=>page.waitForFunction(()=>document.body.dataset.transitioning!=='true'&&document.querySelector('#dino-motion')?.dataset.phase==='idle');
 try{
- await page.goto('http://127.0.0.1:8776/Hackathon-Tips.html?motion=v33#intro');
+ await page.goto(base+'/Hackathon-Tips.html#intro');
  await page.waitForSelector('#dino-motion[data-ready="true"]');await page.evaluate(()=>document.fonts.ready);
  await page.waitForFunction(()=>[...document.images].every(i=>i.complete&&i.naturalWidth>0));
  assert.equal(await page.locator('.slide').count(),12);assert.equal(await page.locator('.slide-jump button').count(),12);
  assert.equal(await page.locator('.slide-jump').textContent(),'');assert.equal(await page.locator('.sticker').count(),4);
+ await page.setViewportSize({width:390,height:844});
+ await page.waitForTimeout(100);
+ const portrait=await page.locator('.stage').boundingBox();
+ assert.ok(portrait.height>portrait.width*1.5,'Portrait phones get a tall slide instead of a tiny landscape canvas');
+ assert.ok(await page.locator('.slide.active .heading').evaluate(el=>parseFloat(getComputedStyle(el).fontSize)*el.getBoundingClientRect().width/el.offsetWidth)>=30,'Phone headline stays readable');
+ assert.ok((await page.getByRole('button',{name:'Go directly to Intro',exact:true}).boundingBox()).height>=43,'Phone navigation has finger-sized targets');
+ await page.emulateMedia({reducedMotion:'reduce'});
+ for(const slide of spec){
+  await page.getByRole('button',{name:`Go directly to ${slide.name}`,exact:true}).tap();await settle();
+  assert.equal(await active(),slide.name);
+  if(slide.buildTitle||slide.certify){await page.touchscreen.tap(378,portrait.y+180);await settle();assert.equal(await active(),slide.name,'Phone tap reveals or stamps before advancing');}
+  const issues=await page.locator('.slide.active .copy,.slide.active .design-title').evaluateAll(elements=>elements.filter(e=>e.getClientRects().length&&e.textContent.trim()).flatMap(e=>{const r=e.getBoundingClientRect();return r.x<-.5||r.right>innerWidth+.5||r.bottom>innerHeight+.5||e.scrollHeight>e.clientHeight+3||e.scrollWidth>e.clientWidth+3?[{text:e.textContent,font:getComputedStyle(e).fontSize,box:r.toJSON(),width:[e.scrollWidth,e.clientWidth],height:[e.scrollHeight,e.clientHeight]}]:[];}));
+  assert.deepEqual(issues,[],`${slide.name}: mobile copy is visible and fits`);
+  assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth||document.documentElement.scrollHeight>innerHeight),false);
+  if(slide.name==='Demo'){
+   const pictures=await page.locator('.slide.active .example-pair[aria-hidden="false"] .example-preview').all();
+   const a=await pictures[0].boundingBox(),b=await pictures[1].boundingBox();assert.ok(b.y>a.y+a.height,'Phone examples stack vertically');
+   await pictures[0].tap();assert.ok(await page.locator('.image-preview').isVisible());await page.getByRole('button',{name:'Close enlarged example'}).tap();
+   await page.getByRole('button',{name:'Next examples',exact:true}).tap();
+   await page.waitForFunction(()=>document.querySelector('.slide.active .example-pair[aria-hidden="false"] img').src.endsWith('bad-ui-oasis.png'));
+   assert.ok((await page.getByRole('button',{name:'Previous examples',exact:true}).boundingBox()).height>=43);
+   await page.getByRole('button',{name:'Previous examples',exact:true}).tap();
+   await page.waitForFunction(()=>document.querySelector('.slide.active .example-gallery').scrollLeft<1);
+  }
+  if(slide.name==='Challenge'){
+   const qr=await page.locator('.slide.active [src$="challenge-qr.png"]').boundingBox(),theme=await page.locator('[data-challenge-theme]').boundingBox();
+   assert.ok(qr.width>280&&qr.y>theme.y+theme.height,'Phone QR stays large and clear of its theme');
+   assert.ok((await page.getByRole('button',{name:'Reveal rankings',exact:true}).boundingBox()).height>=44);
+  }
+  await page.screenshot({path:path.join(dir,`mobile-${slide.name.toLowerCase()}.png`)});
+ }
+ await page.setViewportSize({width:844,height:390});await page.waitForFunction(()=>document.body.dataset.layout==='landscape');
+ assert.equal(await active(),'Thanks','Rotating preserves the active slide');
+ const landscape=await page.locator('.stage').boundingBox();assert.ok(landscape.width>landscape.height*1.7);
+ await page.screenshot({path:path.join(dir,'mobile-landscape.png')});
+ await page.setViewportSize({width:1280,height:720});
+ await page.getByRole('button',{name:'Go directly to Intro',exact:true}).click();await settle();await page.emulateMedia({reducedMotion:'no-preference'});
+ assert.equal(await page.locator('.jump-cactus').count(),0,'The first slide has no cactus');
  const sources=new Set(await page.locator('[data-source]').evaluateAll(els=>els.map(el=>el.dataset.source)));
  for(const file of Object.keys(JSON.parse(await fs.readFile(path.join(dir,'photos.json'),'utf8'))))assert.ok(sources.has(file),`Preserve ${file}`);
  for(const [i,slide]of spec.entries()){
@@ -149,6 +190,13 @@ try{
   if(spec[i].buildTitle){await page.mouse.click(1110,220);await settle();assert.equal(await active(),spec[i].name);}
   await page.mouse.click(1110,220);assert.equal(await active(),spec[i].name,'Old slide stays through exit');
   await page.waitForFunction(scene=>document.querySelector('#dino-motion').dataset.scene===scene,scene);
+  if(scene==='window'){
+   const samples=await page.evaluate(async()=>{const points=[];while(document.querySelector('#dino-motion').dataset.phase==='exit'){const d=document.querySelector('#arcade-dino');points.push({x:+d.dataset.x,y:+d.dataset.y,frame:+d.dataset.frame,action:d.dataset.action});await new Promise(requestAnimationFrame);}return points;});
+   assert.ok(samples.length>20&&samples.at(-1).frame>=260,'Cape run stays visible for around 4.5 seconds');
+   assert.ok(samples.every(p=>p.y===62&&p.action==='run'),'Cape run stays on the ground without a final jump');
+   const speed=(samples.at(-1).x-samples[0].x)/(samples.at(-1).frame-samples[0].frame);
+   assert.ok(speed>0&&samples.every(p=>Math.abs(p.x-samples[0].x-(p.frame-samples[0].frame)*speed)<.01),'Cape moves right at a constant pace');
+  }
   if(scene==='pipe'){
    await page.waitForFunction(()=>document.querySelector('#dino-motion').dataset.phase==='enter');
    const samples=await page.evaluate(async()=>{
@@ -233,4 +281,4 @@ try{
  assert.deepEqual(errors,[]);
  await fs.writeFile(path.join(dir,'html-checks.json'),JSON.stringify({passed:true,slides:12,names:spec.map(s=>s.name),sourceImages:[...sources],checks:['all original photos','both uploads','named portraits','twelve direct pills','eleven different arcade transitions','both centred titles and click-to-reveal morphs','bad and good screenshot carousels with a certification stamp','two pace memes with matching labels','separate criteria slide','interrupted title morph','static pictures','text fit','notes','keyboard','reduced motion','responsive fit']},null,2));
  console.log('Passed: twelve slides, Hackathon title and trophy, three click-to-reveal Morphs, pace memes, text fit and all navigation.');
-}finally{await browser.close();}
+}finally{await browser.close();fixture.kill();}

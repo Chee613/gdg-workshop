@@ -11,7 +11,14 @@
         "h": 83,
         "size": 68,
         "color": "#111315",
-        "bold": true
+        "bold": true,
+        "mobile": {
+          "x": 36,
+          "y": 210,
+          "w": 648,
+          "h": 92,
+          "size": 64
+        }
       },
       {
         "kind": "text",
@@ -22,7 +29,14 @@
         "h": 40,
         "size": 28,
         "color": "#5F6368",
-        "bold": false
+        "bold": false,
+        "mobile": {
+          "x": 36,
+          "y": 312,
+          "w": 648,
+          "h": 46,
+          "size": 34
+        }
       },
       {
         "kind": "image",
@@ -37,6 +51,12 @@
           "right": 0.13,
           "top": 0.1,
           "bottom": 0.5433717579250721
+        },
+        "mobile": {
+          "x": 36,
+          "y": 375,
+          "w": 282,
+          "h": 244
         }
       },
       {
@@ -48,7 +68,13 @@
         "h": 300,
         "alt": "Shawn, photographed outdoors in a suit",
         "fit": "cover",
-        "focus": "50% 30%"
+        "focus": "50% 30%",
+        "mobile": {
+          "x": 36,
+          "y": 638,
+          "w": 282,
+          "h": 244
+        }
       },
       {
         "kind": "image",
@@ -63,6 +89,12 @@
           "right": 0.34,
           "top": 0.36,
           "bottom": 0.3417291066282421
+        },
+        "mobile": {
+          "x": 36,
+          "y": 901,
+          "w": 282,
+          "h": 244
         }
       },
       {
@@ -74,7 +106,14 @@
         "h": 47,
         "size": 34,
         "color": "#4285F4",
-        "bold": true
+        "bold": true,
+        "mobile": {
+          "x": 354,
+          "y": 470,
+          "w": 330,
+          "h": 58,
+          "size": 44
+        }
       },
       {
         "kind": "text",
@@ -85,7 +124,14 @@
         "h": 47,
         "size": 34,
         "color": "#EA4335",
-        "bold": true
+        "bold": true,
+        "mobile": {
+          "x": 354,
+          "y": 733,
+          "w": 330,
+          "h": 58,
+          "size": 44
+        }
       },
       {
         "kind": "text",
@@ -96,7 +142,14 @@
         "h": 47,
         "size": 34,
         "color": "#34A853",
-        "bold": true
+        "bold": true,
+        "mobile": {
+          "x": 354,
+          "y": 996,
+          "w": 330,
+          "h": 58,
+          "size": 44
+        }
       }
     ],
     "notes": "Introduce Zayn, Shawn and Edmund, using the three portraits and names provided by the user. Keep the introduction brief. Do not invent roles, qualifications or individual achievements."
@@ -113,7 +166,14 @@
         "h": 85,
         "size": 72,
         "color": "#111315",
-        "bold": true
+        "bold": true,
+        "mobile": {
+          "x": 36,
+          "y": 210,
+          "w": 430,
+          "h": 86,
+          "size": 72
+        }
       },
       {
         "kind": "text",
@@ -124,7 +184,14 @@
         "h": 44,
         "size": 32,
         "color": "#4285F4",
-        "bold": true
+        "bold": true,
+        "mobile": {
+          "x": 36,
+          "y": 312,
+          "w": 648,
+          "h": 50,
+          "size": 36
+        }
       },
       {
         "kind": "image",
@@ -134,7 +201,13 @@
         "w": 108,
         "h": 108,
         "alt": "Soft 3D trophy sticker",
-        "sticker": true
+        "sticker": true,
+        "mobile": {
+          "x": 490,
+          "y": 202,
+          "w": 96,
+          "h": 96
+        }
       },
       {
         "kind": "image",
@@ -144,7 +217,13 @@
         "w": 180,
         "h": 240,
         "alt": "Team with a hackathon award",
-        "source": "P3291631.JPG"
+        "source": "P3291631.JPG",
+        "mobile": {
+          "x": 36,
+          "y": 400,
+          "w": 198,
+          "h": 264
+        }
       },
       {
         "kind": "image",
@@ -154,7 +233,13 @@
         "w": 260,
         "h": 195,
         "alt": "Team holding a competition award",
-        "source": "P3311713 (1) (1).JPG"
+        "source": "P3311713 (1) (1).JPG",
+        "mobile": {
+          "x": 256,
+          "y": 400,
+          "w": 428,
+          "h": 321
+        }
       },
       {
         "kind": "image",
@@ -164,7 +249,13 @@
         "w": 260,
         "h": 195,
         "alt": "Team at an AI for Society event",
-        "source": "P9063427.jpeg"
+        "source": "P9063427.jpeg",
+        "mobile": {
+          "x": 36,
+          "y": 752,
+          "w": 280,
+          "h": 210
+        }
       },
       {
         "kind": "image",
@@ -174,7 +265,13 @@
         "w": 180,
         "h": 240,
         "alt": "Newly uploaded hardware prototype photograph on the award board",
-        "source": "P4021779.JPG"
+        "source": "P4021779.JPG",
+        "mobile": {
+          "x": 340,
+          "y": 752,
+          "w": 160,
+          "h": 214
+        }
       },
       {
         "kind": "image",
@@ -184,7 +281,13 @@
         "w": 180,
         "h": 240,
         "alt": "Newly uploaded presenter photograph showing the Agent Beaver Clever app",
-        "source": "P4151781.jpeg"
+        "source": "P4151781.jpeg",
+        "mobile": {
+          "x": 520,
+          "y": 752,
+          "w": 160,
+          "h": 214
+        }
       },
       {
         "kind": "text",
@@ -195,7 +298,14 @@
         "h": 42,
         "size": 28,
         "color": "#5F6368",
-        "bold": false
+        "bold": false,
+        "mobile": {
+          "x": 36,
+          "y": 1040,
+          "w": 648,
+          "h": 50,
+          "size": 34
+        }
       }
     ],
     "notes": "The previous opening slide is now the second slide, with the two newly uploaded photos added. The totals are the presenter’s own claims from Hack.pptx; they are not independently verified. Tell one short story behind an award, prototype or demo."
@@ -213,7 +323,14 @@
         "h": 40,
         "size": 30,
         "color": "#111315",
-        "bold": true
+        "bold": true,
+        "mobile": {
+          "x": 36,
+          "y": 302,
+          "w": 648,
+          "h": 52,
+          "size": 42
+        }
       },
       {
         "kind": "image",
@@ -222,7 +339,13 @@
         "y": 236,
         "w": 530,
         "h": 423.75291375291374,
-        "alt": "Drake rejecting an AI-only idea and approving your own brainstormed ideas"
+        "alt": "Drake rejecting an AI-only idea and approving your own brainstormed ideas",
+        "mobile": {
+          "x": 36,
+          "y": 376,
+          "w": 648,
+          "h": 518
+        }
       },
       {
         "kind": "text",
@@ -234,7 +357,14 @@
         "size": 30,
         "color": "#EA4335",
         "bold": true,
-        "align": "center"
+        "align": "center",
+        "mobile": {
+          "x": 296,
+          "y": 453,
+          "w": 378,
+          "h": 52,
+          "size": 36
+        }
       },
       {
         "kind": "image",
@@ -243,7 +373,13 @@
         "y": 366,
         "w": 42,
         "h": 42,
-        "alt": "Gemini logo"
+        "alt": "Gemini logo",
+        "mobile": {
+          "x": 312,
+          "y": 528,
+          "w": 58,
+          "h": 58
+        }
       },
       {
         "kind": "image",
@@ -252,7 +388,13 @@
         "y": 366,
         "w": 42,
         "h": 42,
-        "alt": "ChatGPT logo"
+        "alt": "ChatGPT logo",
+        "mobile": {
+          "x": 399,
+          "y": 528,
+          "w": 58,
+          "h": 58
+        }
       },
       {
         "kind": "image",
@@ -261,7 +403,13 @@
         "y": 366,
         "w": 42,
         "h": 42,
-        "alt": "Claude logo"
+        "alt": "Claude logo",
+        "mobile": {
+          "x": 486,
+          "y": 528,
+          "w": 58,
+          "h": 58
+        }
       },
       {
         "kind": "image",
@@ -270,7 +418,13 @@
         "y": 366,
         "w": 42,
         "h": 42,
-        "alt": "Grok logo"
+        "alt": "Grok logo",
+        "mobile": {
+          "x": 573,
+          "y": 528,
+          "w": 58,
+          "h": 58
+        }
       },
       {
         "kind": "text",
@@ -282,7 +436,14 @@
         "size": 13,
         "color": "#5F6368",
         "bold": false,
-        "align": "center"
+        "align": "center",
+        "mobile": {
+          "x": 288,
+          "y": 596,
+          "w": 106,
+          "h": 30,
+          "size": 20
+        }
       },
       {
         "kind": "text",
@@ -294,7 +455,14 @@
         "size": 13,
         "color": "#5F6368",
         "bold": false,
-        "align": "center"
+        "align": "center",
+        "mobile": {
+          "x": 375,
+          "y": 596,
+          "w": 106,
+          "h": 30,
+          "size": 20
+        }
       },
       {
         "kind": "text",
@@ -306,7 +474,14 @@
         "size": 13,
         "color": "#5F6368",
         "bold": false,
-        "align": "center"
+        "align": "center",
+        "mobile": {
+          "x": 462,
+          "y": 596,
+          "w": 106,
+          "h": 30,
+          "size": 20
+        }
       },
       {
         "kind": "text",
@@ -318,7 +493,14 @@
         "size": 13,
         "color": "#5F6368",
         "bold": false,
-        "align": "center"
+        "align": "center",
+        "mobile": {
+          "x": 549,
+          "y": 596,
+          "w": 106,
+          "h": 30,
+          "size": 20
+        }
       },
       {
         "kind": "text",
@@ -330,7 +512,14 @@
         "size": 30,
         "color": "#34A853",
         "bold": true,
-        "align": "center"
+        "align": "center",
+        "mobile": {
+          "x": 296,
+          "y": 686,
+          "w": 378,
+          "h": 52,
+          "size": 36
+        }
       },
       {
         "kind": "image",
@@ -340,14 +529,26 @@
         "w": 80,
         "h": 80,
         "alt": "Soft 3D idea sticker",
-        "sticker": true
+        "sticker": true,
+        "mobile": {
+          "x": 432,
+          "y": 759,
+          "w": 100,
+          "h": 100
+        }
       },
       {
         "kind": "check",
         "x": 658,
         "y": 299,
         "w": 30,
-        "h": 30
+        "h": 30,
+        "mobile": {
+          "x": 36,
+          "y": 934,
+          "w": 36,
+          "h": 36
+        }
       },
       {
         "kind": "text",
@@ -358,14 +559,27 @@
         "h": 46,
         "size": 32,
         "color": "#4285F4",
-        "bold": true
+        "bold": true,
+        "mobile": {
+          "x": 92,
+          "y": 930,
+          "w": 440,
+          "h": 50,
+          "size": 34
+        }
       },
       {
         "kind": "check",
         "x": 658,
         "y": 383,
         "w": 30,
-        "h": 30
+        "h": 30,
+        "mobile": {
+          "x": 36,
+          "y": 1002,
+          "w": 36,
+          "h": 36
+        }
       },
       {
         "kind": "text",
@@ -376,14 +590,27 @@
         "h": 46,
         "size": 32,
         "color": "#34A853",
-        "bold": true
+        "bold": true,
+        "mobile": {
+          "x": 92,
+          "y": 998,
+          "w": 440,
+          "h": 50,
+          "size": 34
+        }
       },
       {
         "kind": "check",
         "x": 658,
         "y": 467,
         "w": 30,
-        "h": 30
+        "h": 30,
+        "mobile": {
+          "x": 36,
+          "y": 1070,
+          "w": 36,
+          "h": 36
+        }
       },
       {
         "kind": "text",
@@ -394,7 +621,14 @@
         "h": 46,
         "size": 30,
         "color": "#111315",
-        "bold": true
+        "bold": true,
+        "mobile": {
+          "x": 92,
+          "y": 1066,
+          "w": 440,
+          "h": 50,
+          "size": 32
+        }
       },
       {
         "kind": "image",
@@ -403,14 +637,26 @@
         "y": 540,
         "w": 140,
         "h": 140,
-        "alt": "No thanks I use AI meme, marked with a ban sign"
+        "alt": "No thanks I use AI meme, marked with a ban sign",
+        "mobile": {
+          "x": 556,
+          "y": 1008,
+          "w": 114,
+          "h": 114
+        }
       },
       {
         "kind": "ban",
         "x": 1055,
         "y": 533,
         "w": 154,
-        "h": 154
+        "h": 154,
+        "mobile": {
+          "x": 550,
+          "y": 1002,
+          "w": 126,
+          "h": 126
+        }
       }
     ],
     "notes": "Begin with the centred Hackathon tips title, then morph it upward to reveal Idea Brainstorming. The supplied Drake meme contrasts Idea from AI with Your own ideas and a light bulb. Brainstorm, notice problems in daily life and solve a niche problem. The second supplied meme sits in the bottom corner with a red ban overlay, warning against outsourcing your thinking to AI."
@@ -427,7 +673,14 @@
         "h": 83,
         "size": 68,
         "color": "#111315",
-        "bold": true
+        "bold": true,
+        "mobile": {
+          "x": 36,
+          "y": 210,
+          "w": 540,
+          "h": 100,
+          "size": 64
+        }
       },
       {
         "kind": "text",
@@ -438,7 +691,14 @@
         "h": 49,
         "size": 36,
         "color": "#4285F4",
-        "bold": true
+        "bold": true,
+        "mobile": {
+          "x": 36,
+          "y": 354,
+          "w": 648,
+          "h": 50,
+          "size": 42
+        }
       },
       {
         "kind": "text",
@@ -449,7 +709,14 @@
         "h": 39,
         "size": 27,
         "color": "#5F6368",
-        "bold": false
+        "bold": false,
+        "mobile": {
+          "x": 36,
+          "y": 413,
+          "w": 648,
+          "h": 46,
+          "size": 34
+        }
       },
       {
         "kind": "text",
@@ -460,7 +727,14 @@
         "h": 48,
         "size": 34,
         "color": "#EA4335",
-        "bold": true
+        "bold": true,
+        "mobile": {
+          "x": 36,
+          "y": 490,
+          "w": 648,
+          "h": 50,
+          "size": 40
+        }
       },
       {
         "kind": "text",
@@ -471,7 +745,14 @@
         "h": 45,
         "size": 32,
         "color": "#34A853",
-        "bold": true
+        "bold": true,
+        "mobile": {
+          "x": 36,
+          "y": 552,
+          "w": 520,
+          "h": 50,
+          "size": 38
+        }
       },
       {
         "kind": "text",
@@ -482,7 +763,14 @@
         "h": 50,
         "size": 38,
         "color": "#4285F4",
-        "bold": true
+        "bold": true,
+        "mobile": {
+          "x": 36,
+          "y": 620,
+          "w": 520,
+          "h": 54,
+          "size": 42
+        }
       },
       {
         "kind": "image",
@@ -492,7 +780,13 @@
         "w": 246,
         "h": 328,
         "alt": "Electronics connected beside a laptop",
-        "source": "P3261499.JPG"
+        "source": "P3261499.JPG",
+        "mobile": {
+          "x": 36,
+          "y": 748,
+          "w": 270,
+          "h": 360
+        }
       },
       {
         "kind": "image",
@@ -502,7 +796,13 @@
         "w": 230,
         "h": 328,
         "alt": "A printer making the prototype enclosure",
-        "source": "P3261504 (1).JPG"
+        "source": "P3261504 (1).JPG",
+        "mobile": {
+          "x": 332,
+          "y": 748,
+          "w": 270,
+          "h": 360
+        }
       },
       {
         "kind": "image",
@@ -518,6 +818,12 @@
           "bottom": 0.18,
           "left": 0.04,
           "right": 0.04
+        },
+        "mobile": {
+          "x": 560,
+          "y": 582,
+          "w": 112,
+          "h": 112
         }
       },
       {
@@ -528,7 +834,13 @@
         "w": 108,
         "h": 108,
         "alt": "Soft 3D idea sticker",
-        "sticker": true
+        "sticker": true,
+        "mobile": {
+          "x": 578,
+          "y": 204,
+          "w": 104,
+          "h": 104
+        }
       }
     ],
     "notes": "Based on uploaded screenshot 3 and Hack.pptx slide 2. Prefer a simple app over a cluttered dashboard. Go beyond a generic chatbot by delivering a useful result, using machine learning or AI plus IoT where relevant. This is the presenter’s advice, not a universal ban on chat interfaces. The small mint device visual is a supplied generated concept."
@@ -545,7 +857,14 @@
         "h": 83,
         "size": 68,
         "color": "#111315",
-        "bold": true
+        "bold": true,
+        "mobile": {
+          "x": 36,
+          "y": 210,
+          "w": 648,
+          "h": 92,
+          "size": 64
+        }
       },
       {
         "kind": "text",
@@ -556,7 +875,14 @@
         "h": 42,
         "size": 30,
         "color": "#5F6368",
-        "bold": false
+        "bold": false,
+        "mobile": {
+          "x": 36,
+          "y": 314,
+          "w": 648,
+          "h": 46,
+          "size": 34
+        }
       },
       {
         "kind": "image",
@@ -566,7 +892,13 @@
         "w": 300,
         "h": 225,
         "alt": "A completed phone-mounted hardware enclosure",
-        "source": "Hack.pptx phone exterior"
+        "source": "Hack.pptx phone exterior",
+        "mobile": {
+          "x": 36,
+          "y": 410,
+          "w": 306,
+          "h": 230
+        }
       },
       {
         "kind": "image",
@@ -576,7 +908,13 @@
         "w": 300,
         "h": 225,
         "alt": "The working electronics inside the phone enclosure",
-        "source": "Hack.pptx phone electronics"
+        "source": "Hack.pptx phone electronics",
+        "mobile": {
+          "x": 378,
+          "y": 410,
+          "w": 306,
+          "h": 230
+        }
       },
       {
         "kind": "image",
@@ -586,7 +924,13 @@
         "w": 212,
         "h": 283,
         "alt": "A completed mint hardware prototype",
-        "source": "P4021743.JPG"
+        "source": "P4021743.JPG",
+        "mobile": {
+          "x": 66,
+          "y": 740,
+          "w": 240,
+          "h": 320
+        }
       },
       {
         "kind": "image",
@@ -596,7 +940,13 @@
         "w": 212,
         "h": 283,
         "alt": "The completed device on an award board",
-        "source": "Uploaded award photograph"
+        "source": "Uploaded award photograph",
+        "mobile": {
+          "x": 414,
+          "y": 740,
+          "w": 240,
+          "h": 320
+        }
       },
       {
         "kind": "text",
@@ -607,7 +957,14 @@
         "h": 42,
         "size": 29,
         "color": "#4285F4",
-        "bold": true
+        "bold": true,
+        "mobile": {
+          "x": 36,
+          "y": 654,
+          "w": 306,
+          "h": 50,
+          "size": 36
+        }
       },
       {
         "kind": "text",
@@ -618,7 +975,14 @@
         "h": 42,
         "size": 29,
         "color": "#EA4335",
-        "bold": true
+        "bold": true,
+        "mobile": {
+          "x": 378,
+          "y": 654,
+          "w": 306,
+          "h": 50,
+          "size": 36
+        }
       },
       {
         "kind": "text",
@@ -629,7 +993,14 @@
         "h": 42,
         "size": 29,
         "color": "#34A853",
-        "bold": true
+        "bold": true,
+        "mobile": {
+          "x": 66,
+          "y": 1080,
+          "w": 240,
+          "h": 50,
+          "size": 34
+        }
       },
       {
         "kind": "text",
@@ -640,7 +1011,14 @@
         "h": 42,
         "size": 29,
         "color": "#4285F4",
-        "bold": true
+        "bold": true,
+        "mobile": {
+          "x": 414,
+          "y": 1080,
+          "w": 240,
+          "h": 50,
+          "size": 34
+        }
       }
     ],
     "notes": "Based on uploaded screenshot 4. The two original phone-prototype photographs were recovered from Hack.pptx rather than taking a screenshot of a screenshot. Show the enclosure, then the internals, and explain the useful task that really works."
@@ -658,7 +1036,14 @@
         "size": 88,
         "color": "#111315",
         "bold": true,
-        "align": "center"
+        "align": "center",
+        "mobile": {
+          "x": 36,
+          "y": 500,
+          "w": 648,
+          "h": 240,
+          "size": 86
+        }
       }
     ],
     "notes": "Project Showcase section divider. Show the projects before moving into UI and slide design."
@@ -674,7 +1059,13 @@
         "y": 114,
         "w": 150,
         "h": 92,
-        "alt": "Winnie the Pooh looking unimpressed while reading a sheet of paper"
+        "alt": "Winnie the Pooh looking unimpressed while reading a sheet of paper",
+        "mobile": {
+          "x": 550,
+          "y": 210,
+          "w": 130,
+          "h": 80
+        }
       },
       {
         "kind": "text",
@@ -685,7 +1076,14 @@
         "h": 42,
         "size": 30,
         "color": "#EA4335",
-        "bold": true
+        "bold": true,
+        "mobile": {
+          "x": 36,
+          "y": 350,
+          "w": 648,
+          "h": 44,
+          "size": 34
+        }
       },
       {
         "kind": "text",
@@ -696,7 +1094,14 @@
         "h": 42,
         "size": 30,
         "color": "#EA4335",
-        "bold": true
+        "bold": true,
+        "mobile": {
+          "x": 36,
+          "y": 734,
+          "w": 648,
+          "h": 44,
+          "size": 34
+        }
       },
       {
         "kind": "gallery",
@@ -726,7 +1131,13 @@
               "alt": "Bad slide: Bi-Modal Architecture"
             }
           ]
-        ]
+        ],
+        "mobile": {
+          "x": 36,
+          "y": 396,
+          "w": 648,
+          "h": 710
+        }
       }
     ],
     "notes": "Start with the centred title, then morph it upward to reveal one large bad UI and one large bad slide. Next examples swipes the second pair to the front; Previous examples swipes back. Touch swiping and arrow keys inside the gallery also work. Screenshots remain intact and borderless. Click a screenshot for a full-screen view; Escape returns."
@@ -744,7 +1155,14 @@
         "h": 83,
         "size": 64,
         "color": "#111315",
-        "bold": true
+        "bold": true,
+        "mobile": {
+          "x": 36,
+          "y": 210,
+          "w": 648,
+          "h": 92,
+          "size": 60
+        }
       },
       {
         "kind": "text",
@@ -756,7 +1174,14 @@
         "size": 30,
         "color": "#4285F4",
         "bold": true,
-        "align": "center"
+        "align": "center",
+        "mobile": {
+          "x": 36,
+          "y": 350,
+          "w": 648,
+          "h": 52,
+          "size": 40
+        }
       },
       {
         "kind": "gallery",
@@ -779,14 +1204,26 @@
               "alt": "Good UI: the supplied sign-to-voice mobile interface"
             }
           ]
-        ]
+        ],
+        "mobile": {
+          "x": 36,
+          "y": 418,
+          "w": 648,
+          "h": 640
+        }
       },
       {
         "kind": "certify",
         "x": 1090,
         "y": 110,
         "w": 160,
-        "h": 160
+        "h": 160,
+        "mobile": {
+          "x": 552,
+          "y": 202,
+          "w": 140,
+          "h": 140
+        }
       }
     ],
     "notes": "Show one supplied Good UI picture at a time and swipe between the illustrated housemate dashboard and the sign-to-voice app. This presentation itself is the good-slide example. The first click anywhere on this slide pastes a playful Good Slide — Certified badge into the top-right corner with a stamp animation; this is a workshop joke, not an external certification. Advance again to continue. There is no Good slides heading or placeholder."
@@ -806,7 +1243,14 @@
         "size": 28,
         "color": "#EA4335",
         "bold": true,
-        "code": true
+        "code": true,
+        "mobile": {
+          "x": 36,
+          "y": 340,
+          "w": 648,
+          "h": 44,
+          "size": 32
+        }
       },
       {
         "kind": "image",
@@ -815,7 +1259,13 @@
         "y": 259,
         "w": 546,
         "h": 230,
-        "alt": "Too Slow: the supplied blinking-listener meme"
+        "alt": "Too Slow: the supplied blinking-listener meme",
+        "mobile": {
+          "x": 87,
+          "y": 392,
+          "w": 546,
+          "h": 230
+        }
       },
       {
         "kind": "text",
@@ -827,7 +1277,14 @@
         "size": 22,
         "color": "#5F6368",
         "bold": false,
-        "code": true
+        "code": true,
+        "mobile": {
+          "x": 60,
+          "y": 634,
+          "w": 624,
+          "h": 40,
+          "size": 28
+        }
       },
       {
         "kind": "text",
@@ -839,7 +1296,14 @@
         "size": 26,
         "color": "#EA4335",
         "bold": false,
-        "code": true
+        "code": true,
+        "mobile": {
+          "x": 36,
+          "y": 674,
+          "w": 60,
+          "h": 38,
+          "size": 32
+        }
       },
       {
         "kind": "text",
@@ -851,7 +1315,14 @@
         "size": 28,
         "color": "#4285F4",
         "bold": true,
-        "code": true
+        "code": true,
+        "mobile": {
+          "x": 36,
+          "y": 724,
+          "w": 648,
+          "h": 44,
+          "size": 32
+        }
       },
       {
         "kind": "image",
@@ -866,6 +1337,12 @@
           "bottom": 0.255,
           "left": 0,
           "right": 0
+        },
+        "mobile": {
+          "x": 184,
+          "y": 786,
+          "w": 351,
+          "h": 230
         }
       },
       {
@@ -878,7 +1355,14 @@
         "size": 22,
         "color": "#5F6368",
         "bold": false,
-        "code": true
+        "code": true,
+        "mobile": {
+          "x": 60,
+          "y": 1028,
+          "w": 624,
+          "h": 40,
+          "size": 28
+        }
       },
       {
         "kind": "text",
@@ -890,7 +1374,14 @@
         "size": 26,
         "color": "#4285F4",
         "bold": false,
-        "code": true
+        "code": true,
+        "mobile": {
+          "x": 36,
+          "y": 1068,
+          "w": 60,
+          "h": 38,
+          "size": 32
+        }
       },
       {
         "kind": "text",
@@ -902,7 +1393,14 @@
         "size": 22,
         "color": "#34A853",
         "bold": false,
-        "code": true
+        "code": true,
+        "mobile": {
+          "x": 36,
+          "y": 1120,
+          "w": 648,
+          "h": 70,
+          "size": 24
+        }
       }
     ],
     "notes": "Start with the centred code title. Advance once to morph the title to the top and reveal both pace memes on the same slide. Advance again for judging criteria. The displayed JavaScript is syntactically valid when Pitch and Presentation_Video are defined booleans and pace is a defined string. The first meme corresponds to pace === \"Too Slow\" and the second to pace === \"Too Fast\". The else branch is the comfortable pace. The second picture’s blank margins are cropped in the layout; the original file is preserved."
@@ -919,7 +1417,14 @@
         "h": 83,
         "size": 64,
         "color": "#111315",
-        "bold": true
+        "bold": true,
+        "mobile": {
+          "x": 36,
+          "y": 210,
+          "w": 648,
+          "h": 130,
+          "size": 60
+        }
       },
       {
         "kind": "text",
@@ -930,7 +1435,14 @@
         "h": 40,
         "size": 28,
         "color": "#5F6368",
-        "bold": false
+        "bold": false,
+        "mobile": {
+          "x": 36,
+          "y": 352,
+          "w": 648,
+          "h": 46,
+          "size": 34
+        }
       },
       {
         "kind": "image",
@@ -940,7 +1452,13 @@
         "w": 186,
         "h": 330,
         "alt": "An audience at a technology event",
-        "source": "20260907_145201.jpg"
+        "source": "20260907_145201.jpg",
+        "mobile": {
+          "x": 36,
+          "y": 430,
+          "w": 203,
+          "h": 360
+        }
       },
       {
         "kind": "image",
@@ -950,7 +1468,13 @@
         "w": 248,
         "h": 186,
         "alt": "Presenters explaining a simple app on stage",
-        "source": "PC021661.jpg"
+        "source": "PC021661.jpg",
+        "mobile": {
+          "x": 278,
+          "y": 430,
+          "w": 406,
+          "h": 305
+        }
       },
       {
         "kind": "text",
@@ -961,7 +1485,14 @@
         "h": 54,
         "size": 39,
         "color": "#4285F4",
-        "bold": true
+        "bold": true,
+        "mobile": {
+          "x": 36,
+          "y": 834,
+          "w": 648,
+          "h": 58,
+          "size": 42
+        }
       },
       {
         "kind": "text",
@@ -972,7 +1503,14 @@
         "h": 54,
         "size": 39,
         "color": "#EA4335",
-        "bold": true
+        "bold": true,
+        "mobile": {
+          "x": 36,
+          "y": 928,
+          "w": 648,
+          "h": 58,
+          "size": 42
+        }
       },
       {
         "kind": "text",
@@ -983,7 +1521,14 @@
         "h": 54,
         "size": 39,
         "color": "#34A853",
-        "bold": true
+        "bold": true,
+        "mobile": {
+          "x": 36,
+          "y": 1022,
+          "w": 530,
+          "h": 58,
+          "size": 42
+        }
       },
       {
         "kind": "image",
@@ -993,7 +1538,13 @@
         "w": 105,
         "h": 135,
         "alt": "Soft 3D microphone sticker",
-        "sticker": true
+        "sticker": true,
+        "mobile": {
+          "x": 572,
+          "y": 1010,
+          "w": 104,
+          "h": 134
+        }
       }
     ],
     "notes": "Match the pitch and presentation video to the actual judging criteria. Give each criterion clear evidence. Explain the problem, the solution and the result in language a new listener can follow. Rehearse with the event’s actual time limit."
@@ -1012,7 +1563,14 @@
         "color": "#4285F4",
         "bold": true,
         "align": "center",
-        "liveTheme": true
+        "liveTheme": true,
+        "mobile": {
+          "x": 36,
+          "y": 220,
+          "w": 648,
+          "h": 116,
+          "size": 48
+        }
       },
       {
         "kind": "image",
@@ -1021,14 +1579,26 @@
         "y": 140,
         "w": 380,
         "h": 380,
-        "alt": "Scan to submit a workshop idea"
+        "alt": "Scan to submit a workshop idea",
+        "mobile": {
+          "x": 88,
+          "y": 348,
+          "w": 544,
+          "h": 544
+        }
       },
       {
         "kind": "rankButton",
         "x": 480,
         "y": 534,
         "w": 320,
-        "h": 66
+        "h": 66,
+        "mobile": {
+          "x": 110,
+          "y": 930,
+          "w": 500,
+          "h": 88
+        }
       },
       {
         "kind": "text",
@@ -1041,7 +1611,14 @@
         "color": "#5F6368",
         "bold": false,
         "align": "center",
-        "liveStatus": true
+        "liveStatus": true,
+        "mobile": {
+          "x": 36,
+          "y": 1032,
+          "w": 648,
+          "h": 90,
+          "size": 30
+        }
       },
       {
         "kind": "link",
@@ -1051,7 +1628,13 @@
         "x": 72,
         "y": 603,
         "w": 190,
-        "h": 40
+        "h": 40,
+        "mobile": {
+          "x": 196,
+          "y": 1136,
+          "w": 328,
+          "h": 82
+        }
       }
     ],
     "notes": "Set the theme, judging criteria and Gemini connection in the presenter dashboard. The saved theme appears above the large central QR code; leave it blank until ready. Participants scan and submit. Press the GDG Reveal rankings button to analyse all ideas and reveal the top three with the existing countdown and podium inside the presentation. It requires at least three ideas and a real Gemini connection. Existing ranked results can be shown again without re-analysing. Open dashboard plays the dinosaur warp-pipe jump, then opens the public title wall. Presenter controls stay at /host."
@@ -1069,7 +1652,14 @@
         "size": 100,
         "color": "#111315",
         "bold": true,
-        "align": "center"
+        "align": "center",
+        "mobile": {
+          "x": 36,
+          "y": 230,
+          "w": 648,
+          "h": 140,
+          "size": 96
+        }
       },
       {
         "kind": "firework",
@@ -1077,7 +1667,13 @@
         "y": 285,
         "w": 240,
         "h": 260,
-        "delay": 0
+        "delay": 0,
+        "mobile": {
+          "x": 0,
+          "y": 440,
+          "w": 220,
+          "h": 240
+        }
       },
       {
         "kind": "firework",
@@ -1085,7 +1681,13 @@
         "y": 285,
         "w": 240,
         "h": 260,
-        "delay": 0.35
+        "delay": 0.35,
+        "mobile": {
+          "x": 500,
+          "y": 440,
+          "w": 220,
+          "h": 240
+        }
       },
       {
         "kind": "image",
@@ -1095,7 +1697,13 @@
         "w": 320,
         "h": 320,
         "alt": "The supplied animated black cat celebrating",
-        "chroma": true
+        "chroma": true,
+        "mobile": {
+          "x": 150,
+          "y": 470,
+          "w": 420,
+          "h": 420
+        }
       }
     ],
     "notes": "Thank the audience. The original cat GIF keeps its animation, with its green background removed by a live chroma-key filter. GDG-coloured fireworks play on either side of the cat. The Chrome dinosaur keeps its trophy below without the earlier surrounding confetti."

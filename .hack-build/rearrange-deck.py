@@ -143,6 +143,44 @@ slides = [
     notes='Thank the audience. The original cat GIF keeps its animation, with its green background removed by a live chroma-key filter. GDG-coloured fireworks play on either side of the cat. The Chrome dinosaur keeps its trophy below without the earlier surrounding confetti.')
 ]
 
+# Portrait positions reuse the same elements, photos, galleries and click-to-reveal steps.
+# Each tuple is x, y, width, height, and optional font size on a 720 x 1280 canvas.
+portrait = {
+ 'Intro': [(36,210,648,92,64),(36,312,648,46,34),
+    (36,375,282,244),(36,638,282,244),(36,901,282,244),
+    (354,470,330,58,44),(354,733,330,58,44),(354,996,330,58,44)],
+ 'Stories': [(36,210,430,86,72),(36,312,648,50,36),(490,202,96,96),
+    (36,400,198,264),(256,400,428,321),(36,752,280,210),
+    (340,752,160,214),(520,752,160,214),(36,1040,648,50,34)],
+ 'Brainstorm': [(36,302,648,52,42),(36,376,648,518),(296,453,378,52,36),
+    (312,528,58,58),(399,528,58,58),(486,528,58,58),(573,528,58,58),
+    (288,596,106,30,20),(375,596,106,30,20),(462,596,106,30,20),(549,596,106,30,20),
+    (296,686,378,52,36),(432,759,100,100),
+    (36,934,36,36),(92,930,440,50,34),(36,1002,36,36),(92,998,440,50,34),
+    (36,1070,36,36),(92,1066,440,50,32),(556,1008,114,114),(550,1002,126,126)],
+ 'Idea': [(36,210,540,100,64),(36,354,648,50,42),(36,413,648,46,34),
+    (36,490,648,50,40),(36,552,520,50,38),(36,620,520,54,42),
+    (36,748,270,360),(332,748,270,360),(560,582,112,112),(578,204,104,104)],
+ 'Build': [(36,210,648,92,64),(36,314,648,46,34),
+    (36,410,306,230),(378,410,306,230),(66,740,240,320),(414,740,240,320),
+    (36,654,306,50,36),(378,654,306,50,36),(66,1080,240,50,34),(414,1080,240,50,34)],
+ 'Showcase': [(36,500,648,240,86)],
+ 'Demo': [(550,210,130,80),(36,350,648,44,34),(36,734,648,44,34),(36,396,648,710)],
+ 'Design': [(36,210,648,92,60),(36,350,648,52,40),(36,418,648,640),(552,202,140,140)],
+ 'Pitch': [(36,340,648,44,32),(87,392,546,230),(60,634,624,40,28),(36,674,60,38,32),
+    (36,724,648,44,32),(184,786,351,230),(60,1028,624,40,28),(36,1068,60,38,32),
+    (36,1120,648,70,24)],
+ 'Criteria': [(36,210,648,130,60),(36,352,648,46,34),(36,430,203,360),(278,430,406,305),
+    (36,834,648,58,42),(36,928,648,58,42),(36,1022,530,58,42),(572,1010,104,134)],
+ 'Challenge': [(36,220,648,116,48),(88,348,544,544),(110,930,500,88),
+    (36,1032,648,90,30),(196,1136,328,82)],
+ 'Thanks': [(36,230,648,140,96),(0,440,220,240),(500,440,220,240),(150,470,420,420)]
+}
+for slide in slides:
+    assert len(slide['elements']) == len(portrait[slide['name']])
+    for element, rect in zip(slide['elements'], portrait[slide['name']]):
+        element['mobile'] = dict(zip(('x','y','w','h','size'),rect))
+
 (OUT/'assets/backup-demo.svg').write_text('''<svg xmlns="http://www.w3.org/2000/svg" width="480" height="360" viewBox="0 0 480 360"><rect x="12" y="14" width="456" height="300" rx="18" fill="#F7F9FC" stroke="#111315" stroke-width="4"/><path d="M14 65H466" stroke="#111315" stroke-width="3"/><circle cx="38" cy="40" r="7" fill="#EA4335"/><circle cx="62" cy="40" r="7" fill="#FBBC04"/><circle cx="86" cy="40" r="7" fill="#34A853"/><rect x="44" y="90" width="392" height="164" rx="10" fill="#E8F0FE"/><circle cx="240" cy="172" r="44" fill="#4285F4"/><path d="M228 148L264 172L228 196Z" fill="white"/><path d="M49 282H431" stroke="#DADCE0" stroke-width="7" stroke-linecap="round"/><path d="M49 282H179" stroke="#34A853" stroke-width="7" stroke-linecap="round"/><path d="M177 337H303" stroke="#111315" stroke-width="7" stroke-linecap="round"/></svg>''',encoding='utf-8')
 (OUT/'assets/podium.svg').write_text('''<svg xmlns="http://www.w3.org/2000/svg" width="500" height="194" viewBox="0 0 500 194"><rect x="20" y="91" width="145" height="98" rx="9" fill="#4285F4"/><rect x="178" y="22" width="145" height="167" rx="9" fill="#FBBC04"/><rect x="336" y="119" width="145" height="70" rx="9" fill="#34A853"/><path d="M218 5L230 28L255 31L237 49L241 74L218 62L196 74L200 49L182 31L207 28Z" fill="#EA4335" transform="translate(33 -2) scale(.85)"/><text x="92" y="151" text-anchor="middle" fill="white" font-family="Arial" font-size="38" font-weight="bold">2</text><text x="250" y="138" text-anchor="middle" fill="#111315" font-family="Arial" font-size="54" font-weight="bold">1</text><text x="409" y="168" text-anchor="middle" fill="white" font-family="Arial" font-size="32" font-weight="bold">3</text></svg>''',encoding='utf-8')
 (ROOT/'.hack-build/deck-spec.json').write_text(json.dumps(slides,ensure_ascii=False,indent=2),encoding='utf-8')

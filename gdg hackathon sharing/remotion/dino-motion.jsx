@@ -83,8 +83,8 @@ function ArcadeScene({phase,kind,from,to,direction}){
  let size=1,opacity=1,rotation=0,ufo=null,beam=0,portal=null,portalOpen=1,rocket=null,hole=null,balloons=null,bowling=null;
  if(exiting&&kind==='window'){
   x=welcome?at(t,[0,.8],[rest[from],2310]):at(t,[0,.28,.68],[rest[from],26,-66]);
-  y=welcome?62-54*Math.sin(at(x,[1100,1280],[0,Math.PI])):at(t,[0,.28,.46,.68],[62,62,4,-70]);facing=welcome?1:-1;
-  action=(welcome?x<1100:t<.28)?'run':'window-jump';
+  y=welcome?62:at(t,[0,.28,.46,.68],[62,62,4,-70]);facing=welcome?1:-1;
+  action=welcome||t<.28?'run':'window-jump';
  }else if(entering&&(kind==='window'||kind==='spring')){
   x=rest[to];y=t<.46?at(t,[0,.46],[-680,62],Easing.bezier(.6,0,1,1)):at(t,[.46,.56,.66],[62,44,62]);
   action=t<.46?'fall':t<.66?'land':'idle';
@@ -202,7 +202,6 @@ function ArcadeScene({phase,kind,from,to,direction}){
    <img className="winner-trophy" src={asset('sticker-trophy.png')} alt="Chrome dinosaur won the trophy" style={{position:'absolute',left:rest[to]+70,top:640+(entering?at(t,[.35,.6],[-45,0]):0),width:64,height:64,opacity:entering?at(t,[.35,.48],[0,1]):1}}/>
   </>}
   {welcome&&<WelcomeCape x={x} y={y} t={t}/>}
-  {(welcome||(phase==='idle'&&to===0))&&<img className="jump-cactus" src={asset('cactus.png')} alt="Cactus for the dinosaur to jump over" style={{position:'absolute',left:1188,top:670,width:24,height:34,imageRendering:'pixelated',objectFit:'contain'}}/>}
   <div style={{position:'absolute',inset:0,...(clip?{clipPath:'inset(0 0 68px 0)'}:{})}}>
    <img id="arcade-dino" src={asset(running?`dino-run-${Math.floor(welcome?frame/fps*10:t*14)%2+1}.png`:'dinosaur.png')}
     alt={`Dinosaur in ${names[exiting?from:to]}`} data-action={action} data-x={x} data-y={y} data-size={size} data-frame={frame}
