@@ -45,7 +45,7 @@ with tempfile.TemporaryDirectory(prefix='gdg-hosting-') as folder:
         payload = json.loads(req.data)
         config = payload['generationConfig']
         assert not {'temperature','topP','topK'} & config.keys(), 'Flash-Lite rejects deprecated sampling controls'
-        assert config['responseFormat']['text']['mimeType'] == 'application/json'
+        assert config['responseFormat']['text']['mimeType'] == 'APPLICATION_JSON'
         prompt = payload['contents'][0]['parts'][0]['text']
         assert sample[0]['title'] in prompt and sample[0]['idea'] in prompt
         result = json.dumps(dict(ratings=[dict(id=1,scores=[9,8,9],strength='Useful',improve='Validate')]))
@@ -53,6 +53,20 @@ with tempfile.TemporaryDirectory(prefix='gdg-hosting-') as folder:
     with patch.object(app,'urlopen',gemini_response):
         ratings = app.judge_with_gemini(app.initial_state(),sample)
     assert ratings[0]['scores'] == [9,8,9]
+    for body, expected in [
+        (json.dumps(dict(error=dict(status='INVALID_ARGUMENT',message='Invalid mime_type. Key: '+app.KEY))).encode(),'INVALID_ARGUMENT'),
+        (b'<html>Proxy failure</html>','Gemini returned HTTP 400'),
+    ]:
+        upstream = HTTPError('https://generativelanguage.googleapis.com/',400,'Bad Request',None,io.BytesIO(body))
+        with patch.object(app,'urlopen',side_effect=upstream):
+            try: app.judge_with_gemini(app.initial_state(),sample)
+            except ValueError as error:
+                message = str(error)
+                assert expected in message
+                assert app.KEY not in message and '<html>' not in message
+                if expected == 'INVALID_ARGUMENT':
+                    assert 'mime_type' in message and '[redacted]' in message
+            else: raise AssertionError('Upstream errors must be reported')
 
     (test_root/'workshop').mkdir()
     (test_root/'output/assets').mkdir(parents=True)
