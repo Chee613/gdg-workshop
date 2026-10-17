@@ -42,7 +42,20 @@ try{
  assert.equal((await (await fetch(base+'/api/state')).json()).results.length,0,'Scores stay private before reveal');
  assert.equal((await post('/api/ideas',{client:'abcdef0123456789',name:'Late',title:'Late idea',idea:'A late submission should be rejected.'},false)).status,409);
  const popupPromise=host.waitForEvent('popup');await host.getByRole('button',{name:'Reveal top three',exact:true}).click();const popup=await popupPromise;await popup.close();
- await board.locator('.winner').first().waitFor();await board.emulateMedia({reducedMotion:'reduce'});
+ await board.locator('.winner').first().waitFor();
+ const burst=await board.locator('.confetti i').evaluateAll(pieces=>{
+  const flights=pieces.map(piece=>{const animation=piece.getAnimations()[0];animation.pause();const timing=animation.effect.getTiming();animation.currentTime=timing.delay;const start=piece.getBoundingClientRect();animation.currentTime=timing.delay+timing.duration*.4;const peak=piece.getBoundingClientRect();return{start:start.toJSON(),peak:peak.toJSON(),delay:timing.delay};});
+  return {flights,width:innerWidth,height:innerHeight};
+ });
+ assert.ok(burst.flights.every(f=>f.start.top>=burst.height-30),'Ribbons launch from the bottom, rather than fall from above');
+ assert.ok(burst.flights.some(f=>f.start.left<20)&&burst.flights.some(f=>f.start.right>burst.width-20),'Both bottom corners pop');
+ assert.ok(Math.max(...burst.flights.map(f=>f.delay))-Math.min(...burst.flights.map(f=>f.delay))<200,'Ribbons pop together');
+ assert.ok(burst.flights.every(f=>f.peak.top<f.start.top-burst.height*.3),'Ribbons shoot upward before falling');
+ await board.waitForFunction(()=>[...document.querySelectorAll('.winner')].every(el=>getComputedStyle(el).opacity==='1'));
+ await board.screenshot({path:'.hack-build/session-ribbon-pop.png',fullPage:true});
+ await board.emulateMedia({reducedMotion:'reduce'});
+ assert.equal(await board.locator('.confetti').isVisible(),false,'Reduced motion hides the burst');
+ await board.evaluate(()=>document.querySelectorAll('.confetti i').forEach(piece=>piece.getAnimations().forEach(animation=>animation.finish())));
  assert.equal(await board.locator('.winner').count(),3);assert.equal(await board.locator('.winner.first .who').textContent(),'');
  await board.screenshot({path:'.hack-build/session-podium.png',fullPage:true});
  await board.setViewportSize({width:390,height:844});assert.equal(await board.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);

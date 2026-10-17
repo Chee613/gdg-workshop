@@ -97,7 +97,24 @@ function renderHost(s){
  if(evaluated){$('review-list').replaceChildren(...s.results.map((r,i)=>{const row=node('div',undefined,'review-row');row.append(node('span',`${r.total}/100`,'review-score'),node('b',`${i+1}. ${r.title}`),node('p',r.name==='Participant'?'':r.name),node('p',r.strength),node('p',`Improve: ${r.improve}`),node('p',s.criteria.map((c,j)=>`${c.name}: ${r.scores[j]}/10`).join(' · ')));return row;}));}
 }
 function renderJoin(s){$('theme').textContent=s.theme;rubric($('rubric'),s.criteria);$('submit').disabled=s.phase!=='collecting';$('join-status').textContent=s.phase==='collecting'?'':s.phase==='judging'?'The ideas are being judged.':s.phase==='revealed'?'The top three are on the live board.':'Submissions are closed. Watch the live board.';}
-function renderPodium(s){const content=$('board-content');content.replaceChildren();const hero=node('div',undefined,'hero');hero.append(node('h1','Your top three.'));content.append(hero);const podium=node('section',undefined,'podium');for(const i of [1,0,2]){const r=s.results[i];if(!r)continue;const winner=node('article',undefined,`winner ${i===0?'first':i===2?'third':'second'}`);winner.append(node('h3',r.title),node('div',r.name==='Participant'?'':r.name,'who'),node('p',r.strength));const step=node('div',undefined,'step');step.append(node('div',String(i+1),'place'),node('div',`${r.total}/100`,'score'));winner.append(step);podium.append(winner);}content.append(podium);const confetti=node('div',undefined,'confetti');confetti.setAttribute('aria-hidden','true');for(let i=0;i<31;i++){const piece=node('i');piece.style.setProperty('--i',i);confetti.append(piece);}content.append(confetti);$('ai-note').hidden=false;}
+function renderPodium(s){
+ const content=$('board-content');content.replaceChildren();const hero=node('div',undefined,'hero');hero.append(node('h1','Your top three.'));content.append(hero);
+ const podium=node('section',undefined,'podium');
+ for(const i of [1,0,2]){const r=s.results[i];if(!r)continue;const winner=node('article',undefined,`winner ${i===0?'first':i===2?'third':'second'}`);winner.append(node('h3',r.title),node('div',r.name==='Participant'?'':r.name,'who'),node('p',r.strength));const step=node('div',undefined,'step');step.append(node('div',String(i+1),'place'),node('div',`${r.total}/100`,'score'));winner.append(step);podium.append(winner);}
+ content.append(podium);$('ai-note').hidden=false;
+ if(still.matches)return;
+ const confetti=node('div',undefined,'confetti');confetti.setAttribute('aria-hidden','true');content.append(confetti);
+ const flights=[];
+ for(let i=0;i<48;i++){
+  const piece=node('i'),side=i%2,direction=side?-1:1;
+  piece.style[side?'right':'left']='0';piece.style.width=`${6+Math.random()*5}px`;piece.style.height=`${16+Math.random()*14}px`;confetti.append(piece);
+  const distance=innerWidth*(.2+Math.random()*.6),height=innerHeight*(.38+Math.random()*.44),spin=direction*(600+Math.random()*500);
+  // Native keyframes follow a ballistic arc: fast launch, a high crest, then a fluttering fall.
+  const frames=Array.from({length:21},(_,j)=>{const t=j/20;return{transform:`translate3d(${direction*distance*t}px,${height*(6.25*t*t-5*t)}px,0) rotate(${spin*t}deg) rotateY(${720*t}deg)`,opacity:j===0||j===20?0:j===19?.4:1};});
+  flights.push(piece.animate(frames,{duration:2200+Math.random()*250,delay:3100+Math.random()*120,easing:'linear',fill:'both'}).finished.catch(()=>{}));
+ }
+ Promise.all(flights).then(()=>confetti.remove());
+}
 function renderBoard(s){clearTimeout(countdownTimer);const content=$('board-content');
  if(s.phase==='revealed'&&Date.now()/1000<s.revealAt){const remaining=Math.max(1,Math.ceil(s.revealAt-Date.now()/1000));content.replaceChildren();const message=node('section',undefined,'stage-message');message.append(node('h2','Here come your top three.'),node('div',remaining,'countdown'));content.append(message);boardKey='countdown';countdownTimer=setTimeout(()=>renderBoard(latest),100);return;}
  const key=JSON.stringify([s.phase,s.round,s.ideas,s.results,s.revealAt]);if(key===boardKey)return;boardKey=key;$('ai-note').hidden=true;
