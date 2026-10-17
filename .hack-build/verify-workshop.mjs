@@ -37,12 +37,22 @@ try{
  assert.equal(await board.locator('.idea-bubble').first().textContent(),'Campus idea 1');
  assert.ok(!(await board.locator('#board-content').textContent()).includes('availability map'),'Audience sees titles only');
  await host.screenshot({path:'.hack-build/session-host.png',fullPage:true});await board.screenshot({path:'.hack-build/session-board.png',fullPage:true});
+ for(let i=3;i<5;i++)assert.equal((await post('/api/ideas',{client:`ranking_participant_${i}`,name:'Participant',title:`Campus idea ${i+1}`,idea:'Help students find a quiet place to study.'},false)).status,200);
  await host.getByRole('button',{name:'Analyse all ideas',exact:true}).click();
  await host.waitForFunction(()=>document.querySelector('#phase').textContent==='Shortlist ready');
+ await host.getByRole('heading',{name:'Full ranking',exact:true}).waitFor();
+ assert.equal(await host.locator('.review-row').count(),5,'Presenter sees every ranked submission');
+ const complete=(await (await host.request.get(base+'/api/host')).json()).results;
+ assert.equal(complete.length,5);
+ assert.deepEqual(complete.map(r=>r.total),[...complete.map(r=>r.total)].sort((a,b)=>b-a),'All rankings descend by score');
+ assert.deepEqual(await host.locator('.review-row b').allTextContents(),complete.map((r,i)=>`${i+1}. ${r.title}`));
+ await host.screenshot({path:'.hack-build/session-full-ranking.png',fullPage:true});
  assert.equal((await (await fetch(base+'/api/state')).json()).results.length,0,'Scores stay private before reveal');
  assert.equal((await post('/api/ideas',{client:'abcdef0123456789',name:'Late',title:'Late idea',idea:'A late submission should be rejected.'},false)).status,409);
  const popupPromise=host.waitForEvent('popup');await host.getByRole('button',{name:'Reveal top three',exact:true}).click();const popup=await popupPromise;await popup.close();
  await board.locator('.winner').first().waitFor();
+ const audience=(await (await fetch(base+'/api/state')).json()).results;
+ assert.deepEqual(audience.map(r=>r.id),complete.slice(0,3).map(r=>r.id),'Public results expose only the top three');
  const burst=await board.locator('.confetti i').evaluateAll(pieces=>{
   const flights=pieces.map(piece=>{const animation=piece.getAnimations()[0];animation.pause();const timing=animation.effect.getTiming();animation.currentTime=timing.delay;const start=piece.getBoundingClientRect();animation.currentTime=timing.delay+timing.duration*.4;const peak=piece.getBoundingClientRect();return{start:start.toJSON(),peak:peak.toJSON(),delay:timing.delay};});
   return {flights,width:innerWidth,height:innerHeight};

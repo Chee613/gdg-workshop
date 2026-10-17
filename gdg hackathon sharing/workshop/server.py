@@ -211,7 +211,7 @@ class Handler(SimpleHTTPRequestHandler):
                 results = state['results'] if host or state['phase']=='revealed' else []
                 data.update(ideas=ideas if host else [{k:i[k] for k in ('id','title','created')} for i in ideas],
                     count=len(ideas), joinUrl=JOIN_URL,
-                    results=results if host else [{k:v for k,v in r.items() if k not in ('idea','created')} for r in results])
+                    results=results if host else [{k:v for k,v in r.items() if k not in ('idea','created')} for r in results[:3]])
                 if host:
                     data.update(aiReady=bool(KEY), model=MODEL, error=state['error'])
             return self.reply(data)

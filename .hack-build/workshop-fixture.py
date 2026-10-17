@@ -11,7 +11,7 @@ spec.loader.exec_module(app)
 
 def fixture_judge(state,ideas):
     time.sleep(.2)
-    return [dict(id=idea['id'],scores=[9-i,8,9],strength='A clear, useful test idea.',improve='Test the main assumption.') for i,idea in enumerate(ideas)]
+    return list(reversed([dict(id=idea['id'],scores=[9-i,8,9],strength='A clear, useful test idea.',improve='Test the main assumption.') for i,idea in enumerate(ideas)]))
 
 with tempfile.TemporaryDirectory() as folder:
     app.DB=Path(folder)/'fixture.sqlite3'
