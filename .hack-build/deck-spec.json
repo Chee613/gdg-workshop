@@ -1,5 +1,140 @@
 [
   {
+    "name": "Cover",
+    "elements": [
+      {
+        "kind": "text",
+        "text": "Beginner Series:",
+        "x": 72,
+        "y": 130,
+        "w": 1136,
+        "h": 48,
+        "size": 32,
+        "color": "#4285F4",
+        "bold": true,
+        "mobile": {
+          "x": 36,
+          "y": 216,
+          "w": 648,
+          "h": 52,
+          "size": 36
+        }
+      },
+      {
+        "kind": "text",
+        "text": "Hackathon Masterclass",
+        "x": 72,
+        "y": 210,
+        "w": 1136,
+        "h": 96,
+        "size": 76,
+        "color": "#111315",
+        "bold": true,
+        "mobile": {
+          "x": 36,
+          "y": 305,
+          "w": 648,
+          "h": 190,
+          "size": 76
+        }
+      },
+      {
+        "kind": "text",
+        "text": "& Hackathon Project Sharing",
+        "x": 72,
+        "y": 310,
+        "w": 1136,
+        "h": 86,
+        "size": 62,
+        "color": "#111315",
+        "bold": true,
+        "mobile": {
+          "x": 36,
+          "y": 510,
+          "w": 648,
+          "h": 190,
+          "size": 64
+        }
+      },
+      {
+        "kind": "coverControls",
+        "x": 390,
+        "y": 485,
+        "w": 500,
+        "h": 56,
+        "mobile": {
+          "x": 36,
+          "y": 1040,
+          "w": 648,
+          "h": 88
+        }
+      }
+    ],
+    "notes": "Welcome to Beginner Series: Hackathon Masterclass & Hackathon Project Sharing. The cover dinosaur can watch TV, play Dino Run or nap. The activity buttons change only the cover scene. Advance to Slido Q&A when ready.",
+    "scene": "window"
+  },
+  {
+    "name": "Slido",
+    "elements": [
+      {
+        "kind": "text",
+        "text": "Slido Q&A",
+        "x": 72,
+        "y": 117,
+        "w": 1136,
+        "h": 83,
+        "size": 64,
+        "color": "#111315",
+        "bold": true,
+        "align": "center",
+        "mobile": {
+          "x": 36,
+          "y": 240,
+          "w": 648,
+          "h": 90,
+          "size": 64
+        }
+      },
+      {
+        "kind": "image",
+        "file": "assets/slido-qa.png",
+        "x": 440,
+        "y": 215,
+        "w": 400,
+        "h": 400,
+        "alt": "Slido Q&A QR code",
+        "href": "https://app.sli.do/event/n7DeCdsQVeGUCAgFX4mX7n/live/questions",
+        "mobile": {
+          "x": 72,
+          "y": 350,
+          "w": 576,
+          "h": 576
+        }
+      },
+      {
+        "kind": "text",
+        "text": "Scan to ask a question",
+        "x": 72,
+        "y": 620,
+        "w": 1136,
+        "h": 38,
+        "size": 26,
+        "color": "#5F6368",
+        "bold": false,
+        "align": "center",
+        "mobile": {
+          "x": 36,
+          "y": 970,
+          "w": 648,
+          "h": 50,
+          "size": 32
+        }
+      }
+    ],
+    "notes": "Scan the supplied Slido code to submit questions, or tap the code to open Slido on this device.",
+    "scene": "portal"
+  },
+  {
     "name": "Intro",
     "elements": [
       {
@@ -152,7 +287,8 @@
         }
       }
     ],
-    "notes": "Introduce Zayn, Shawn and Edmund, using the three portraits and names provided by the user. Keep the introduction brief. Do not invent roles, qualifications or individual achievements."
+    "notes": "Introduce Zayn, Shawn and Edmund, using the three portraits and names provided by the user. Keep the introduction brief. Do not invent roles, qualifications or individual achievements.",
+    "scene": "window"
   },
   {
     "name": "Stories",
@@ -308,7 +444,8 @@
         }
       }
     ],
-    "notes": "The previous opening slide is now the second slide, with the two newly uploaded photos added. The totals are the presenter’s own claims from Hack.pptx; they are not independently verified. Tell one short story behind an award, prototype or demo."
+    "notes": "The previous opening slide is now the second slide, with the two newly uploaded photos added. The totals are the presenter’s own claims from Hack.pptx; they are not independently verified. Tell one short story behind an award, prototype or demo.",
+    "scene": "pipe"
   },
   {
     "name": "Brainstorm",
@@ -659,7 +796,8 @@
         }
       }
     ],
-    "notes": "Begin with the centred Hackathon tips title, then morph it upward to reveal Idea Brainstorming. The supplied Drake meme contrasts Idea from AI with Your own ideas and a light bulb. Brainstorm, notice problems in daily life and solve a niche problem. The second supplied meme sits in the bottom corner with a red ban overlay, warning against outsourcing your thinking to AI."
+    "notes": "Begin with the centred Hackathon tips title, then morph it upward to reveal Idea Brainstorming. The supplied Drake meme contrasts Idea from AI with Your own ideas and a light bulb. Brainstorm, notice problems in daily life and solve a niche problem. The second supplied meme sits in the bottom corner with a red ban overlay, warning against outsourcing your thinking to AI.",
+    "scene": "balloon"
   },
   {
     "name": "Idea",
@@ -843,7 +981,8 @@
         }
       }
     ],
-    "notes": "Based on uploaded screenshot 3 and Hack.pptx slide 2. Prefer a simple app over a cluttered dashboard. Go beyond a generic chatbot by delivering a useful result, using machine learning or AI plus IoT where relevant. This is the presenter’s advice, not a universal ban on chat interfaces. The small mint device visual is a supplied generated concept."
+    "notes": "Based on uploaded screenshot 3 and Hack.pptx slide 2. Prefer a simple app over a cluttered dashboard. Go beyond a generic chatbot by delivering a useful result, using machine learning or AI plus IoT where relevant. This is the presenter’s advice, not a universal ban on chat interfaces. The small mint device visual is a supplied generated concept.",
+    "scene": "chase"
   },
   {
     "name": "Build",
@@ -1021,7 +1160,8 @@
         }
       }
     ],
-    "notes": "Based on uploaded screenshot 4. The two original phone-prototype photographs were recovered from Hack.pptx rather than taking a screenshot of a screenshot. Show the enclosure, then the internals, and explain the useful task that really works."
+    "notes": "Based on uploaded screenshot 4. The two original phone-prototype photographs were recovered from Hack.pptx rather than taking a screenshot of a screenshot. Show the enclosure, then the internals, and explain the useful task that really works.",
+    "scene": "spring"
   },
   {
     "name": "Showcase",
@@ -1046,7 +1186,8 @@
         }
       }
     ],
-    "notes": "Project Showcase section divider. Show the projects before moving into UI and slide design."
+    "notes": "Project Showcase section divider. Show the projects before moving into UI and slide design.",
+    "scene": "bowling"
   },
   {
     "name": "Demo",
@@ -1140,7 +1281,8 @@
         }
       }
     ],
-    "notes": "Start with the centred title, then morph it upward to reveal one large bad UI and one large bad slide. Next examples swipes the second pair to the front; Previous examples swipes back. Touch swiping and arrow keys inside the gallery also work. Screenshots remain intact and borderless. Click a screenshot for a full-screen view; Escape returns."
+    "notes": "Start with the centred title, then morph it upward to reveal one large bad UI and one large bad slide. Next examples swipes the second pair to the front; Previous examples swipes back. Touch swiping and arrow keys inside the gallery also work. Screenshots remain intact and borderless. Click a screenshot for a full-screen view; Escape returns.",
+    "scene": "ufo"
   },
   {
     "name": "Design",
@@ -1226,7 +1368,8 @@
         }
       }
     ],
-    "notes": "Show one supplied Good UI picture at a time and swipe between the illustrated housemate dashboard and the sign-to-voice app. This presentation itself is the good-slide example. The first click anywhere on this slide pastes a playful Good Slide — Certified badge into the top-right corner with a stamp animation; this is a workshop joke, not an external certification. Advance again to continue. There is no Good slides heading or placeholder."
+    "notes": "Show one supplied Good UI picture at a time and swipe between the illustrated housemate dashboard and the sign-to-voice app. This presentation itself is the good-slide example. The first click anywhere on this slide pastes a playful Good Slide — Certified badge into the top-right corner with a stamp animation; this is a workshop joke, not an external certification. Advance again to continue. There is no Good slides heading or placeholder.",
+    "scene": "portal"
   },
   {
     "name": "Pitch",
@@ -1403,7 +1546,8 @@
         }
       }
     ],
-    "notes": "Start with the centred code title. Advance once to morph the title to the top and reveal both pace memes on the same slide. Advance again for judging criteria. The displayed JavaScript is syntactically valid when Pitch and Presentation_Video are defined booleans and pace is a defined string. The first meme corresponds to pace === \"Too Slow\" and the second to pace === \"Too Fast\". The else branch is the comfortable pace. The second picture’s blank margins are cropped in the layout; the original file is preserved."
+    "notes": "Start with the centred code title. Advance once to morph the title to the top and reveal both pace memes on the same slide. Advance again for judging criteria. The displayed JavaScript is syntactically valid when Pitch and Presentation_Video are defined booleans and pace is a defined string. The first meme corresponds to pace === \"Too Slow\" and the second to pace === \"Too Fast\". The else branch is the comfortable pace. The second picture’s blank margins are cropped in the layout; the original file is preserved.",
+    "scene": "rocket"
   },
   {
     "name": "Criteria",
@@ -1547,7 +1691,8 @@
         }
       }
     ],
-    "notes": "Match the pitch and presentation video to the actual judging criteria. Give each criterion clear evidence. Explain the problem, the solution and the result in language a new listener can follow. Rehearse with the event’s actual time limit."
+    "notes": "Match the pitch and presentation video to the actual judging criteria. Give each criterion clear evidence. Explain the problem, the solution and the result in language a new listener can follow. Rehearse with the event’s actual time limit.",
+    "scene": "hole"
   },
   {
     "name": "Challenge",
@@ -1637,7 +1782,69 @@
         }
       }
     ],
-    "notes": "Set the theme, judging criteria and Gemini connection in the presenter dashboard. The saved theme appears above the large central QR code; leave it blank until ready. Participants scan and submit. Press the GDG Reveal rankings button to analyse all ideas and reveal the top three with the existing countdown and podium inside the presentation. It requires at least three ideas and a real Gemini connection. Existing ranked results can be shown again without re-analysing. Open dashboard plays the dinosaur warp-pipe jump, then opens the public title wall. Presenter controls stay at /host."
+    "notes": "Set the theme, judging criteria and Gemini connection in the presenter dashboard. The saved theme appears above the large central QR code; leave it blank until ready. Participants scan and submit. Press the GDG Reveal rankings button to analyse all ideas and reveal the top three with the existing countdown and podium inside the presentation. It requires at least three ideas and a real Gemini connection. Existing ranked results can be shown again without re-analysing. Open dashboard plays the dinosaur warp-pipe jump, then opens the public title wall. Presenter controls stay at /host.",
+    "scene": "pipe"
+  },
+  {
+    "name": "Questions",
+    "elements": [
+      {
+        "kind": "text",
+        "text": "Slido Q&A",
+        "x": 72,
+        "y": 117,
+        "w": 1136,
+        "h": 83,
+        "size": 64,
+        "color": "#111315",
+        "bold": true,
+        "align": "center",
+        "mobile": {
+          "x": 36,
+          "y": 240,
+          "w": 648,
+          "h": 90,
+          "size": 64
+        }
+      },
+      {
+        "kind": "image",
+        "file": "assets/slido-qa.png",
+        "x": 440,
+        "y": 215,
+        "w": 400,
+        "h": 400,
+        "alt": "Slido Q&A QR code",
+        "href": "https://app.sli.do/event/n7DeCdsQVeGUCAgFX4mX7n/live/questions",
+        "mobile": {
+          "x": 72,
+          "y": 350,
+          "w": 576,
+          "h": 576
+        }
+      },
+      {
+        "kind": "text",
+        "text": "Scan to ask a question",
+        "x": 72,
+        "y": 620,
+        "w": 1136,
+        "h": 38,
+        "size": 26,
+        "color": "#5F6368",
+        "bold": false,
+        "align": "center",
+        "mobile": {
+          "x": 36,
+          "y": 970,
+          "w": 648,
+          "h": 50,
+          "size": 32
+        }
+      }
+    ],
+    "notes": "Scan the supplied Slido code to submit questions, or tap the code to open Slido on this device.",
+    "scene": "finish"
   },
   {
     "name": "Thanks",
@@ -1655,57 +1862,128 @@
         "align": "center",
         "mobile": {
           "x": 36,
-          "y": 230,
+          "y": 210,
           "w": 648,
-          "h": 140,
-          "size": 96
+          "h": 120,
+          "size": 88
         }
       },
       {
         "kind": "firework",
-        "x": 180,
-        "y": 285,
-        "w": 240,
-        "h": 260,
+        "x": 390,
+        "y": 355,
+        "w": 140,
+        "h": 160,
         "delay": 0,
         "mobile": {
-          "x": 0,
-          "y": 440,
-          "w": 220,
-          "h": 240
+          "x": 80,
+          "y": 360,
+          "w": 180,
+          "h": 200
         }
       },
       {
         "kind": "firework",
-        "x": 860,
-        "y": 285,
-        "w": 240,
-        "h": 260,
+        "x": 750,
+        "y": 355,
+        "w": 140,
+        "h": 160,
         "delay": 0.35,
         "mobile": {
-          "x": 500,
-          "y": 440,
-          "w": 220,
-          "h": 240
+          "x": 460,
+          "y": 360,
+          "w": 180,
+          "h": 200
         }
       },
       {
         "kind": "image",
         "file": "assets/black-cat-cat-meme.gif",
         "x": 480,
-        "y": 267,
+        "y": 290,
         "w": 320,
         "h": 320,
         "alt": "The supplied animated black cat celebrating",
         "chroma": true,
         "mobile": {
-          "x": 150,
-          "y": 470,
-          "w": 420,
-          "h": 420
+          "x": 244,
+          "y": 350,
+          "w": 232,
+          "h": 232
+        }
+      },
+      {
+        "kind": "text",
+        "text": "Attendance Form",
+        "x": 72,
+        "y": 228,
+        "w": 300,
+        "h": 42,
+        "size": 32,
+        "color": "#4285F4",
+        "bold": true,
+        "align": "center",
+        "mobile": {
+          "x": 36,
+          "y": 660,
+          "w": 306,
+          "h": 52,
+          "size": 32
+        }
+      },
+      {
+        "kind": "image",
+        "file": "assets/attendance-form.png",
+        "x": 72,
+        "y": 282,
+        "w": 300,
+        "h": 300,
+        "alt": "Attendance Form QR code",
+        "href": "https://docs.google.com/forms/d/e/1FAIpQLSd-fgXD_PRemaViyEM3E3se8KbRnYauMPQdybBOfYvnhtNXcg/viewform",
+        "mobile": {
+          "x": 36,
+          "y": 728,
+          "w": 306,
+          "h": 306
+        }
+      },
+      {
+        "kind": "text",
+        "text": "Feedback Form",
+        "x": 908,
+        "y": 228,
+        "w": 300,
+        "h": 42,
+        "size": 32,
+        "color": "#34A853",
+        "bold": true,
+        "align": "center",
+        "mobile": {
+          "x": 378,
+          "y": 660,
+          "w": 306,
+          "h": 52,
+          "size": 32
+        }
+      },
+      {
+        "kind": "image",
+        "file": "assets/feedback-form.png",
+        "x": 908,
+        "y": 282,
+        "w": 300,
+        "h": 300,
+        "alt": "Feedback Form QR code",
+        "href": "https://docs.google.com/forms/d/e/1FAIpQLSfBSBVqblbEIXMo8n4AJDuWOeI9ReD15H6wacKMzswZeALMvg/viewform",
+        "mobile": {
+          "x": 378,
+          "y": 728,
+          "w": 306,
+          "h": 306
         }
       }
     ],
-    "notes": "Thank the audience. The original cat GIF keeps its animation, with its green background removed by a live chroma-key filter. GDG-coloured fireworks play on either side of the cat. The Chrome dinosaur keeps its trophy below without the earlier surrounding confetti."
+    "notes": "Thank the audience. Scan the separately labelled Attendance Form and Feedback Form codes; tapping either QR opens its matching form. The original cat GIF and side fireworks keep celebrating. The Chrome dinosaur keeps its trophy below.",
+    "scene": "finish"
   }
 ]

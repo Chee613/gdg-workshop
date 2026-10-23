@@ -19,7 +19,25 @@ def photo(source, x, y, w, h, alt):
 def sticker(name, x, y, w=120, h=120):
     return image('sticker-'+name+'.png', x, y, w, h, 'Soft 3D '+name+' sticker', sticker=True)
 
+SLIDO = 'https://app.sli.do/event/n7DeCdsQVeGUCAgFX4mX7n/live/questions'
+ATTENDANCE = 'https://docs.google.com/forms/d/e/1FAIpQLSd-fgXD_PRemaViyEM3E3se8KbRnYauMPQdybBOfYvnhtNXcg/viewform'
+FEEDBACK = 'https://docs.google.com/forms/d/e/1FAIpQLSfBSBVqblbEIXMo8n4AJDuWOeI9ReD15H6wacKMzswZeALMvg/viewform'
+
+def slido_slide(name):
+    return dict(name=name, elements=[
+        dict(text('Slido Q&A',72,117,1136,83,64,INK,True),align='center'),
+        image('slido-qa.png',440,215,400,400,'Slido Q&A QR code',href=SLIDO),
+        dict(text('Scan to ask a question',72,620,1136,38,26,GRAY),align='center')],
+        notes='Scan the supplied Slido code to submit questions, or tap the code to open Slido on this device.')
+
 slides = [
+ dict(name='Cover',elements=[
+    text('Beginner Series:',72,130,1136,48,32,BLUE,True),
+    text('Hackathon Masterclass',72,210,1136,96,76,INK,True),
+    text('& Hackathon Project Sharing',72,310,1136,86,62,INK,True),
+    dict(kind='coverControls',x=390,y=485,w=500,h=56)],
+    notes='Welcome to Beginner Series: Hackathon Masterclass & Hackathon Project Sharing. The cover dinosaur can watch TV, play Dino Run or nap. The activity buttons change only the cover scene. Advance to Slido Q&A when ready.'),
+ slido_slide('Slido'),
  dict(name='Intro', elements=[
     text('Meet the builders.',72,117,1110,83,68,INK,True),
     text('Hackathon masterclass',76,208,1080,40,28,GRAY),
@@ -135,17 +153,25 @@ slides = [
     dict(text('',265,608,750,40,18,GRAY),align='center',liveStatus=True),
     dict(kind='link',text='Open dashboard',href='/board',dashboard=True,x=72,y=603,w=190,h=40)],
     notes='Set the theme, judging criteria and Gemini connection in the presenter dashboard. The saved theme appears above the large central QR code; leave it blank until ready. Participants scan and submit. Press the GDG Reveal rankings button to analyse all ideas and reveal the top three with the existing countdown and podium inside the presentation. It requires at least three ideas and a real Gemini connection. Existing ranked results can be shown again without re-analysing. Open dashboard plays the dinosaur warp-pipe jump, then opens the public title wall. Presenter controls stay at /host.'),
+ slido_slide('Questions'),
  dict(name='Thanks', elements=[
     dict(text('Thank You',72,117,1136,132,100,INK,True),align='center'),
-    dict(kind='firework',x=180,y=285,w=240,h=260,delay=0),
-    dict(kind='firework',x=860,y=285,w=240,h=260,delay=.35),
-    image('black-cat-cat-meme.gif',480,267,320,320,'The supplied animated black cat celebrating',chroma=True)],
-    notes='Thank the audience. The original cat GIF keeps its animation, with its green background removed by a live chroma-key filter. GDG-coloured fireworks play on either side of the cat. The Chrome dinosaur keeps its trophy below without the earlier surrounding confetti.')
+    dict(kind='firework',x=390,y=355,w=140,h=160,delay=0),
+    dict(kind='firework',x=750,y=355,w=140,h=160,delay=.35),
+    image('black-cat-cat-meme.gif',480,290,320,320,'The supplied animated black cat celebrating',chroma=True),
+    dict(text('Attendance Form',72,228,300,42,32,BLUE,True),align='center'),
+    image('attendance-form.png',72,282,300,300,'Attendance Form QR code',href=ATTENDANCE),
+    dict(text('Feedback Form',908,228,300,42,32,GREEN,True),align='center'),
+    image('feedback-form.png',908,282,300,300,'Feedback Form QR code',href=FEEDBACK)],
+    notes='Thank the audience. Scan the separately labelled Attendance Form and Feedback Form codes; tapping either QR opens its matching form. The original cat GIF and side fireworks keep celebrating. The Chrome dinosaur keeps its trophy below.')
 ]
 
 # Portrait positions reuse the same elements, photos, galleries and click-to-reveal steps.
 # Each tuple is x, y, width, height, and optional font size on a 720 x 1280 canvas.
 portrait = {
+ 'Cover': [(36,216,648,52,36),(36,305,648,190,76),(36,510,648,190,64),(36,1040,648,88)],
+ 'Slido': [(36,240,648,90,64),(72,350,576,576),(36,970,648,50,32)],
+ 'Questions': [(36,240,648,90,64),(72,350,576,576),(36,970,648,50,32)],
  'Intro': [(36,210,648,92,64),(36,312,648,46,34),
     (36,375,282,244),(36,638,282,244),(36,901,282,244),
     (354,470,330,58,44),(354,733,330,58,44),(354,996,330,58,44)],
@@ -174,9 +200,14 @@ portrait = {
     (36,834,648,58,42),(36,928,648,58,42),(36,1022,530,58,42),(572,1010,104,134)],
  'Challenge': [(36,220,648,116,48),(88,348,544,544),(110,930,500,88),
     (36,1032,648,90,30),(196,1136,328,82)],
- 'Thanks': [(36,230,648,140,96),(0,440,220,240),(500,440,220,240),(150,470,420,420)]
+ 'Thanks': [(36,210,648,120,88),(80,360,180,200),(460,360,180,200),(244,350,232,232),
+    (36,660,306,52,32),(36,728,306,306),(378,660,306,52,32),(378,728,306,306)]
 }
+scenes = dict(Cover='window',Slido='portal',Intro='window',Stories='pipe',Brainstorm='balloon',
+    Idea='chase',Build='spring',Showcase='bowling',Demo='ufo',Design='portal',Pitch='rocket',
+    Criteria='hole',Challenge='pipe',Questions='finish',Thanks='finish')
 for slide in slides:
+    slide['scene'] = scenes[slide['name']]
     assert len(slide['elements']) == len(portrait[slide['name']])
     for element, rect in zip(slide['elements'], portrait[slide['name']]):
         element['mobile'] = dict(zip(('x','y','w','h','size'),rect))
@@ -187,4 +218,4 @@ for slide in slides:
 for label,file,color in [('UI example','good-ui-slot.svg',BLUE),('Slide example','good-slide-slot.svg',GREEN),('Bad UI example','bad-ui-slot.svg',RED),('Bad slide example','bad-slide-slot.svg',YELLOW)]:
     frame = '' if file.startswith('good-') else f'<rect x="2" y="2" width="542" height="298" rx="15" fill="#FAFBFD" stroke="{color}" stroke-width="2" stroke-dasharray="8 7"/>'
     (OUT/'assets'/file).write_text(f'''<svg xmlns="http://www.w3.org/2000/svg" width="546" height="302" viewBox="0 0 546 302">{frame}<rect x="239" y="92" width="68" height="52" rx="6" fill="none" stroke="#BDC1C6" stroke-width="3"/><circle cx="257" cy="108" r="6" fill="#BDC1C6"/><path d="M244 137L262 119L275 132L287 117L302 137" fill="none" stroke="#BDC1C6" stroke-width="3"/><text x="273" y="198" text-anchor="middle" font-family="Arial" font-size="25" fill="#5F6368">{label}</text></svg>''',encoding='utf-8')
-print('Prepared twelve slides with Good UI pictures and a certification stamp.')
+print('Prepared fifteen slides with an interactive cover, Slido Q&A and closing forms.')

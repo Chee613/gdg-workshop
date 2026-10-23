@@ -3,7 +3,7 @@ import {createRoot} from 'react-dom/client';
 import {Player} from '@remotion/player';
 import {Easing, interpolate, useCurrentFrame, useVideoConfig} from 'remotion';
 
-const rest=[130,130,190,310,130,190,190,130,190,190,130,580], names=window.gdgStages;
+const names=window.gdgStages,rest=names.map(name=>({Cover:535,Brainstorm:190,Idea:310,Showcase:190,Demo:190,Pitch:190,Criteria:190,Questions:190,Thanks:580})[name]??130);
 const asset=name=>new URL(`assets/${name}`,document.baseURI).href;
 const at=(t,times,values,easing)=>interpolate(t,times,values,{extrapolateLeft:'clamp',extrapolateRight:'clamp',...(easing?{easing}:{})});
 
@@ -74,10 +74,41 @@ function Trapdoor({x,open,opacity}){
  </svg>;
 }
 
-function ArcadeScene({phase,kind,from,to,direction}){
+function CoverLounge({activity,seconds}){
+ const jump=Math.max(0,Math.sin((seconds%1.8)/1.8*Math.PI*2))*17;
+ return <svg className="cover-lounge" role="img" aria-label={activity==='sleep'?'Dinosaur taking a nap':activity==='play'?'Dinosaur playing Dino Run on TV':'Dinosaur watching TV'} viewBox="0 0 340 154" style={{position:'absolute',left:480,top:550,width:340,height:154}}>
+  <rect x="24" y="105" width="108" height="38" rx="12" fill="#4285F4"/>
+  <rect x="8" y="72" width="40" height="65" rx="15" fill="#D2E3FC" stroke="#4285F4" strokeWidth="3"/>
+  <path d="M37 143V154M116 143V154" stroke="#174EA6" strokeWidth="5"/>
+  <path d="M228 16L218 3M244 16L255 2" stroke="#5F6368" strokeWidth="3" strokeLinecap="round"/>
+  <rect x="188" y="18" width="144" height="104" rx="13" fill="white" stroke="#111315" strokeWidth="4"/>
+  <rect x="199" y="29" width="122" height="71" rx="5" fill={activity==='sleep'?'#F1F3F4':'#E8F0FE'}/>
+  <path d="M218 122L208 143M300 122L310 143M197 147H324" stroke="#111315" strokeWidth="4" strokeLinecap="round"/>
+  <circle cx="261" cy="111" r="3" fill={activity==='sleep'?'#DADCE0':'#34A853'}/>
+  {activity==='watch'&&<>
+   {['#4285F4','#EA4335','#FBBC04','#34A853'].map((color,i)=><rect key={color} x={207+i*28} y={57-Math.sin(seconds*2+i)*7} width="22" height={34+Math.sin(seconds*2+i)*7} rx="4" fill={color}/>)}
+   <text x="260" y="46" textAnchor="middle" fontFamily="Outfit,sans-serif" fontSize="11" fill="#174EA6">GDG TV</text>
+  </>}
+  {activity==='play'&&<>
+   <path d="M202 94H318" stroke="#5F6368"/>
+   <image href={asset(`dino-run-${Math.floor(seconds*10)%2+1}.png`)} x="211" y={65-jump} width="25" height="28" style={{imageRendering:'pixelated'}}/>
+   <image href={asset('cactus.png')} x={307-(seconds*54)%66} y="74" width="13" height="20" style={{imageRendering:'pixelated'}}/>
+   <rect x="119" y="118" width="43" height="23" rx="10" fill="#111315"/>
+   <path d="M127 125V135M122 130H132" stroke="white" strokeWidth="2"/>
+   <circle cx="149" cy="128" r="3" fill="#EA4335"/><circle cx="155" cy="133" r="3" fill="#FBBC04"/>
+  </>}
+  {activity==='sleep'&&<>
+   <path d="M270 46A18 18 0 1 0 274 77A17 17 0 0 1 270 46Z" fill="#4285F4"/>
+   <text x="75" y={38-Math.sin(seconds*1.5)*4} fontFamily="Outfit,sans-serif" fontWeight="700" fontSize="25" fill="#4285F4" opacity={.65+Math.sin(seconds*1.5)*.25}>z Z</text>
+  </>}
+ </svg>;
+}
+
+function ArcadeScene({phase,kind,from,to,direction,activity='watch'}){
  const frame=useCurrentFrame(),{durationInFrames,fps}=useVideoConfig(),t=frame/(durationInFrames-1)*.8;
  const exiting=phase==='exit', entering=phase==='enter';
  const champion=to===names.length-1&&!exiting;
+ const coverIdle=phase==='idle'&&names[to]==='Cover',seconds=frame/fps;
  const welcome=exiting&&kind==='window'&&from===0&&to===1;
  let x=rest[exiting?from:to],y=62,facing=1,action='idle',pipe=null,chaser=null,board=null,clip=false,surprise=false;
  let size=1,opacity=1,rotation=0,ufo=null,beam=0,portal=null,portalOpen=1,rocket=null,hole=null,balloons=null,bowling=null;
@@ -176,10 +207,14 @@ function ArcadeScene({phase,kind,from,to,direction}){
   y=35-(entering?25*Math.sin(at(t,[.35,.65],[0,Math.PI])):0);
   action=entering&&t<.35?'run':'champion';
  }
+ if(coverIdle){x=rest[to];y=14;action=`cover-${activity}`;rotation=activity==='sleep'?-10:0;}
  const running=['run','flee','skid'].includes(action);
+ const dinoWidth=champion?60:coverIdle?78:welcome?at(t,[0,.08],[78,35]):35;
+ const dinoHeight=champion?65:coverIdle?86:welcome?at(t,[0,.08],[86,38]):38;
  return <>
   <div aria-hidden="true" style={{position:'absolute',left:0,top:704,width:1280,height:2,background:'#DADCE0'}}/>
   <div aria-hidden="true" style={{position:'absolute',left:0,top:710,width:1280,height:3,backgroundImage:'repeating-linear-gradient(90deg,transparent 0 28px,#E8EAED 28px 32px,transparent 32px 75px)'}}/>
+  {coverIdle&&<CoverLounge activity={activity} seconds={seconds}/>}
   {board!==null&&<div className="springboard" aria-label="Springboard" style={{position:'absolute',left:592,top:686+board*7,width:60,height:18-board*7,borderBottom:'4px solid #4285F4',borderTop:'6px solid #EA4335',background:'repeating-linear-gradient(135deg,transparent 0 6px,#5F6368 6px 9px,transparent 9px 13px)'}}/>}
   {chaser!==null&&<PacMan x={chaser} direction={direction} t={t}/>}
   {ufo!==null&&<Ufo x={ufo} beam={beam} t={t}/>}
@@ -205,7 +240,7 @@ function ArcadeScene({phase,kind,from,to,direction}){
   <div style={{position:'absolute',inset:0,...(clip?{clipPath:'inset(0 0 68px 0)'}:{})}}>
    <img id="arcade-dino" src={asset(running?`dino-run-${Math.floor(welcome?frame/fps*10:t*14)%2+1}.png`:'dinosaur.png')}
     alt={`Dinosaur in ${names[exiting?from:to]}`} data-action={action} data-x={x} data-y={y} data-size={size} data-frame={frame}
-    style={{position:'absolute',left:x,top:604+y,width:champion?60:35,height:champion?65:38,imageRendering:'pixelated',objectFit:'contain',scale:`${facing*size} ${size}`,opacity,rotate:`${action==='launch'?direction*-16:rotation}deg`}}/>
+    style={{position:'absolute',left:x,top:604+y-(welcome?dinoHeight-38:0),width:dinoWidth,height:dinoHeight,imageRendering:'pixelated',objectFit:'contain',scale:`${facing*size} ${size}`,opacity,rotate:`${action==='launch'?direction*-16:rotation}deg`}}/>
   </div>
   {surprise&&<span className="surprise" aria-label="Dinosaur is surprised" style={{position:'absolute',left:x+12,top:628,font:'bold 27px monospace',color:'#EA4335'}}>!</span>}
   {pipe!==null&&<Pipe x={pipe}/>}
@@ -217,25 +252,28 @@ function ArcadePlayer(){
  const player=useRef(null),pending=useRef(null),serial=useRef(0),lastFrame=useRef(59),host=document.getElementById('dino-motion');
  const initial=Math.max(0,names.indexOf(document.querySelector('.slide.active').getAttribute('aria-label')));
  const [job,setJob]=useState({phase:'idle',kind:'window',from:initial,to:initial,direction:1,id:0});
- const durationInFrames=job.phase==='exit'?(job.kind==='window'&&job.from===0&&job.to===1?270:108):60;
+ const [activity,setActivity]=useState('watch');
+ const coverIdle=job.phase==='idle'&&names[job.to]==='Cover',fps=60;
+ const durationInFrames=coverIdle?6*fps:job.phase==='exit'?(job.kind==='window'&&job.from===0&&job.to===1?4.5*fps:1.8*fps):fps;
  const complete=()=>{host.dataset.phase='idle';const resolve=pending.current;pending.current=null;resolve?.();};
  useEffect(()=>{
   // ponytail: the Player's ended event is the slide-change clock; no second timer to drift.
   player.current.addEventListener('ended',complete);
   window.arcadeTransition=options=>new Promise(resolve=>{pending.current=resolve;setJob({...options,id:++serial.current});});
   window.arcadeIdle=stage=>setJob({phase:'idle',kind:'window',from:stage,to:stage,direction:1,id:++serial.current});
+  window.setCoverActivity=activity=>{if(['watch','play','sleep'].includes(activity))setActivity(activity);};
   window.finishArcade=()=>{player.current.pause();player.current.seekTo(lastFrame.current);complete();};
   host.dataset.ready='true';
-  return()=>{player.current?.removeEventListener('ended',complete);delete window.arcadeTransition;delete window.arcadeIdle;delete window.finishArcade;};
+  return()=>{player.current?.removeEventListener('ended',complete);delete window.arcadeTransition;delete window.arcadeIdle;delete window.setCoverActivity;delete window.finishArcade;};
  },[]);
  useLayoutEffect(()=>{
   lastFrame.current=durationInFrames-1;
   player.current.pause();player.current.seekTo(0);host.dataset.phase=job.phase;host.dataset.scene=job.kind;
-  if(job.phase==='idle')return;
+  if(job.phase==='idle'&&!coverIdle)return;
   if(matchMedia('(prefers-reduced-motion: reduce)').matches){player.current.seekTo(lastFrame.current);complete();}else player.current.play();
  },[job]);
- return <Player ref={player} component={ArcadeScene} inputProps={job} durationInFrames={durationInFrames} compositionWidth={1280} compositionHeight={720} fps={60}
-  controls={false} autoPlay={false} loop={false} moveToBeginningWhenEnded={false} clickToPlay={false} doubleClickToFullscreen={false} spaceKeyToPlayOrPause={false}
+ return <Player ref={player} component={ArcadeScene} inputProps={{...job,activity}} durationInFrames={durationInFrames} compositionWidth={1280} compositionHeight={720} fps={fps}
+  controls={false} autoPlay={false} loop={coverIdle} moveToBeginningWhenEnded={false} clickToPlay={false} doubleClickToFullscreen={false} spaceKeyToPlayOrPause={false}
   style={{width:1280,height:720,backgroundColor:'transparent'}}/>;
 }
 

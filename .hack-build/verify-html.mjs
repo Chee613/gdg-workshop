@@ -14,18 +14,33 @@ page.on('pageerror',e=>errors.push(e.message));
 const active=()=>page.locator('.slide.active').getAttribute('aria-label');
 const settle=()=>page.waitForFunction(()=>document.body.dataset.transitioning!=='true'&&document.querySelector('#dino-motion')?.dataset.phase==='idle');
 try{
- await page.goto(base+'/Hackathon-Tips.html#intro');
+ await page.goto(base+'/Hackathon-Tips.html#cover');
  await page.waitForSelector('#dino-motion[data-ready="true"]');await page.evaluate(()=>document.fonts.ready);
  await page.waitForFunction(()=>[...document.images].every(i=>i.complete&&i.naturalWidth>0));
- assert.equal(await page.locator('.slide').count(),12);assert.equal(await page.locator('.slide-jump button').count(),12);
+ assert.equal(await page.locator('.slide').count(),15);assert.equal(await page.locator('.slide-jump button').count(),15);
+ assert.equal(await active(),'Cover');
+ assert.equal((await page.locator('.slide.active .copy').allTextContents()).join(' '),'Beginner Series: Hackathon Masterclass & Hackathon Project Sharing');
+ for(const [label,activity]of [['Dino Run','play'],['Nap','sleep'],['Watch TV','watch']]){
+  await page.getByRole('button',{name:label,exact:true}).click();
+  await page.waitForFunction(activity=>document.querySelector('#arcade-dino').dataset.action===`cover-${activity}`,activity);
+  assert.equal(await active(),'Cover','Cover activity controls do not advance the deck');
+  assert.equal(await page.getByRole('button',{name:label,exact:true}).getAttribute('aria-pressed'),'true');
+  await page.locator('.stage').screenshot({path:path.join(dir,`cover-${activity}.png`)});
+ }
+ await page.locator('.viewport').focus();await page.keyboard.press('ArrowRight');await settle();assert.equal(await active(),'Slido');
+ await page.keyboard.press('ArrowLeft');await settle();assert.equal(await active(),'Cover');
+ assert.ok(await page.locator('.cover-lounge').isVisible(),'Returning to the cover restores its interactive lounge');
+ for(const name of ['Slido','Questions'])assert.ok((await page.locator(`.slide[aria-label="${name}"] img[alt="Slido Q&A QR code"]`).getAttribute('src')).endsWith('slido-qa.png'));
+ assert.deepEqual(spec.slice(0,3).map(s=>s.name),['Cover','Slido','Intro']);
+ assert.deepEqual(spec.slice(-2).map(s=>s.name),['Questions','Thanks']);
  assert.equal(await page.locator('.slide-jump').textContent(),'');assert.equal(await page.locator('.sticker').count(),4);
  await page.setViewportSize({width:390,height:844});
  const rotate=page.getByRole('dialog',{name:'Rotate your phone',exact:true});
  await rotate.waitFor({timeout:3000});
  await page.screenshot({path:path.join(dir,'phone-rotate-prompt.png')});
- await page.keyboard.press('ArrowRight');assert.equal(await active(),'Intro','Rotate prompt does not advance slides');
+ await page.keyboard.press('ArrowRight');assert.equal(await active(),'Cover','Rotate prompt does not advance slides');
  await page.setViewportSize({width:844,height:390});await rotate.waitFor({state:'hidden'});
- assert.equal(await active(),'Intro','Rotating dismisses the prompt without navigating');
+ assert.equal(await active(),'Cover','Rotating dismisses the prompt without navigating');
  await page.setViewportSize({width:390,height:844});await rotate.waitFor();
  await rotate.getByRole('button',{name:'Continue in portrait',exact:true}).tap();await rotate.waitFor({state:'hidden'});
  await page.reload();await page.waitForSelector('#dino-motion[data-ready="true"]');await page.evaluate(()=>document.fonts.ready);
@@ -36,7 +51,7 @@ try{
  await page.waitForTimeout(100);
  const portrait=await page.locator('.stage').boundingBox();
  assert.ok(portrait.height>portrait.width*1.5,'Portrait phones get a tall slide instead of a tiny landscape canvas');
- assert.ok(await page.locator('.slide.active .heading').evaluate(el=>parseFloat(getComputedStyle(el).fontSize)*el.getBoundingClientRect().width/el.offsetWidth)>=30,'Phone headline stays readable');
+ assert.ok(await page.locator('.slide.active .heading').first().evaluate(el=>parseFloat(getComputedStyle(el).fontSize)*el.getBoundingClientRect().width/el.offsetWidth)>=30,'Phone headline stays readable');
  assert.ok((await page.getByRole('button',{name:'Go directly to Intro',exact:true}).boundingBox()).height>=43,'Phone navigation has finger-sized targets');
  await page.emulateMedia({reducedMotion:'reduce'});
  for(const slide of spec){
@@ -171,7 +186,7 @@ try{
  }
  assert.deepEqual(await page.locator('.slide[aria-label="Intro"] .copy').allTextContents(),['Meet the builders.','Hackathon masterclass','Zayn','Shawn','Edmund']);
  assert.equal(await page.locator('.slide[aria-label="Stories"] [src*="upload-"]').count(),2);
- assert.deepEqual(spec.slice(0,7).map(s=>s.name),['Intro','Stories','Brainstorm','Idea','Build','Showcase','Demo']);
+ assert.deepEqual(spec.slice(2,9).map(s=>s.name),['Intro','Stories','Brainstorm','Idea','Build','Showcase','Demo']);
  assert.equal(await page.locator('.slide[aria-label="Brainstorm"] [src$="brainstorm-drake.png"]').count(),1);
  assert.equal(await page.locator('.slide[aria-label="Brainstorm"] [aria-label^="Ban sign"]').count(),1);
  assert.equal(await page.locator('.slide[aria-label="Showcase"] .copy').textContent(),'Project Showcase');
@@ -197,13 +212,14 @@ try{
  const inactive=[];paceExample(false,false,'Too Slow',{log:value=>inactive.push(value)});assert.deepEqual(inactive,[]);
  assert.ok((await page.locator('.slide[aria-label="Criteria"] .copy').allTextContents()).includes('Judging criteria'));
  assert.ok((await page.locator('.slide[aria-label="Criteria"] .copy').allTextContents()).includes('Pitch / Presentation Video'));
- await page.getByRole('button',{name:'Go directly to Intro',exact:true}).click();
- for(const [i,scene]of ['window','pipe','balloon','chase','spring','bowling','ufo','portal','rocket','hole','finish'].entries()){
+ await page.getByRole('button',{name:'Go directly to Cover',exact:true}).click();
+ for(const [i,slide]of spec.slice(0,-1).entries()){
+  const scene=slide.scene;
   if(spec[i].certify){await page.mouse.click(1110,220);await settle();assert.equal(await active(),spec[i].name);}
   if(spec[i].buildTitle){await page.mouse.click(1110,220);await settle();assert.equal(await active(),spec[i].name);}
   await page.mouse.click(1110,220);assert.equal(await active(),spec[i].name,'Old slide stays through exit');
   await page.waitForFunction(scene=>document.querySelector('#dino-motion').dataset.scene===scene,scene);
-  if(scene==='window'){
+  if(scene==='window'&&i===0){
    const samples=await page.evaluate(async()=>{const points=[];while(document.querySelector('#dino-motion').dataset.phase==='exit'){const d=document.querySelector('#arcade-dino');points.push({x:+d.dataset.x,y:+d.dataset.y,frame:+d.dataset.frame,action:d.dataset.action});await new Promise(requestAnimationFrame);}return points;});
    assert.ok(samples.length>20&&samples.at(-1).frame>=260,'Cape run stays visible for around 4.5 seconds');
    assert.ok(samples.every(p=>p.y===62&&p.action==='run'),'Cape run stays on the ground without a final jump');
@@ -231,8 +247,8 @@ try{
    const feature={ufo:'.ufo',portal:'.teleport-portal',magnet:'.giant-magnet',rocket:'.rocket',hole:'.trapdoor',finish:'.finish-line'}[scene];
    assert.ok(await page.locator(feature).isVisible(),`${scene} has its own prop`);
    if(scene==='finish'){
-    const gate=await page.locator('.finish-line').boundingBox(),button=await page.locator('[data-rank]').boundingBox();
-    assert.ok(gate.x>button.x+button.width+100,'Finish gate is clear of the ranking button');
+    const gate=await page.locator('.finish-line').boundingBox();
+    assert.ok(gate.x>1000,'Finish gate stays to the far right of the closing Q&A');
    }
    await page.locator('.stage').screenshot({path:path.join(dir,`arcade-${scene}-exit.png`)});
    await page.waitForFunction(()=>document.querySelector('#dino-motion').dataset.phase==='enter');
@@ -271,7 +287,7 @@ try{
  assert.ok(await page.locator('.slide.active [src$="pace-too-slow.png"]').isVisible(),'Backward navigation keeps pitch revealed');
  await page.getByRole('button',{name:'Go directly to Challenge',exact:true}).click();
  await page.emulateMedia({reducedMotion:'reduce'});await page.mouse.click(100,400);await settle();assert.equal(await active(),'Criteria');
- await page.keyboard.press('Home');await settle();assert.equal(await active(),'Intro');
+ await page.keyboard.press('Home');await settle();assert.equal(await active(),'Cover');
  await page.keyboard.press('n');assert.ok(await page.locator('#speaker').isVisible());await page.keyboard.press('Escape');
  for(const [width,height]of [[390,844],[1920,1080]]){
   await page.setViewportSize({width,height});
@@ -282,7 +298,13 @@ try{
  await page.setViewportSize({width:1280,height:720});
  await page.getByRole('button',{name:'Go directly to Thanks',exact:true}).click();await settle();
  assert.equal(await active(),'Thanks');
- assert.deepEqual(await page.locator('.slide.active .copy').allTextContents(),['Thank You']);
+ assert.deepEqual(await page.locator('.slide.active .copy').allTextContents(),['Thank You','Attendance Form','Feedback Form']);
+ for(const [label,file]of [['Attendance Form','attendance-form.png'],['Feedback Form','feedback-form.png']]){
+  const code=page.locator(`.slide.active a[aria-label="Open ${label}"]`);
+  assert.ok((await code.getAttribute('href')).startsWith('https://docs.google.com/forms/d/e/'));
+  assert.ok((await code.locator('img').getAttribute('src')).endsWith(file));
+  assert.ok((await code.boundingBox()).width>=300,'Closing QR codes stay large enough to scan');
+ }
  assert.ok(await page.locator('.slide.active [src$="black-cat-cat-meme.gif"]').isVisible());
  assert.ok(await page.locator('.winner-trophy').isVisible());
  assert.equal(await page.locator('.winner-confetti').count(),0);
@@ -292,6 +314,6 @@ try{
  await page.locator('.stage').screenshot({path:path.join(dir,'thank-you-finale.png')});
  await page.keyboard.press('End');await settle();assert.equal(await active(),'Thanks');
  assert.deepEqual(errors,[]);
- await fs.writeFile(path.join(dir,'html-checks.json'),JSON.stringify({passed:true,slides:12,names:spec.map(s=>s.name),sourceImages:[...sources],checks:['all original photos','both uploads','named portraits','twelve direct pills','eleven different arcade transitions','both centred titles and click-to-reveal morphs','bad and good screenshot carousels with a certification stamp','two pace memes with matching labels','separate criteria slide','interrupted title morph','static pictures','text fit','notes','keyboard','reduced motion','responsive fit']},null,2));
- console.log('Passed: twelve slides, Hackathon title and trophy, three click-to-reveal Morphs, pace memes, text fit and all navigation.');
+ await fs.writeFile(path.join(dir,'html-checks.json'),JSON.stringify({passed:true,slides:15,names:spec.map(s=>s.name),sourceImages:[...sources],checks:['all original photos','both uploads','named portraits','fifteen direct pills','named arcade transitions','interactive cover activities','two supplied Slido codes','attendance and feedback codes','both centred titles and click-to-reveal morphs','bad and good screenshot carousels with a certification stamp','two pace memes with matching labels','separate criteria slide','interrupted title morph','static pictures','text fit','notes','keyboard','reduced motion','responsive fit']},null,2));
+ console.log('Passed: fifteen slides, interactive dino cover, two Slido Q&A slides, closing form codes, Morphs, text fit, phone layouts and navigation.');
 }finally{await browser.close();fixture.kill();}
