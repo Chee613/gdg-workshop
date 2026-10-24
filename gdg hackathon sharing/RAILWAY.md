@@ -15,11 +15,11 @@ In the service's **Variables** tab, add:
 
 | Variable | Value |
 |---|---|
-| `GEMINI_API_KEY` | Your Gemini API key |
+| `GEMINI_API_KEY` | Optional Gemini API key; manual scoring and ChatGPT CSV import work without it |
 | `WORKSHOP_HOST_PASSWORD` | A unique presenter password of at least 16 characters |
 | `GEMINI_MODEL` | Optional; defaults to `gemini-3.5-flash-lite` |
 
-Enter secrets directly in Railway. The service connects to Gemini at startup. Keep the generated password available for signing in; do not put it in participant links.
+Enter secrets directly in Railway. A configured Gemini key is available at startup. Keep the generated password available for signing in; do not put it in participant links. Both judging fallbacks work without a Gemini key; see the [judging guide](workshop/JUDGING.md).
 
 The container already sets `WORKSHOP_DATA_DIR=/data` and requires presenter authentication. Without a suitable password it refuses to start. The account name is always `presenter`.
 
@@ -48,13 +48,13 @@ Replace `YOUR-DOMAIN` with the generated domain:
 
 Open `/host` first. At the browser sign-in prompt, use **presenter** and the password you configured. Open the slides in the same browser session so the ranking button uses your presenter login. Participant pages remain public; keep presenter controls off the projector.
 
-The initial theme is **AI for Everyday Life**. Confirm the criteria in presenter controls and check that it says **Gemini key ready**.
+The initial theme is **AI for Everyday Life**. Confirm the criteria in presenter controls and choose a **Judging method**. For Gemini, check that it says **Gemini key ready**; the other two methods need no Gemini connection.
 
 ## 6. Rehearse
 
 1. Scan the deployed QR on a phone using mobile data. It should open the public participant form.
 2. Submit ideas from three separate browsers or private sessions. Confirm their titles appear on the board.
-3. From your signed-in presenter browser, press **Reveal rankings** on the challenge slide. This makes a real Gemini API request.
+3. In `/host`, close submissions and rehearse the selected judging method. Review the full ranking, then **Reveal top three**. Gemini analysis makes a real provider request; manual scoring and CSV import do not.
 4. Restart the Railway deployment and confirm the submissions remain saved.
 5. Start a new round before the actual workshop. Keep auto-deploys and planned edits out of the live session; a restart interrupts an active judging run.
 

@@ -1,6 +1,9 @@
 if(new URLSearchParams(location.search).has('embed'))document.body.classList.add('embedded-board');
 const page=document.body.dataset.page,$=id=>document.getElementById(id);
-let latest=null,initialized=false,wallKey='',boardKey='',countdownTimer;
+let latest=null,initialized=false,wallKey='',boardKey='',countdownTimer,manualRound=null,manualRubric='',manualDrafts={};
+let judgingMode='gemini';
+try{judgingMode=localStorage.getItem('gdg-judging-mode')||'gemini';}catch{}
+if(!['gemini','manual','imported'].includes(judgingMode))judgingMode='gemini';
 const phaseLabel={collecting:'Submissions open',closed:'Submissions closed',judging:'AI judging',ready:'Shortlist ready',revealed:'Top three revealed'};
 const node=(tag,text,className)=>{const e=document.createElement(tag);if(text!==undefined)e.textContent=text;if(className)e.className=className;return e;};
 async function request(path,data){const response=await fetch(path,data===undefined?{cache:'no-store'}:{method:'POST',headers:{'Content-Type':'application/json','X-Workshop-Host':'1'},body:JSON.stringify(data)});const result=await response.json();if(!response.ok)throw Error(result.error||'Please try again.');return result;}
@@ -91,24 +94,63 @@ function tickBubbles(time){
 if(page==='board'){addEventListener('resize',layoutBubbles);still.addEventListener('change',layoutBubbles);document.fonts.ready.then(layoutBubbles);}
 function renderHost(s){
  if(!initialized){$('theme').value=s.theme;$('criteria').value=s.criteria.map(c=>`${c.name} | ${c.weight}${c.guidance?` | ${c.guidance}`:''}`).join('\n');$('model').value=s.model;$('ai-details').open=!s.aiReady;initialized=true;}
+ $('judging-mode').value=judgingMode;
+ $('external-judging').hidden=judgingMode!=='imported';$('gemini-connection').hidden=judgingMode!=='gemini';
  $('count').textContent=s.count;$('phase').textContent=phaseLabel[s.phase];$('phase').classList.toggle('closed',s.phase!=='collecting');
  $('join-link').textContent=s.joinUrl;$('join-link').href=s.joinUrl;
  $('ai-status').textContent=s.aiReady?'Gemini key ready':'Connect Gemini';
- const busy=s.phase==='judging',evaluated=s.results.length>0;
+ const busy=s.phase==='judging',evaluated=s.results.length>0,closed=s.phase==='closed';
  $('collect').textContent=s.phase==='collecting'?'Close submissions':'Open submissions';$('collect').disabled=busy||evaluated;
- $('analyse').textContent=busy?'Analysing…':'Analyse all ideas';$('analyse').disabled=busy||s.count<3||!s.aiReady||evaluated;
+ $('analyse').hidden=judgingMode==='imported';
+ $('analyse').textContent=busy?'Analysing…':judgingMode==='manual'?'Calculate ranking':'Analyse all ideas';
+ $('analyse').disabled=busy||s.count<3||evaluated||(judgingMode==='manual'?!closed:!s.aiReady);
  $('reveal').disabled=s.phase!=='ready';$('new-round').disabled=busy;$('save').disabled=busy||evaluated;
- $('host-hint').textContent=busy?'Every submitted idea is being scored against the same rubric.':s.error||(!s.aiReady?'Add a Gemini key to enable AI judging. Ideas can be collected now.':s.count<3?'Collect at least three ideas, then analyse them together.':s.phase==='ready'?'Review the scores below, then reveal the podium.':s.phase==='revealed'?'The podium is live. Start a new round for another challenge.':'Ready when the room is. Analysing closes submissions.');
- const key=JSON.stringify(s.ideas);if(key!==wallKey){renderWall($('wall'),s.ideas);wallKey=key;}
+ $('judging-mode').disabled=busy||evaluated;$('import-file').disabled=busy||s.count>0||evaluated;
+ for(const id of ['export-markdown','export-csv','scores-file'])$(id).disabled=!closed||s.count<3||evaluated;
+ $('host-hint').textContent=busy?'Every idea is being scored against the same rubric.':s.error||(evaluated?'Review every score below, then reveal the top three.':judgingMode==='manual'?'Close submissions, enter a 0–10 score for every criterion, then calculate. Drafts stay in this browser.':judgingMode==='imported'?'Close submissions, export the complete prompt, then import one CSV row per idea.':!s.aiReady?'Connect Gemini or choose manual scoring / ChatGPT CSV import.':s.count<3?'Collect at least three ideas.':'Analysing closes submissions and sends all ideas in one request.');
+ const rubricKey=JSON.stringify(s.criteria),storageKey=`gdg-manual-${s.round}`;
+ if(manualRound!==s.round||manualRubric!==rubricKey){
+  manualRound=s.round;manualRubric=rubricKey;manualDrafts={};
+  try{const saved=JSON.parse(localStorage.getItem(storageKey)||'{}');if(saved.rubric===rubricKey)manualDrafts=saved.values||{};}catch{}
+ }
+ const key=JSON.stringify([s.ideas,s.criteria,s.round,judgingMode]);
+ if(key!==wallKey){
+  renderWall($('wall'),s.ideas);wallKey=key;
+  if(judgingMode==='manual')for(const [index,card]of [...$('wall').querySelectorAll('.idea-card')].entries()){
+   const idea=s.ideas[index],fields=node('div',undefined,'manual-scores');
+   s.criteria.forEach((criterion,j)=>{
+    const label=node('label',`${criterion.name} (${criterion.weight}%)`),input=node('input');
+    input.type='number';input.min='0';input.max='10';input.step='any';input.required=true;
+    input.dataset.idea=idea.id;input.dataset.criterion=j;input.setAttribute('aria-label',`${idea.title}: ${criterion.name}`);
+    input.value=manualDrafts[idea.id]?.[j]??'';label.title=criterion.guidance||'';label.append(input);fields.append(label);
+    input.addEventListener('input',()=>{
+     (manualDrafts[idea.id]??={})[j]=input.value;
+     try{localStorage.setItem(storageKey,JSON.stringify({rubric:rubricKey,values:manualDrafts}));}catch{}
+    });
+   });card.append(fields);
+  }
+ }
+ for(const input of document.querySelectorAll('.manual-scores input'))input.disabled=!closed||evaluated;
  $('review').hidden=!evaluated;
  if(evaluated){$('review-list').replaceChildren(...s.results.map((r,i)=>{const row=node('div',undefined,'review-row');row.append(node('span',`${r.total}/100`,'review-score'),node('b',`${i+1}. ${r.title}`),node('p',r.name==='Participant'?'':r.name),node('p',r.strength),node('p',`Improve: ${r.improve}`),node('p',s.criteria.map((c,j)=>`${c.name}: ${r.scores[j]}/10`).join(' · ')));return row;}));}
+}
+async function downloadJudging(path){
+ showError('');
+ try{
+  const response=await fetch(path,{cache:'no-store'});
+  if(!response.ok)throw Error((await response.json()).error||'Export failed.');
+  const url=URL.createObjectURL(await response.blob()),link=node('a');
+  link.href=url;link.download=`gdg-judging-round-${latest.round}.${path.endsWith('.md')?'md':'csv'}`;link.click();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+  $('judging-status').textContent=`Exported all ${latest.count} ideas with the saved rubric. Ask ChatGPT to follow the included CSV instructions.`;
+ }catch(error){showError(error.message);}
 }
 function renderJoin(s){$('theme').textContent=s.theme;rubric($('rubric'),s.criteria);$('submit').disabled=s.phase!=='collecting';$('join-status').textContent=s.phase==='collecting'?'':s.phase==='judging'?'The ideas are being judged.':s.phase==='revealed'?'The top three are on the live board.':'Submissions are closed. Watch the live board.';}
 function renderPodium(s){
  const content=$('board-content');content.replaceChildren();const hero=node('div',undefined,'hero');hero.append(node('h1','Your top three.'));content.append(hero);
  const podium=node('section',undefined,'podium');
  for(const i of [1,0,2]){const r=s.results[i];if(!r)continue;const winner=node('article',undefined,`winner ${i===0?'first':i===2?'third':'second'}`);winner.append(node('h3',r.title),node('div',r.name==='Participant'?'':r.name,'who'),node('p',r.strength));const step=node('div',undefined,'step');step.append(node('div',String(i+1),'place'),node('div',`${r.total}/100`,'score'));winner.append(step);podium.append(winner);}
- content.append(podium);$('ai-note').hidden=false;
+ content.append(podium);$('ai-note').hidden=false;$('ai-note').textContent=`${s.judgingSource==='manual'?'Host-scored':s.judgingSource==='imported'?'Imported scores':'AI'} shortlist · Same theme. Same criteria. Discuss the ideas together.`;
  if(still.matches)return;
  const confetti=node('div',undefined,'confetti');confetti.setAttribute('aria-hidden','true');content.append(confetti);
  const flights=[];
@@ -124,7 +166,7 @@ function renderPodium(s){
 }
 function renderBoard(s){clearTimeout(countdownTimer);const content=$('board-content');
  if(s.phase==='revealed'&&Date.now()/1000<s.revealAt){const remaining=Math.max(1,Math.ceil(s.revealAt-Date.now()/1000));content.replaceChildren();const message=node('section',undefined,'stage-message');message.append(node('h2','Here come your top three.'),node('div',remaining,'countdown'));content.append(message);boardKey='countdown';countdownTimer=setTimeout(()=>renderBoard(latest),100);return;}
- const key=JSON.stringify([s.phase,s.round,s.theme,s.criteria,s.ideas,s.results,s.revealAt]);if(key===boardKey)return;boardKey=key;$('ai-note').hidden=true;
+ const key=JSON.stringify([s.phase,s.round,s.theme,s.criteria,s.ideas,s.results,s.revealAt,s.judgingSource]);if(key===boardKey)return;boardKey=key;$('ai-note').hidden=true;
  if(s.phase==='revealed'){renderPodium(s);return;}
  if(s.phase==='judging'||s.phase==='ready'){content.replaceChildren();const message=node('section',undefined,'stage-message');const dots=node('div',undefined,'judging-dots');for(let i=0;i<4;i++)dots.append(node('i'));message.append(dots,node('h2',s.phase==='judging'?'Finding the standout ideas…':'The shortlist is ready.'),node('p',s.phase==='judging'?'Same theme. Same criteria.':'Waiting for the big reveal.','muted'));content.append(message);return;}
  if(!content.querySelector('.bubble-wall')||content.dataset.round!==String(s.round)){
@@ -145,8 +187,35 @@ async function action(path,data){showError('');try{await request(path,data);awai
 if(page==='host'){
  $('config-form').addEventListener('submit',async e=>{e.preventDefault();const criteria=$('criteria').value.split('\n').filter(line=>line.trim()).map(line=>{const [name,weight,...guidance]=line.split('|');return{name:name.trim(),weight:Number(weight?.trim()),guidance:guidance.join('|').trim()};});await action('/api/config',{theme:$('theme').value,criteria});});
  $('connect-form').addEventListener('submit',async e=>{e.preventDefault();if(await action('/api/connect',{key:$('api-key').value,model:$('model').value})){$('api-key').value='';$('ai-details').open=false;}});
+ $('judging-mode').addEventListener('change',()=>{judgingMode=$('judging-mode').value;try{localStorage.setItem('gdg-judging-mode',judgingMode);}catch{}renderHost(latest);});
+ $('import-file').addEventListener('change',async e=>{
+  const file=e.target.files[0];if(!file)return;
+  try{
+   if(file.size>12*1024*1024)throw Error('Choose an export smaller than 12 MB.');
+   const data=JSON.parse(await file.text());initialized=false;wallKey='';await action('/api/import',data);
+  }catch(error){showError(error instanceof SyntaxError?'Choose a valid ideas export JSON file.':error.message);}
+  e.target.value='';
+ });
+ $('scores-file').addEventListener('change',async e=>{
+  const file=e.target.files[0];if(!file)return;
+  try{
+   if(file.size>12*1024*1024)throw Error('Choose a CSV smaller than 12 MB.');
+   if(await action('/api/import-scores',{csv:await file.text()}))$('judging-status').textContent='All scores imported. Review the full ranking below, then reveal the top three.';
+  }catch(error){showError(error.message);}
+  e.target.value='';
+ });
+ $('export-markdown').addEventListener('click',()=>downloadJudging('/api/judging.md'));
+ $('export-csv').addEventListener('click',()=>downloadJudging('/api/judging.csv'));
  $('collect').addEventListener('click',()=>action('/api/collect',{open:latest.phase!=='collecting'}));
- $('analyse').addEventListener('click',async()=>{$('analyse').disabled=true;await action('/api/rank',{});});
+ $('analyse').addEventListener('click',async()=>{
+  const data={mode:judgingMode};
+  if(judgingMode==='manual'){
+   const inputs=[...document.querySelectorAll('.manual-scores input')];
+   const invalid=inputs.find(input=>!input.reportValidity());if(invalid){invalid.focus();return;}
+   data.ratings=latest.ideas.map(idea=>({id:idea.id,scores:latest.criteria.map((_,j)=>Number(inputs.find(input=>input.dataset.idea===String(idea.id)&&input.dataset.criterion===String(j)).value)),strength:'Host-scored against the saved rubric.',improve:'Discuss the next validation step.'}));
+  }
+  $('analyse').disabled=true;await action('/api/rank',data);
+ });
  $('reveal').addEventListener('click',async()=>{if(await action('/api/reveal',{}))window.open('/board','gdg-live-board');});
  $('new-round').addEventListener('click',async()=>{if(confirm('Start a new round? Current ideas stay archived on this computer.')){initialized=false;wallKey='';await action('/api/new-round',{});}});
 }else if(page==='join'){
