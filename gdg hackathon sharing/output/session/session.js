@@ -83,7 +83,7 @@ function tickBubbles(time){
 }
 if(page==='board'){addEventListener('resize',layoutBubbles);still.addEventListener('change',layoutBubbles);document.fonts.ready.then(layoutBubbles);}
 function renderHost(s){
- if(!initialized){$('theme').value=s.theme;$('criteria').value=s.criteria.map(c=>`${c.name} | ${c.weight}`).join('\n');$('model').value=s.model;$('ai-details').open=!s.aiReady;initialized=true;}
+ if(!initialized){$('theme').value=s.theme;$('criteria').value=s.criteria.map(c=>`${c.name} | ${c.weight}${c.guidance?` | ${c.guidance}`:''}`).join('\n');$('model').value=s.model;$('ai-details').open=!s.aiReady;initialized=true;}
  $('count').textContent=s.count;$('phase').textContent=phaseLabel[s.phase];$('phase').classList.toggle('closed',s.phase!=='collecting');
  $('join-link').textContent=s.joinUrl;$('join-link').href=s.joinUrl;
  $('ai-status').textContent=s.aiReady?'Gemini key ready':'Connect Gemini';
@@ -117,7 +117,7 @@ function renderPodium(s){
 }
 function renderBoard(s){clearTimeout(countdownTimer);const content=$('board-content');
  if(s.phase==='revealed'&&Date.now()/1000<s.revealAt){const remaining=Math.max(1,Math.ceil(s.revealAt-Date.now()/1000));content.replaceChildren();const message=node('section',undefined,'stage-message');message.append(node('h2','Here come your top three.'),node('div',remaining,'countdown'));content.append(message);boardKey='countdown';countdownTimer=setTimeout(()=>renderBoard(latest),100);return;}
- const key=JSON.stringify([s.phase,s.round,s.ideas,s.results,s.revealAt]);if(key===boardKey)return;boardKey=key;$('ai-note').hidden=true;
+ const key=JSON.stringify([s.phase,s.round,s.theme,s.criteria,s.ideas,s.results,s.revealAt]);if(key===boardKey)return;boardKey=key;$('ai-note').hidden=true;
  if(s.phase==='revealed'){renderPodium(s);return;}
  if(s.phase==='judging'||s.phase==='ready'){content.replaceChildren();const message=node('section',undefined,'stage-message');const dots=node('div',undefined,'judging-dots');for(let i=0;i<4;i++)dots.append(node('i'));message.append(dots,node('h2',s.phase==='judging'?'Finding the standout ideas…':'The shortlist is ready.'),node('p',s.phase==='judging'?'Same theme. Same criteria.':'Waiting for the big reveal.','muted'));content.append(message);return;}
  if(!content.querySelector('.bubble-wall')||content.dataset.round!==String(s.round)){
@@ -136,7 +136,7 @@ function renderBoard(s){clearTimeout(countdownTimer);const content=$('board-cont
 async function refresh(){try{latest=await request(page==='host'?'/api/host':'/api/state');if(page==='host')renderHost(latest);else if(page==='join')renderJoin(latest);else renderBoard(latest);}catch(error){showError(error.message);}}
 async function action(path,data){showError('');try{await request(path,data);await refresh();return true;}catch(error){showError(error.message);return false;}}
 if(page==='host'){
- $('config-form').addEventListener('submit',async e=>{e.preventDefault();const criteria=$('criteria').value.split('\n').filter(line=>line.trim()).map(line=>{const split=line.lastIndexOf('|');return{name:line.slice(0,split).trim(),weight:Number(line.slice(split+1).trim())};});await action('/api/config',{theme:$('theme').value,criteria});});
+ $('config-form').addEventListener('submit',async e=>{e.preventDefault();const criteria=$('criteria').value.split('\n').filter(line=>line.trim()).map(line=>{const [name,weight,...guidance]=line.split('|');return{name:name.trim(),weight:Number(weight?.trim()),guidance:guidance.join('|').trim()};});await action('/api/config',{theme:$('theme').value,criteria});});
  $('connect-form').addEventListener('submit',async e=>{e.preventDefault();if(await action('/api/connect',{key:$('api-key').value,model:$('model').value})){$('api-key').value='';$('ai-details').open=false;}});
  $('collect').addEventListener('click',()=>action('/api/collect',{open:latest.phase!=='collecting'}));
  $('analyse').addEventListener('click',async()=>{$('analyse').disabled=true;await action('/api/rank',{});});
@@ -145,6 +145,8 @@ if(page==='host'){
 }else if(page==='join'){
  let client=localStorage.getItem('gdg-client');if(!client){client=Array.from(crypto.getRandomValues(new Uint8Array(16)),n=>n.toString(16).padStart(2,'0')).join('');localStorage.setItem('gdg-client',client);}
  try{const draft=JSON.parse(localStorage.getItem('gdg-idea-draft')||'{}');for(const key of ['title','idea'])if(draft[key])$(key).value=draft[key];}catch{}
+ const updateWords=()=>{const count=$('idea').value.trim().split(/\s+/u).filter(Boolean).length;$('word-count').textContent=`${count} / 200 words`;$('idea').setCustomValidity(count>200?'Keep the brief introduction to 200 words or fewer.':'');};
+ $('idea').addEventListener('input',updateWords);updateWords();
  $('idea-form').addEventListener('submit',async e=>{e.preventDefault();$('submit').disabled=true;showError('');const draft={title:$('title').value,idea:$('idea').value};try{await request('/api/ideas',{client,name:'Participant',...draft});localStorage.setItem('gdg-idea-draft',JSON.stringify(draft));$('submitted').hidden=false;$('submit').textContent='Update idea';}catch(error){showError(error.message);}await refresh();});
 }else{
  $('fullscreen').addEventListener('click',()=>{const p=document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen();p?.catch(()=>{});});

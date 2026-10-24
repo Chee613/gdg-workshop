@@ -18,7 +18,12 @@ try{
  await page.waitForSelector('#dino-motion[data-ready="true"]');await page.evaluate(()=>document.fonts.ready);
  await page.waitForFunction(()=>[...document.images].every(i=>i.complete&&i.naturalWidth>0));
  assert.equal(await page.locator('.slide').count(),16);assert.equal(await page.locator('.slide-jump button').count(),16);
+ assert.equal(new Set(spec.slice(0,-1).map(s=>s.scene)).size,15,'Every slide boundary has its own transition');
  assert.equal(await active(),'Cover');
+ await page.getByRole('button',{name:'Go directly to Idea',exact:true}).click();
+ await page.keyboard.press('ArrowRight');await settle();assert.equal(await active(),'Build','Right arrow works after clicking a navigation button');
+ await page.keyboard.press('ArrowLeft');await settle();assert.equal(await active(),'Idea','Left arrow works with a button focused');
+ await page.getByRole('button',{name:'Go directly to Cover',exact:true}).click();
  assert.equal((await page.locator('.slide.active .copy').allTextContents()).join(' '),'Re:Zero Beginner series: Hackathon Masterclass & Hackathon Project Sharing');
  assert.equal(await page.locator('[data-cover-activity],.cover-activities').count(),0,'Cover has no activity choices');
  assert.equal(await page.locator('.slide.active .sticker').count(),0);
@@ -61,7 +66,7 @@ try{
   await page.getByRole('button',{name:`Go directly to ${slide.name}`,exact:true}).tap();await settle();
   assert.equal(await active(),slide.name);
   if(slide.buildTitle||slide.certify){await page.touchscreen.tap(378,portrait.y+180);await settle();assert.equal(await active(),slide.name,'Phone tap reveals or stamps before advancing');}
-  const issues=await page.locator('.slide.active .copy,.slide.active .design-title').evaluateAll(elements=>elements.filter(e=>e.getClientRects().length&&e.textContent.trim()).flatMap(e=>{const r=e.getBoundingClientRect();return r.x<-.5||r.right>innerWidth+.5||r.bottom>innerHeight+.5||e.scrollHeight>e.clientHeight+3||e.scrollWidth>e.clientWidth+3?[{text:e.textContent,font:getComputedStyle(e).fontSize,box:r.toJSON(),width:[e.scrollWidth,e.clientWidth],height:[e.scrollHeight,e.clientHeight]}]:[];}));
+  const issues=await page.locator('.slide.active .copy,.slide.active .design-title,.slide.active .speaker-badge').evaluateAll(elements=>elements.filter(e=>e.getClientRects().length&&e.textContent.trim()).flatMap(e=>{const r=e.getBoundingClientRect();return r.x<-.5||r.right>innerWidth+.5||r.bottom>innerHeight+.5||e.scrollHeight>e.clientHeight+3||e.scrollWidth>e.clientWidth+3?[{text:e.textContent,font:getComputedStyle(e).fontSize,box:r.toJSON(),width:[e.scrollWidth,e.clientWidth],height:[e.scrollHeight,e.clientHeight]}]:[];}));
   assert.deepEqual(issues,[],`${slide.name}: mobile copy is visible and fits`);
   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth||document.documentElement.scrollHeight>innerHeight),false);
   if(slide.name==='Demo'){
@@ -131,9 +136,8 @@ try{
    await page.getByRole('button',{name:'Previous examples',exact:true}).click();
    await page.waitForFunction(()=>document.querySelector('.slide.active .example-gallery').scrollLeft<1);
    await gallery.focus();await page.keyboard.press('ArrowRight');
-   await page.waitForFunction(()=>{const el=document.querySelector('.slide.active .example-gallery');return Math.abs(el.scrollLeft-el.clientWidth)<1});
-   assert.equal(await active(),'Demo','Gallery arrows do not navigate the deck');
-   await page.keyboard.press('ArrowLeft');
+   await settle();assert.equal(await active(),'Design','Arrow keys navigate slides even when the gallery is focused');
+   await page.keyboard.press('ArrowLeft');await settle();assert.equal(await active(),'Demo');
    await page.waitForFunction(()=>document.querySelector('.slide.active .example-gallery').scrollLeft<1);
    assert.equal(await page.locator('.slide.active [src$="bad-ui.svg"],.slide.active [src$="bad-slide.svg"]').count(),0);
    }else if(slide.name==='Pitch'){
@@ -159,9 +163,10 @@ try{
   if(slide.certify){
    assert.deepEqual(await page.locator('.slide.active .copy').allTextContents(),['UI / Slide Design','Good UI']);
    assert.equal(await page.locator('[data-certify-button],.certify-action').count(),0,'Certification has no button');
-   const gallery=await page.locator('.slide.active .example-gallery').boundingBox();
+   assert.equal(await page.locator('.slide.active .example-gallery,.slide.active .gallery-controls').count(),0,'Good UI uses one page without carousel arrows');
+   assert.equal(await page.locator('.slide.active .example-preview').count(),3);
    const label=await page.locator('.slide.active .copy').last().boundingBox();
-   assert.equal(gallery.x+gallery.width/2,640);assert.equal(label.x+label.width/2,640);
+   assert.equal(label.x+label.width/2,640);
    for(const [x,y]of [[10,400],[640,450],[1230,400]]){
     await page.getByRole('button',{name:'Go directly to Design',exact:true}).click();await settle();
     assert.ok(await page.locator('.slide.active .certified-badge').isHidden());
@@ -172,28 +177,29 @@ try{
    }
    const badge=await page.getByRole('img',{name:'Good Slide Certified badge',exact:true}).boundingBox();
    assert.ok(badge.x>1000&&badge.y<130&&badge.x+badge.width<=1280,'Badge lands in the top-right corner');
-   const visible=page.locator('.slide.active .example-pair[aria-hidden="false"]');
-   assert.equal(await visible.locator('img').count(),1);
-   assert.ok((await visible.locator('img').getAttribute('src')).endsWith('good-ui-house.png'));
-   await page.getByRole('button',{name:'Next examples',exact:true}).click();
-   await page.waitForFunction(()=>{const v=document.querySelector('.slide.active .example-gallery');return Math.abs(v.scrollLeft-v.clientWidth)<1});
-   assert.ok((await visible.locator('img').getAttribute('src')).endsWith('good-ui-sign.jpg'));
-   await visible.locator('img').click();assert.ok(await page.locator('.image-preview').isVisible());await page.keyboard.press('Escape');
-   await page.getByRole('button',{name:'Previous examples',exact:true}).click();
-   await page.waitForFunction(()=>document.querySelector('.slide.active .example-gallery').scrollLeft<1);
+   for(const file of ['good-ui-rewatt.png','good-ui-house.png','good-ui-sign.jpg']){
+    const example=page.locator(`.slide.active .example-preview [src$="${file}"]`);
+    assert.ok(await example.isVisible(),'All three good examples are visible together');
+    await example.click();assert.ok(await page.locator('.image-preview').isVisible());
+    assert.ok((await page.locator('.image-preview img').getAttribute('src')).endsWith(file));
+    await page.keyboard.press('Escape');
+   }
   }
-  const overflow=await page.locator('.slide.active .copy').evaluateAll(els=>els.filter(el=>el.scrollWidth>el.clientWidth+1||el.scrollHeight>el.clientHeight+1).map(el=>el.textContent));
+  const overflow=await page.locator('.slide.active .copy,.slide.active .speaker-badge').evaluateAll(els=>els.filter(el=>el.scrollWidth>el.clientWidth+1||el.scrollHeight>el.clientHeight+1).map(el=>el.textContent));
   assert.deepEqual(overflow,[],`${slide.name} copy fits`);
   assert.ok(await page.locator('.slide.active .photo').evaluateAll(els=>els.every(el=>el.getAnimations().length===0&&getComputedStyle(el).opacity==='1')),'Keep photos still');
   await page.locator('.stage').screenshot({path:path.join(dir,`html-slide-${i+1}.png`)});
  }
  assert.deepEqual(await page.locator('.slide[aria-label="Intro"] .copy').allTextContents(),['Meet the builders.','Hackathon masterclass','Zayn','Shawn','Edmund']);
+ assert.equal(await page.locator('.slide[aria-label="Intro"] [src$="edmund-birthday-closeup.jpg"]').count(),1);
+ assert.deepEqual(await page.locator('.slide[aria-label="Intro"] .speaker-badge span').allTextContents(),['9x Hackathon Winner','GDG AI/ML Team Lead']);
+ assert.equal(await page.locator('.slide[aria-label="Intro"] [aria-label="Birthday cake badge"]').count(),1);
  assert.equal(await page.locator('.slide[aria-label="Stories"] [src*="upload-"]').count(),2);
  assert.deepEqual(spec.slice(2,9).map(s=>s.name),['Intro','Stories','Brainstorm','Idea','Build','Showcase','Demo']);
  assert.equal(await page.locator('.slide[aria-label="Brainstorm"] [src$="brainstorm-drake.png"]').count(),1);
  assert.equal(await page.locator('.slide[aria-label="Brainstorm"] [aria-label^="Ban sign"]').count(),1);
  assert.equal(await page.locator('.slide[aria-label="Showcase"] .copy').textContent(),'Project Showcase');
- assert.equal(await page.locator('.slide[aria-label="Design"] .example-pair').count(),2);
+ assert.equal(await page.locator('.slide[aria-label="Design"] .example-preview').count(),3);
  assert.equal(await page.locator('.slide[aria-label="Stories"] .heading').textContent(),'Hackathon');
  const storyTitle=await page.locator('.slide[aria-label="Stories"] .heading').evaluate(el=>({x:parseFloat(el.style.left),w:parseFloat(el.style.width)}));
  const trophyX=await page.locator('.slide[aria-label="Stories"] .sticker').evaluate(el=>parseFloat(el.style.left));
@@ -213,7 +219,8 @@ try{
  const paceExample=new Function('Pitch','Presentation_Video','pace','console',paceCode);
  for(const [pace,expected]of [['Too Slow','Audience: 😴'],['Too Fast','Audience: 🤯'],['Just Right','Audience: 😎']]){const messages=[];paceExample(true,false,pace,{log:value=>messages.push(value)});assert.deepEqual(messages,[expected]);}
  const inactive=[];paceExample(false,false,'Too Slow',{log:value=>inactive.push(value)});assert.deepEqual(inactive,[]);
- assert.ok((await page.locator('.slide[aria-label="Criteria"] .copy').allTextContents()).includes('Judging criteria'));
+ assert.deepEqual((await page.locator('.slide[aria-label="Criteria"] .copy').allTextContents()).slice(2),['Problem','Agitation','Solution','Validation Proof','Insane Value Metric']);
+ assert.equal(await page.locator('.slide[aria-label="Criteria"] .flow-arrow').count(),4);
  assert.ok((await page.locator('.slide[aria-label="Criteria"] .copy').allTextContents()).includes('Pitch / Presentation Video'));
  await page.getByRole('button',{name:'Go directly to Cover',exact:true}).click();
  for(const [i,slide]of spec.slice(0,-1).entries()){
@@ -317,6 +324,6 @@ try{
  await page.locator('.stage').screenshot({path:path.join(dir,'thank-you-finale.png')});
  await page.keyboard.press('End');await settle();assert.equal(await active(),'Thanks');
  assert.deepEqual(errors,[]);
- await fs.writeFile(path.join(dir,'html-checks.json'),JSON.stringify({passed:true,slides:16,names:spec.map(s=>s.name),sourceImages:[...sources],checks:['all original photos','both uploads','named portraits','sixteen direct pills','named arcade transitions','automatic articulated cover dinosaur','two supplied Slido codes','attendance and feedback codes','both centred titles and click-to-reveal morphs','bad and good screenshot carousels with a certification stamp','two pace memes with matching labels','separate criteria slide','interrupted title morph','static pictures','text fit','notes','keyboard','reduced motion','responsive fit']},null,2));
+ await fs.writeFile(path.join(dir,'html-checks.json'),JSON.stringify({passed:true,slides:16,names:spec.map(s=>s.name),sourceImages:[...sources],checks:['all original photos','both uploads','named portraits','sixteen direct pills','named arcade transitions','automatic articulated cover dinosaur','two supplied Slido codes','attendance and feedback codes','both centred titles and click-to-reveal morphs','bad screenshot carousel and one-page good UI examples with certification','two pace memes with matching labels','separate criteria slide','interrupted title morph','static pictures','text fit','notes','keyboard','reduced motion','responsive fit']},null,2));
  console.log('Passed: sixteen slides, automatic animated dino cover, two Slido Q&A slides, closing form codes, Morphs, text fit, phone layouts and navigation.');
 }finally{await browser.close();fixture.kill();}

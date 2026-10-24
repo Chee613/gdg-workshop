@@ -20,11 +20,6 @@ for (const gallery of document.querySelectorAll('.example-gallery-wrap')) {
     const button = event.target.closest('[data-gallery-step]');
     if (button) move(Number(button.dataset.galleryStep));
   });
-  gallery.addEventListener('keydown', event => {
-    if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
-    event.preventDefault(); event.stopPropagation();
-    move(event.key === 'ArrowRight' ? 1 : -1);
-  });
   viewport.addEventListener('scroll', update, {passive: true});
   update();
 }

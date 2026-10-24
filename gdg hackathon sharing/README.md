@@ -1,6 +1,8 @@
 # GDG Hackathon Masterclass
 
-Twelve interactive slides, an animated Chrome dinosaur, and a live idea challenge.
+Sixteen interactive slides, an animated Chrome dinosaur, and a live idea challenge.
+
+Use the left and right arrow keys to navigate, including after clicking a slide button. Example buttons or swipes change gallery images; open popups and editable text keep their own keys. The [presenter script](Presenter-Script.md) follows the full deck with audience questions, demo cues and optional expansions.
 
 For online hosting, follow the [Railway deployment guide](RAILWAY.md). It uses one service, a persistent volume, and password-protected presenter controls.
 

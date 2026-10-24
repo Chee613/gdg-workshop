@@ -122,7 +122,7 @@
       }
     ],
     "notes": "Scan the supplied Slido code to submit questions, or tap the code to open Slido on this device.",
-    "scene": "portal"
+    "scene": "pipe"
   },
   {
     "name": "Intro",
@@ -167,15 +167,15 @@
         "kind": "image",
         "file": "assets/zayn.png",
         "x": 72,
-        "y": 271,
+        "y": 267,
         "w": 347,
-        "h": 300,
+        "h": 282,
         "alt": "Zayn, photographed beside a shop window",
         "crop": {
           "left": 0.32,
           "right": 0.13,
           "top": 0.1,
-          "bottom": 0.5433717579250721
+          "bottom": 0.5647694524495678
         },
         "mobile": {
           "x": 36,
@@ -188,9 +188,9 @@
         "kind": "image",
         "file": "assets/shawn.jpg",
         "x": 457,
-        "y": 271,
+        "y": 267,
         "w": 347,
-        "h": 300,
+        "h": 282,
         "alt": "Shawn, photographed outdoors in a suit",
         "fit": "cover",
         "focus": "50% 30%",
@@ -203,18 +203,13 @@
       },
       {
         "kind": "image",
-        "file": "assets/edmund.png",
+        "file": "assets/edmund-birthday-closeup.jpg",
         "x": 842,
-        "y": 271,
+        "y": 267,
         "w": 347,
-        "h": 300,
-        "alt": "Edmund, photographed at an award event",
-        "crop": {
-          "left": 0.2,
-          "right": 0.34,
-          "top": 0.36,
-          "bottom": 0.3417291066282421
-        },
+        "h": 282,
+        "alt": "Edmund holding his birthday cake",
+        "fit": "contain",
         "mobile": {
           "x": 36,
           "y": 901,
@@ -226,15 +221,15 @@
         "kind": "text",
         "text": "Zayn",
         "x": 72,
-        "y": 589,
+        "y": 559,
         "w": 347,
-        "h": 47,
+        "h": 42,
         "size": 34,
         "color": "#4285F4",
         "bold": true,
         "mobile": {
           "x": 354,
-          "y": 470,
+          "y": 440,
           "w": 330,
           "h": 58,
           "size": 44
@@ -244,15 +239,15 @@
         "kind": "text",
         "text": "Shawn",
         "x": 457,
-        "y": 589,
+        "y": 559,
         "w": 347,
-        "h": 47,
+        "h": 42,
         "size": 34,
         "color": "#EA4335",
         "bold": true,
         "mobile": {
           "x": 354,
-          "y": 733,
+          "y": 703,
           "w": 330,
           "h": 58,
           "size": 44
@@ -262,23 +257,73 @@
         "kind": "text",
         "text": "Edmund",
         "x": 842,
-        "y": 589,
+        "y": 559,
         "w": 347,
-        "h": 47,
+        "h": 42,
         "size": 34,
         "color": "#34A853",
         "bold": true,
         "mobile": {
           "x": 354,
-          "y": 996,
+          "y": 966,
           "w": 330,
           "h": 58,
           "size": 44
         }
+      },
+      {
+        "kind": "speakerBadge",
+        "label": "9x Hackathon Winner",
+        "icon": "trophy",
+        "x": 72,
+        "y": 610,
+        "w": 300,
+        "h": 38,
+        "color": "#174EA6",
+        "mobile": {
+          "x": 354,
+          "y": 510,
+          "w": 330,
+          "h": 64,
+          "size": 26
+        }
+      },
+      {
+        "kind": "speakerBadge",
+        "label": "GDG AI/ML Team Lead",
+        "icon": "gdg",
+        "x": 457,
+        "y": 610,
+        "w": 310,
+        "h": 38,
+        "color": "#137333",
+        "mobile": {
+          "x": 354,
+          "y": 773,
+          "w": 330,
+          "h": 64,
+          "size": 26
+        }
+      },
+      {
+        "kind": "speakerBadge",
+        "label": "",
+        "icon": "cake",
+        "x": 842,
+        "y": 610,
+        "w": 62,
+        "h": 38,
+        "color": "#775600",
+        "mobile": {
+          "x": 354,
+          "y": 1036,
+          "w": 86,
+          "h": 64
+        }
       }
     ],
-    "notes": "Introduce Zayn, Shawn and Edmund, using the three portraits and names provided by the user. Keep the introduction brief. Do not invent roles, qualifications or individual achievements.",
-    "scene": "window"
+    "notes": "Introduce Zayn, Shawn and Edmund using the supplied names, portraits and badges. Zayn’s 9x Hackathon Winner claim and Shawn’s GDG AI/ML Team Lead role are labels provided by the presenter. Edmund uses the supplied birthday-cake photo and a cake badge. Do not infer ages or additional achievements.",
+    "scene": "plane"
   },
   {
     "name": "Stories",
@@ -435,7 +480,7 @@
       }
     ],
     "notes": "The previous opening slide is now the second slide, with the two newly uploaded photos added. The totals are the presenter’s own claims from Hack.pptx; they are not independently verified. Tell one short story behind an award, prototype or demo.",
-    "scene": "pipe"
+    "scene": "balloon"
   },
   {
     "name": "Brainstorm",
@@ -787,7 +832,7 @@
       }
     ],
     "notes": "Begin with the centred Hackathon tips title, then morph it upward to reveal Idea Brainstorming. The supplied Drake meme contrasts Idea from AI with Your own ideas and a light bulb. Brainstorm, notice problems in daily life and solve a niche problem. The second supplied meme sits in the bottom corner with a red ban overlay, warning against outsourcing your thinking to AI.",
-    "scene": "balloon"
+    "scene": "bridge"
   },
   {
     "name": "Idea",
@@ -1271,7 +1316,7 @@
         }
       }
     ],
-    "notes": "Start with the centred title, then morph it upward to reveal one large bad UI and one large bad slide. Next examples swipes the second pair to the front; Previous examples swipes back. Touch swiping and arrow keys inside the gallery also work. Screenshots remain intact and borderless. Click a screenshot for a full-screen view; Escape returns.",
+    "notes": "Start with the centred title, then morph it upward to reveal one large bad UI and one large bad slide. Next examples swipes the second pair to the front; Previous examples swipes back. Use touch swiping or the example buttons to change the pair; left and right keyboard arrows navigate the presentation. Screenshots remain intact and borderless. Click a screenshot for a full-screen view; Escape returns.",
     "scene": "ufo"
   },
   {
@@ -1309,39 +1354,58 @@
         "align": "center",
         "mobile": {
           "x": 36,
-          "y": 350,
+          "y": 326,
           "w": 648,
           "h": 52,
           "size": 40
         }
       },
       {
-        "kind": "gallery",
+        "kind": "image",
+        "file": "assets/good-ui-rewatt.png",
         "x": 72,
         "y": 270,
-        "w": 1136,
+        "w": 190,
         "h": 394,
-        "columns": 1,
-        "label": "Good UI examples",
-        "items": [
-          [
-            {
-              "file": "good-ui-house.png",
-              "alt": "Good UI: the supplied illustrated housemate dashboard"
-            }
-          ],
-          [
-            {
-              "file": "good-ui-sign.jpg",
-              "alt": "Good UI: the supplied sign-to-voice mobile interface"
-            }
-          ]
-        ],
+        "alt": "Good UI: ReWatt room monitoring mobile interface",
+        "preview": true,
         "mobile": {
           "x": 36,
-          "y": 418,
+          "y": 758,
+          "w": 306,
+          "h": 400
+        }
+      },
+      {
+        "kind": "image",
+        "file": "assets/good-ui-house.png",
+        "x": 282,
+        "y": 270,
+        "w": 724,
+        "h": 394,
+        "alt": "Good UI: the supplied illustrated housemate dashboard",
+        "preview": true,
+        "mobile": {
+          "x": 36,
+          "y": 394,
           "w": 648,
-          "h": 640
+          "h": 330
+        }
+      },
+      {
+        "kind": "image",
+        "file": "assets/good-ui-sign.jpg",
+        "x": 1026,
+        "y": 270,
+        "w": 182,
+        "h": 394,
+        "alt": "Good UI: the supplied sign-to-voice mobile interface",
+        "preview": true,
+        "mobile": {
+          "x": 378,
+          "y": 758,
+          "w": 306,
+          "h": 400
         }
       },
       {
@@ -1358,7 +1422,7 @@
         }
       }
     ],
-    "notes": "Show one supplied Good UI picture at a time and swipe between the illustrated housemate dashboard and the sign-to-voice app. This presentation itself is the good-slide example. The first click anywhere on this slide pastes a playful Good Slide — Certified badge into the top-right corner with a stamp animation; this is a workshop joke, not an external certification. Advance again to continue. There is no Good slides heading or placeholder.",
+    "notes": "Show all three Good UI examples together on one page: ReWatt, the illustrated housemate dashboard and the sign-to-voice app. There are no carousel arrows or swiping between examples. The first click anywhere stamps Good Slide — Certified; this is a workshop joke, not an external certification. After stamping, click an example to enlarge it or click outside the examples to advance.",
     "scene": "portal"
   },
   {
@@ -1612,56 +1676,149 @@
       },
       {
         "kind": "text",
-        "text": "Judging criteria",
+        "text": "Problem",
         "x": 601,
-        "y": 292,
+        "y": 272,
         "w": 550,
-        "h": 54,
-        "size": 39,
+        "h": 42,
+        "size": 34,
         "color": "#4285F4",
         "bold": true,
+        "align": "center",
         "mobile": {
           "x": 36,
-          "y": 834,
-          "w": 648,
-          "h": 58,
-          "size": 42
+          "y": 826,
+          "w": 530,
+          "h": 44,
+          "size": 36
+        }
+      },
+      {
+        "kind": "flowArrow",
+        "x": 864,
+        "y": 314,
+        "w": 24,
+        "h": 24,
+        "mobile": {
+          "x": 289,
+          "y": 870,
+          "w": 24,
+          "h": 24
         }
       },
       {
         "kind": "text",
-        "text": "Show evidence",
+        "text": "Agitation",
         "x": 601,
-        "y": 394,
+        "y": 342,
         "w": 550,
-        "h": 54,
-        "size": 39,
+        "h": 42,
+        "size": 34,
         "color": "#EA4335",
         "bold": true,
+        "align": "center",
         "mobile": {
           "x": 36,
-          "y": 928,
-          "w": 648,
-          "h": 58,
-          "size": 42
+          "y": 896,
+          "w": 530,
+          "h": 44,
+          "size": 36
+        }
+      },
+      {
+        "kind": "flowArrow",
+        "x": 864,
+        "y": 384,
+        "w": 24,
+        "h": 24,
+        "mobile": {
+          "x": 289,
+          "y": 940,
+          "w": 24,
+          "h": 24
         }
       },
       {
         "kind": "text",
-        "text": "One clear story",
+        "text": "Solution",
         "x": 601,
-        "y": 496,
-        "w": 530,
-        "h": 54,
-        "size": 39,
+        "y": 412,
+        "w": 550,
+        "h": 42,
+        "size": 34,
         "color": "#34A853",
         "bold": true,
+        "align": "center",
         "mobile": {
           "x": 36,
-          "y": 1022,
+          "y": 966,
           "w": 530,
-          "h": 58,
-          "size": 42
+          "h": 44,
+          "size": 36
+        }
+      },
+      {
+        "kind": "flowArrow",
+        "x": 864,
+        "y": 454,
+        "w": 24,
+        "h": 24,
+        "mobile": {
+          "x": 289,
+          "y": 1010,
+          "w": 24,
+          "h": 24
+        }
+      },
+      {
+        "kind": "text",
+        "text": "Validation Proof",
+        "x": 601,
+        "y": 482,
+        "w": 550,
+        "h": 42,
+        "size": 34,
+        "color": "#A56A00",
+        "bold": true,
+        "align": "center",
+        "mobile": {
+          "x": 36,
+          "y": 1036,
+          "w": 530,
+          "h": 44,
+          "size": 36
+        }
+      },
+      {
+        "kind": "flowArrow",
+        "x": 864,
+        "y": 524,
+        "w": 24,
+        "h": 24,
+        "mobile": {
+          "x": 289,
+          "y": 1080,
+          "w": 24,
+          "h": 24
+        }
+      },
+      {
+        "kind": "text",
+        "text": "Insane Value Metric",
+        "x": 601,
+        "y": 552,
+        "w": 550,
+        "h": 42,
+        "size": 34,
+        "color": "#4285F4",
+        "bold": true,
+        "align": "center",
+        "mobile": {
+          "x": 36,
+          "y": 1106,
+          "w": 530,
+          "h": 44,
+          "size": 36
         }
       },
       {
@@ -1681,7 +1838,7 @@
         }
       }
     ],
-    "notes": "Match the pitch and presentation video to the actual judging criteria. Give each criterion clear evidence. Explain the problem, the solution and the result in language a new listener can follow. Rehearse with the event’s actual time limit.",
+    "notes": "Read the pitch flow from top to bottom: Problem, Agitation, Solution, Validation Proof, Insane Value Metric. Show what hurts, why it matters, the solution, supporting evidence and one memorable measurable result. Connect the story to the actual judging criteria and rehearse within the event’s time limit.",
     "scene": "hole"
   },
   {
@@ -1773,7 +1930,7 @@
       }
     ],
     "notes": "Set the theme, judging criteria and Gemini connection in the presenter dashboard. The saved theme appears above the large central QR code; leave it blank until ready. Participants scan and submit. Press the GDG Reveal rankings button to analyse all ideas and reveal the top three with the existing countdown and podium inside the presentation. It requires at least three ideas and a real Gemini connection. Existing ranked results can be shown again without re-analysing. Open dashboard plays the dinosaur warp-pipe jump, then opens the public title wall. Presenter controls stay at /host.",
-    "scene": "pipe"
+    "scene": "magnet"
   },
   {
     "name": "Timer",
@@ -1799,10 +1956,10 @@
       },
       {
         "kind": "countdown",
-        "x": 430,
+        "x": 450,
         "y": 207,
-        "w": 420,
-        "h": 475,
+        "w": 380,
+        "h": 425,
         "mobile": {
           "x": 36,
           "y": 358,
@@ -1812,7 +1969,7 @@
       }
     ],
     "notes": "Five-minute GDG countdown after the challenge announcement and before closing Slido Q&A. The Chrome dinosaur runs from the left to the right across the same five minutes; all timer controls also control the run. Press Start to begin, Pause to hold, Resume to continue, or Reset to return to 05:00. The timer keeps real elapsed time while this browser tab is in the background. It stays at 00:00 when finished; advance to Slido when ready.",
-    "scene": "portal"
+    "scene": "train"
   },
   {
     "name": "Questions",

@@ -13,6 +13,21 @@ const post=(path,data,host=true)=>fetch(base+path,{method:'POST',headers:{'Conte
 try{
  await host.goto(base+'/host');await host.getByRole('heading',{name:'Let the ideas roll in.'}).waitFor();
  await board.goto(base+'/board');await board.getByRole('heading',{name:'Ideas in the room.'}).waitFor();
+ assert.equal(await board.locator('.rubric span').count(),5);
+ const defaults=await (await host.request.get(base+'/api/host')).json();
+ assert.ok(defaults.criteria.every(c=>c.guidance));
+ assert.ok((await host.getByLabel('Judging criteria').inputValue()).includes(defaults.criteria[0].guidance));
+ assert.ok(!(await board.locator('body').textContent()).includes(defaults.criteria[0].guidance));
+ const preview=await browser.newPage({viewport:{width:390,height:844}});
+ await preview.goto(base+'/join');await preview.waitForFunction(()=>document.querySelectorAll('#rubric span').length===5);
+ assert.deepEqual(await preview.locator('#rubric span').allTextContents(),defaults.criteria.map(c=>`${c.name} ${c.weight}%`));
+ assert.ok(!(await preview.locator('body').textContent()).includes(defaults.criteria[0].guidance));
+ assert.equal(await preview.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
+ await preview.screenshot({path:'.hack-build/session-default-rubric-mobile.png',fullPage:true});await preview.close();
+ await board.screenshot({path:'.hack-build/session-default-rubric.png',fullPage:true});
+ const saved=host.waitForResponse(r=>r.url().endsWith('/api/config')&&r.request().method()==='POST');
+ await host.getByRole('button',{name:'Save challenge',exact:true}).click();assert.ok((await saved).ok());
+ assert.deepEqual((await (await host.request.get(base+'/api/host')).json()).criteria,defaults.criteria,'Saving preserves private guidance');
  assert.equal((await post('/api/config',{theme:'x',criteria:[]})).status,400);
  assert.equal((await post('/api/collect',{open:false},false)).status,hosted?401:403);
  await host.getByLabel('Theme / topic').fill('Useful campus ideas');
@@ -22,6 +37,13 @@ try{
   const participant=await browser.newContext({viewport:{width:390,height:844}}),p=await participant.newPage();p.on('pageerror',e=>errors.push(e.message));
   await p.goto(base+'/join');await p.getByRole('heading',{name:'Useful campus ideas'}).waitFor();
   assert.equal(await p.locator('#idea-form input,#idea-form textarea').count(),2,'Only title and introduction are required');
+  if(i===0){
+   await p.getByLabel('Brief introduction').fill(Array(201).fill('everyday').join(' '));
+   assert.equal(await p.locator('#word-count').textContent(),'201 / 200 words');
+   assert.ok(!(await p.getByLabel('Brief introduction').evaluate(e=>e.checkValidity())));
+   await p.getByLabel('Brief introduction').fill(Array(200).fill('everyday').join(' '));
+   assert.ok(await p.getByLabel('Brief introduction').evaluate(e=>e.checkValidity()));
+  }
   await p.getByLabel('Project title').fill(i===2?'<img src=x onerror=alert(1)>':`Campus idea ${i+1}`);
   await p.getByLabel('Brief introduction').fill('Help students find available study spaces with a simple availability map.');
   await p.getByRole('button',{name:'Submit idea',exact:true}).click();await p.getByRole('heading',{name:"You're on the board."}).waitFor();

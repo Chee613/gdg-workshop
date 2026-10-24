@@ -40,13 +40,16 @@ slides = [
  dict(name='Intro', elements=[
     text('Meet the builders.',72,117,1110,83,68,INK,True),
     text('Hackathon masterclass',76,208,1080,40,28,GRAY),
-    image('zayn.png',72,271,347,300,'Zayn, photographed beside a shop window',crop=dict(left=.32,right=.13,top=.10,bottom=1-.10-(960*.55/1280*300/347))),
-    image('shawn.jpg',457,271,347,300,'Shawn, photographed outdoors in a suit',fit='cover',focus='50% 30%'),
-    image('edmund.png',842,271,347,300,'Edmund, photographed at an award event',crop=dict(left=.20,right=.34,top=.36,bottom=1-.36-(810*.46/1080*300/347))),
-    text('Zayn',72,589,347,47,34,BLUE,True),
-    text('Shawn',457,589,347,47,34,RED,True),
-    text('Edmund',842,589,347,47,34,GREEN,True)],
-    notes='Introduce Zayn, Shawn and Edmund, using the three portraits and names provided by the user. Keep the introduction brief. Do not invent roles, qualifications or individual achievements.'),
+    image('zayn.png',72,267,347,282,'Zayn, photographed beside a shop window',crop=dict(left=.32,right=.13,top=.10,bottom=1-.10-(960*.55/1280*282/347))),
+    image('shawn.jpg',457,267,347,282,'Shawn, photographed outdoors in a suit',fit='cover',focus='50% 30%'),
+    image('edmund-birthday-closeup.jpg',842,267,347,282,'Edmund holding his birthday cake',fit='contain'),
+    text('Zayn',72,559,347,42,34,BLUE,True),
+    text('Shawn',457,559,347,42,34,RED,True),
+    text('Edmund',842,559,347,42,34,GREEN,True),
+    dict(kind='speakerBadge',label='9x Hackathon Winner',icon='trophy',x=72,y=610,w=300,h=38,color='#174EA6'),
+    dict(kind='speakerBadge',label='GDG AI/ML Team Lead',icon='gdg',x=457,y=610,w=310,h=38,color='#137333'),
+    dict(kind='speakerBadge',label='',icon='cake',x=842,y=610,w=62,h=38,color='#775600')],
+    notes='Introduce Zayn, Shawn and Edmund using the supplied names, portraits and badges. Zayn’s 9x Hackathon Winner claim and Shawn’s GDG AI/ML Team Lead role are labels provided by the presenter. Edmund uses the supplied birthday-cake photo and a cake badge. Do not infer ages or additional achievements.'),
  dict(name='Stories', elements=[
     text('Hackathon',72,117,330,85,72,INK,True),
     text('11 hackathons   9 wins',76,218,750,44,32,BLUE,True),
@@ -115,15 +118,15 @@ slides = [
     dict(kind='gallery',x=24,y=270,w=1232,h=382,label='Bad design examples',items=[
         [dict(file='bad-ui-finance.png',alt='Bad UI: procurement and contract risk dashboard'),dict(file='bad-slide-inbound.png',alt='Bad slide: Inbound Paradox')],
         [dict(file='bad-ui-oasis.png',alt='Bad UI: OASIS security workspace'),dict(file='bad-slide-architecture.png',alt='Bad slide: Bi-Modal Architecture')]])],
-    notes='Start with the centred title, then morph it upward to reveal one large bad UI and one large bad slide. Next examples swipes the second pair to the front; Previous examples swipes back. Touch swiping and arrow keys inside the gallery also work. Screenshots remain intact and borderless. Click a screenshot for a full-screen view; Escape returns.'),
+    notes='Start with the centred title, then morph it upward to reveal one large bad UI and one large bad slide. Next examples swipes the second pair to the front; Previous examples swipes back. Use touch swiping or the example buttons to change the pair; left and right keyboard arrows navigate the presentation. Screenshots remain intact and borderless. Click a screenshot for a full-screen view; Escape returns.'),
  dict(name='Design', certify=True, elements=[
     text('UI / Slide Design',72,117,1100,83,64,INK,True),
     dict(text('Good UI',72,214,1136,42,30,BLUE,True),align='center'),
-    dict(kind='gallery',x=72,y=270,w=1136,h=394,columns=1,label='Good UI examples',items=[
-        [dict(file='good-ui-house.png',alt='Good UI: the supplied illustrated housemate dashboard')],
-        [dict(file='good-ui-sign.jpg',alt='Good UI: the supplied sign-to-voice mobile interface')]]),
+    image('good-ui-rewatt.png',72,270,190,394,'Good UI: ReWatt room monitoring mobile interface',preview=True),
+    image('good-ui-house.png',282,270,724,394,'Good UI: the supplied illustrated housemate dashboard',preview=True),
+    image('good-ui-sign.jpg',1026,270,182,394,'Good UI: the supplied sign-to-voice mobile interface',preview=True),
     dict(kind='certify',x=1090,y=110,w=160,h=160)],
-    notes='Show one supplied Good UI picture at a time and swipe between the illustrated housemate dashboard and the sign-to-voice app. This presentation itself is the good-slide example. The first click anywhere on this slide pastes a playful Good Slide — Certified badge into the top-right corner with a stamp animation; this is a workshop joke, not an external certification. Advance again to continue. There is no Good slides heading or placeholder.'),
+    notes='Show all three Good UI examples together on one page: ReWatt, the illustrated housemate dashboard and the sign-to-voice app. There are no carousel arrows or swiping between examples. The first click anywhere stamps Good Slide — Certified; this is a workshop joke, not an external certification. After stamping, click an example to enlarge it or click outside the examples to advance.'),
  dict(name='Pitch', buildTitle='if (Pitch || Presentation_Video) {', buildCode=True, elements=[
     dict(text('if (pace === "Too Slow") {',72,208,546,42,28,RED,True),code=True),
     image('pace-too-slow.png',72,259,546,230,'Too Slow: the supplied blinking-listener meme'),
@@ -140,11 +143,17 @@ slides = [
     text('Pitch / Presentation Video',76,208,980,40,28,GRAY),
     photo('20260907_145201.jpg',72,273,186,330,'An audience at a technology event'),
     photo('PC021661.jpg',285,315,248,186,'Presenters explaining a simple app on stage'),
-    text('Judging criteria',601,292,550,54,39,BLUE,True),
-    text('Show evidence',601,394,550,54,39,RED,True),
-    text('One clear story',601,496,530,54,39,GREEN,True),
+    dict(text('Problem',601,272,550,42,34,BLUE,True),align='center'),
+    dict(kind='flowArrow',x=864,y=314,w=24,h=24),
+    dict(text('Agitation',601,342,550,42,34,RED,True),align='center'),
+    dict(kind='flowArrow',x=864,y=384,w=24,h=24),
+    dict(text('Solution',601,412,550,42,34,GREEN,True),align='center'),
+    dict(kind='flowArrow',x=864,y=454,w=24,h=24),
+    dict(text('Validation Proof',601,482,550,42,34,'#A56A00',True),align='center'),
+    dict(kind='flowArrow',x=864,y=524,w=24,h=24),
+    dict(text('Insane Value Metric',601,552,550,42,34,BLUE,True),align='center'),
     sticker('microphone',1100,500,105,135)],
-    notes='Match the pitch and presentation video to the actual judging criteria. Give each criterion clear evidence. Explain the problem, the solution and the result in language a new listener can follow. Rehearse with the event’s actual time limit.'),
+    notes='Read the pitch flow from top to bottom: Problem, Agitation, Solution, Validation Proof, Insane Value Metric. Show what hurts, why it matters, the solution, supporting evidence and one memorable measurable result. Connect the story to the actual judging criteria and rehearse within the event’s time limit.'),
  dict(name='Challenge', elements=[
     dict(text('AI for Everyday Life',72,127,1136,60,42,BLUE,True),align='center',liveTheme=True),
     image('challenge-qr.png',450,140,380,380,'Scan to submit a workshop idea'),
@@ -154,7 +163,7 @@ slides = [
     notes='Set the theme, judging criteria and Gemini connection in the presenter dashboard. The saved theme appears above the large central QR code; leave it blank until ready. Participants scan and submit. Press the GDG Reveal rankings button to analyse all ideas and reveal the top three with the existing countdown and podium inside the presentation. It requires at least three ideas and a real Gemini connection. Existing ranked results can be shown again without re-analysing. Open dashboard plays the dinosaur warp-pipe jump, then opens the public title wall. Presenter controls stay at /host.'),
  dict(name='Timer',elements=[
     dict(text('GDG Clock',72,117,1136,83,64,INK,True),align='center'),
-    dict(kind='countdown',x=430,y=207,w=420,h=475)],
+    dict(kind='countdown',x=450,y=207,w=380,h=425)],
     notes='Five-minute GDG countdown after the challenge announcement and before closing Slido Q&A. The Chrome dinosaur runs from the left to the right across the same five minutes; all timer controls also control the run. Press Start to begin, Pause to hold, Resume to continue, or Reset to return to 05:00. The timer keeps real elapsed time while this browser tab is in the background. It stays at 00:00 when finished; advance to Slido when ready.'),
  slido_slide('Questions'),
  dict(name='Thanks', elements=[
@@ -178,7 +187,8 @@ portrait = {
  'Timer': [(36,210,648,90,64),(36,358,648,716)],
  'Intro': [(36,210,648,92,64),(36,312,648,46,34),
     (36,375,282,244),(36,638,282,244),(36,901,282,244),
-    (354,470,330,58,44),(354,733,330,58,44),(354,996,330,58,44)],
+    (354,440,330,58,44),(354,703,330,58,44),(354,966,330,58,44),
+    (354,510,330,64,26),(354,773,330,64,26),(354,1036,86,64)],
  'Stories': [(36,210,430,86,72),(36,312,648,50,36),(490,202,96,96),
     (36,400,198,264),(256,400,428,321),(36,752,280,210),
     (340,752,160,214),(520,752,160,214),(36,1040,648,50,34)],
@@ -196,20 +206,24 @@ portrait = {
     (36,654,306,50,36),(378,654,306,50,36),(66,1080,240,50,34),(414,1080,240,50,34)],
  'Showcase': [(36,500,648,240,86)],
  'Demo': [(550,210,130,80),(36,350,648,44,34),(36,734,648,44,34),(36,396,648,710)],
- 'Design': [(36,210,648,92,60),(36,350,648,52,40),(36,418,648,640),(552,202,140,140)],
+ 'Design': [(36,210,648,92,60),(36,326,648,52,40),
+    (36,758,306,400),(36,394,648,330),(378,758,306,400),(552,202,140,140)],
  'Pitch': [(36,340,648,44,32),(87,392,546,230),(60,634,624,40,28),(36,674,60,38,32),
     (36,724,648,44,32),(184,786,351,230),(60,1028,624,40,28),(36,1068,60,38,32),
     (36,1120,648,70,24)],
  'Criteria': [(36,210,648,130,60),(36,352,648,46,34),(36,430,203,360),(278,430,406,305),
-    (36,834,648,58,42),(36,928,648,58,42),(36,1022,530,58,42),(572,1010,104,134)],
+    (36,826,530,44,36),(289,870,24,24),(36,896,530,44,36),(289,940,24,24),
+    (36,966,530,44,36),(289,1010,24,24),(36,1036,530,44,36),(289,1080,24,24),
+    (36,1106,530,44,36),(572,1010,104,134)],
  'Challenge': [(36,220,648,116,48),(88,348,544,544),(110,930,500,88),
     (36,1032,648,90,30),(196,1136,328,82)],
  'Thanks': [(36,210,648,120,88),(80,360,180,200),(460,360,180,200),(244,350,232,232),
     (36,660,306,52,32),(36,728,306,306),(378,660,306,52,32),(378,728,306,306)]
 }
-scenes = dict(Cover='window',Slido='portal',Intro='window',Stories='pipe',Brainstorm='balloon',
+scenes = dict(Cover='window',Slido='pipe',Intro='plane',Stories='balloon',Brainstorm='bridge',
     Idea='chase',Build='spring',Showcase='bowling',Demo='ufo',Design='portal',Pitch='rocket',
-    Criteria='hole',Challenge='pipe',Timer='portal',Questions='finish',Thanks='finish')
+    Criteria='hole',Challenge='magnet',Timer='train',Questions='finish',Thanks='finish')
+assert len({scenes[s['name']] for s in slides[:-1]}) == len(slides)-1
 for slide in slides:
     slide['scene'] = scenes[slide['name']]
     assert len(slide['elements']) == len(portrait[slide['name']])

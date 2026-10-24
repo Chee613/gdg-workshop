@@ -39,6 +39,25 @@ with tempfile.TemporaryDirectory(prefix='gdg-hosting-') as folder:
         os.environ.update(previous)
     assert app.DB.parent == test_root/'data', 'Database must use the configured persistent directory'
     assert app.MODEL == 'gemini-3.5-flash-lite', 'Flash-Lite must be the default judging model'
+    criteria = app.initial_state()['criteria']
+    assert [c['weight'] for c in criteria] == [25,20,20,15,20]
+    assert all(c['guidance'] for c in criteria)
+    app.setup()
+    legacy = [dict(name='Impact',weight=40),dict(name='Feasibility',weight=30),dict(name='Clarity',weight=30)]
+    state = app.initial_state()
+    state['criteria'] = legacy
+    app.save_state(state)
+    app.setup()
+    assert app.get_state()['criteria'] == criteria, 'Upgrade the old default before judging'
+    state.update(results=[dict(id=1)],phase='ready')
+    app.save_state(state)
+    app.setup()
+    assert app.get_state()['criteria'] == legacy, 'Never change a completed ranking rubric'
+    state.update(results=[],phase='collecting',criteria=[dict(name='Custom',weight=100)])
+    app.save_state(state)
+    app.setup()
+    assert app.get_state()['criteria'] == state['criteria'], 'Preserve a presenter custom rubric'
+    app.save_state(app.initial_state())
     sample = [dict(id=1,title='Pocket Pantry',idea='Help people use food before it expires.')]
     def gemini_response(req, timeout):
         assert req.full_url.endswith('/gemini-3.5-flash-lite:generateContent')
@@ -48,11 +67,12 @@ with tempfile.TemporaryDirectory(prefix='gdg-hosting-') as folder:
         assert config['responseFormat']['text']['mimeType'] == 'APPLICATION_JSON'
         prompt = payload['contents'][0]['parts'][0]['text']
         assert sample[0]['title'] in prompt and sample[0]['idea'] in prompt
-        result = json.dumps(dict(ratings=[dict(id=1,scores=[9,8,9],strength='Useful',improve='Validate')]))
+        assert criteria[0]['guidance'] in prompt and 'unsupported' in prompt
+        result = json.dumps(dict(ratings=[dict(id=1,scores=[9,8,9,7,6],strength='Useful',improve='Validate')]))
         return io.BytesIO(json.dumps(dict(candidates=[dict(content=dict(parts=[dict(text=result)]))])).encode())
     with patch.object(app,'urlopen',gemini_response):
         ratings = app.judge_with_gemini(app.initial_state(),sample)
-    assert ratings[0]['scores'] == [9,8,9]
+    assert ratings[0]['scores'] == [9,8,9,7,6]
     for body, expected in [
         (json.dumps(dict(error=dict(status='INVALID_ARGUMENT',message='Invalid mime_type. Key: '+app.KEY))).encode(),'INVALID_ARGUMENT'),
         (b'<html>Proxy failure</html>','Gemini returned HTTP 400'),
@@ -123,16 +143,24 @@ with tempfile.TemporaryDirectory(prefix='gdg-hosting-') as folder:
         assert request(base,'/api/collect',{'open':False},marker=True)[0] == 401
         assert request(base,'/api/collect',{'open':False},auth=AUTH)[0] == 403
         assert request(base,'/api/collect',{'open':True},auth=AUTH,marker=True)[0] == 200
+        entry = dict(client='hosting_participant_0001',name='Participant',title='Pocket Pantry',idea=' '.join(['everyday']*200))
+        assert request(base,'/api/ideas',entry)[0] == 200, '200 words can exceed the former 700-character limit'
+        entry['idea'] += ' extra'
+        assert request(base,'/api/ideas',entry)[0] == 400, 'Reject 201 words on the server'
+        entry['idea'] = 'everyday\n\t'*200
+        assert request(base,'/api/ideas',entry)[0] == 200, 'Whitespace does not count as words'
         assert request(base,'/api/ideas',dict(client='hosting_participant_0001',name='Participant',title='Pocket Pantry',idea='Help people use food before it expires.'))[0] == 200
         public = json.loads(request(base,'/api/state')[2])
         assert public['count'] == 1 and public['joinUrl'] == 'https://workshop.example.com/join'
         assert set(public['ideas'][0]) == {'id','title','created'}
         assert 'aiReady' not in public and 'error' not in public
+        assert all(set(c) == {'name','weight'} for c in public['criteria']), 'Judging guidance stays private'
         private = json.loads(request(base,'/api/host',auth=AUTH)[2])
+        assert all(c['guidance'] for c in private['criteria'])
         assert private['ideas'][0]['idea'].startswith('Help people') and private['aiReady']
         assert env['GEMINI_API_KEY'] not in json.dumps(private)
         state = app.get_state()
-        state.update(phase='revealed', results=[dict(**private['ideas'][0], scores=[9,9,9],
+        state.update(phase='revealed', results=[dict(**private['ideas'][0], scores=[9,9,9,9,9],
             total=90, strength='Useful test idea.', improve='Validate the main assumption.')])
         app.save_state(state)
         revealed = json.loads(request(base,'/api/state')[2])

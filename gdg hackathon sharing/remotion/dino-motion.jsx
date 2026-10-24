@@ -5,8 +5,42 @@ import {Easing, interpolate, useCurrentFrame, useVideoConfig} from 'remotion';
 import {coverPose} from './cover-pose.mjs';
 
 const names=window.gdgStages,rest=names.map(name=>({Cover:535,Brainstorm:190,Idea:310,Showcase:190,Demo:190,Pitch:190,Criteria:190,Timer:190,Questions:190,Thanks:580})[name]??130);
+const timing={window:[4.5,1.2],pipe:[1.8,1.25],plane:[1.8,1.35],balloon:[2.1,1.3],bridge:[1.8,1.25],chase:[1.6,1],spring:[1.8,1.1],bowling:[1.8,1.15],ufo:[2.15,1.65],portal:[1.8,1.2],rocket:[2.4,1.8],hole:[1.8,1.2],magnet:[1.8,1.3],train:[2,1.35],finish:[1.8,1.25]};
 const asset=name=>new URL(`assets/${name}`,document.baseURI).href;
-const at=(t,times,values,easing)=>interpolate(t,times,values,{extrapolateLeft:'clamp',extrapolateRight:'clamp',...(easing?{easing}:{})});
+const at=(t,times,values,easing=Easing.inOut(Easing.quad))=>interpolate(t,times,values,{extrapolateLeft:'clamp',extrapolateRight:'clamp',easing});
+
+function PaperPlane({x,y,bank,opacity}){
+ return <svg className="paper-plane" aria-label="Paper plane carrying the dinosaur" viewBox="0 0 116 45" style={{position:'absolute',left:x-36,top:604+y+31,width:116,height:45,rotate:`${bank}deg`,opacity}}>
+  <path d="M3 13L110 2L67 39L50 25L32 33L36 22Z" fill="white" stroke="#4285F4" strokeWidth="2.5" strokeLinejoin="round"/>
+  <path d="M36 22L110 2L50 25L32 33Z" fill="#D2E3FC" stroke="#4285F4" strokeWidth="1.5"/>
+  <path d="M5 32H21M13 40H28" stroke="#34A853" strokeWidth="2" strokeLinecap="round"/>
+ </svg>;
+}
+
+function DrawnBridge({start,end,draw,opacity}){
+ const tip=start+(end-start)*draw;
+ return <svg className="drawn-bridge" aria-label="Pencil drawing a bridge for the dinosaur" viewBox="0 0 1280 96" style={{position:'absolute',left:0,top:620,width:1280,height:96,opacity}}>
+  <path d={`M${start} 81Q${(start+end)/2} 63 ${end} 81`} pathLength="1" fill="none" stroke="#4285F4" strokeWidth="5" strokeDasharray="1" strokeDashoffset={1-draw} strokeLinecap="round"/>
+  <g transform={`translate(${tip-4} 70) rotate(-35)`}><path d="M0 0V-42H12V0L6 12Z" fill="#FBBC04" stroke="#775600" strokeWidth="1.5"/><path d="M0-42V-49H12V-42" fill="#EA4335"/><path d="M2 3L6 12L10 3" fill="#111315"/></g>
+ </svg>;
+}
+
+function Magnet({x,pull,opacity}){
+ return <svg className="giant-magnet" aria-label="Magnet pulling the dinosaur" viewBox="0 0 100 68" style={{position:'absolute',left:x,top:636,width:100,height:68,opacity}}>
+  <path d="M35 12H60A22 22 0 0 1 60 56H35V42H60A8 8 0 0 0 60 26H35Z" fill="#EA4335" stroke="#A52714" strokeWidth="2"/>
+  <path d="M26 12H42V26H26ZM26 42H42V56H26Z" fill="#E8F0FE" stroke="#4285F4" strokeWidth="2"/>
+  <g opacity={pull} fill="none" stroke="#4285F4" strokeWidth="2" strokeLinecap="round"><path d="M15 18L5 12M13 34H0M15 50L5 56"/></g>
+ </svg>;
+}
+
+function Train({x,rotation,opacity}){
+ return <svg className="gdg-train" aria-label="GDG express train carrying the dinosaur" viewBox="0 0 160 66" style={{position:'absolute',left:x-40,top:648,width:160,height:66,opacity}}>
+  <path d="M8 25H91V48H8ZM91 10H133L151 28V48H91Z" fill="#E8F0FE" stroke="#4285F4" strokeWidth="2"/>
+  <path d="M101 16H126L136 27H101Z" fill="#4285F4"/><path d="M4 48H155" stroke="#34A853" strokeWidth="4"/>
+  <path d="M96 5H131" stroke="#EA4335" strokeWidth="5" strokeLinecap="round"/><rect x="141" y="32" width="9" height="9" rx="2" fill="#FBBC04"/>
+  {[24,72,119].map(cx=><g key={cx} transform={`rotate(${rotation} ${cx} 53)`}><circle cx={cx} cy="53" r="9" fill="white" stroke="#5F6368" strokeWidth="3"/><path d={`M${cx-6} 53H${cx+6}M${cx} 47V59`} stroke="#4285F4" strokeWidth="2"/></g>)}
+ </svg>;
+}
 
 function WelcomeCape({x,y,t}){
  const width=at(t,[0,.4],[30,960]),wave=Math.sin(t*35)*3;
@@ -127,12 +161,14 @@ function ArcadeScene({phase,kind,from,to,direction}){
  const activity=seconds<8||seconds>=29?'watch':seconds<18?'play':'sleep';
  const welcome=exiting&&kind==='window'&&from===0&&to===1;
  let x=rest[exiting?from:to],y=62,facing=1,action='idle',pipe=null,chaser=null,board=null,clip=false,surprise=false;
- let size=1,opacity=1,rotation=0,ufo=null,beam=0,portal=null,portalOpen=1,rocket=null,hole=null,balloons=null,bowling=null;
+ let size=1,opacity=1,rotation=0,ufo=null,beam=0,portal=null,portalOpen=1,rocket=null,hole=null,balloons=null,bowling=null,plane=null,bridge=null,magnet=null,train=null;
  if(exiting&&kind==='window'){
-  x=welcome?at(t,[0,.8],[rest[from],2310]):at(t,[0,.28,.68],[rest[from],26,-66]);
+  x=welcome?at(t,[0,.8],[rest[from],2310],Easing.linear):at(t,[0,.28,.68],[rest[from],26,-66]);
   y=welcome?62:at(t,[0,.28,.46,.68],[62,62,4,-70]);facing=welcome?1:-1;
   action=welcome||t<.28?'run':'window-jump';
- }else if(entering&&(kind==='window'||kind==='spring')){
+ }else if(entering&&kind==='window'){
+  x=at(t,[0,.64],[-65,rest[to]],Easing.out(Easing.cubic));action=t<.64?'run':'idle';
+ }else if(entering&&kind==='spring'){
   x=rest[to];y=t<.46?at(t,[0,.46],[-680,62],Easing.bezier(.6,0,1,1)):at(t,[.46,.56,.66],[62,44,62]);
   action=t<.46?'fall':t<.66?'land':'idle';
  }else if(exiting&&kind==='pipe'){
@@ -142,6 +178,40 @@ function ArcadeScene({phase,kind,from,to,direction}){
   pipe=Math.max(24,rest[to]-154);
   x=at(t,[0,.32,.64],[pipe+14,pipe+14,rest[to]]);y=at(t,[0,.26,.38,.64],[108,4,-24,62]);
   clip=t<.32;facing=1;action=t<.32?'pipe-up':t<.64?'pipe-hop':'idle';
+ }else if(kind==='plane'&&(exiting||entering)){
+  if(exiting){
+   x=at(t,[0,.2,.8],[rest[from],rest[from]+50,1390]);y=at(t,[0,.2,.55,.8],[62,62,26,38]);
+   plane={x,y,bank:at(t,[0,.28,.8],[0,-7,-2]),opacity:at(t,[0,.16],[0,1])};
+   action=t<.2?'plane-board':'plane-glide';rotation=at(t,[.2,.45],[0,-5]);
+  }else{
+   x=at(t,[0,.52],[-120,rest[to]],Easing.out(Easing.cubic));y=at(t,[0,.52],[34,62]);
+   plane={x:x+at(t,[.52,.8],[0,600]),y:y+at(t,[.52,.8],[0,45]),bank:at(t,[.5,.8],[0,12]),opacity:at(t,[.58,.8],[1,0])};
+   action=t<.52?'plane-land':'idle';
+  }
+ }else if(kind==='bridge'&&(exiting||entering)){
+  if(exiting){
+   bridge={start:rest[from]-25,end:1370,draw:at(t,[0,.5],[0,1]),opacity:1};
+   x=at(t,[.22,.8],[rest[from],1380]);y=62-9*Math.sin(at(t,[.22,.8],[0,Math.PI]));action=t<.22?'drawing':'run';
+  }else{
+   bridge={start:-100,end:rest[to]+40,draw:1,opacity:at(t,[.58,.8],[1,0])};
+   x=at(t,[0,.6],[-70,rest[to]],Easing.out(Easing.cubic));y=62-9*Math.sin(at(t,[0,.6],[0,Math.PI]));action=t<.6?'run':'idle';
+  }
+ }else if(kind==='magnet'&&(exiting||entering)){
+  if(exiting){
+   const grab=at(t,[.16,.36],[0,1]);x=at(t,[.32,.8],[rest[from],1390],Easing.in(Easing.cubic));y=62-18*grab;rotation=-10*grab;
+   magnet={x:x+60,pull:grab,opacity:at(t,[0,.16],[0,1])};action=t<.32?'magnet-resist':'magnet-pull';
+  }else{
+   x=at(t,[0,.58],[-70,rest[to]],Easing.out(Easing.cubic));y=at(t,[0,.48,.6,.7],[44,44,64,62]);rotation=at(t,[.4,.65],[-10,0]);
+   magnet={x:x+60+at(t,[.48,.8],[0,1300]),pull:at(t,[.45,.6],[1,0]),opacity:at(t,[.65,.8],[1,0])};action=t<.48?'magnet-pull':t<.7?'land':'idle';
+  }
+ }else if(kind==='train'&&(exiting||entering)){
+  if(exiting){
+   x=at(t,[.24,.8],[rest[from],1400],Easing.in(Easing.cubic));y=at(t,[0,.16,.24],[62,28,31]);
+   train={x:x-20,y,rotation:(x-rest[from])*5,opacity:at(t,[0,.14],[0,1])};action=t<.24?'train-board':'train-ride';
+  }else{
+   x=at(t,[0,.5],[-150,rest[to]],Easing.out(Easing.cubic));y=at(t,[0,.45,.55,.68],[31,31,22,62]);
+   train={x:x-20+at(t,[.5,.8],[0,1500]),rotation:(x+150+at(t,[.5,.8],[0,1500]))*5,opacity:at(t,[.72,.8],[1,0])};action=t<.5?'train-ride':t<.68?'train-hop':'idle';
+  }
  }else if(exiting&&kind==='chase'){
   surprise=t<.2;facing=t<.18?-direction:direction;
   x=t<.18?rest[from]+Math.sin(t*110)*2:at(t,[.18,.73],[rest[from],direction>0?1340:-70],Easing.bezier(.25,0,.6,1));
@@ -179,13 +249,13 @@ function ArcadeScene({phase,kind,from,to,direction}){
   }
  }else if(kind==='rocket'&&(exiting||entering)){
   if(exiting){
-   y=at(t,[0,.26,.42,.8],[62,62,48,-740],Easing.bezier(.42,0,.8,1));
-   x=rest[from]+(t<.3?Math.sin(t*100)*2:0);rocket={x,y:604+y+24,size:at(t,[0,.16],[0,1]),lit:t>.2};
-   action=t<.3?'rocket-ready':'rocket-launch';
+   x=at(t,[0,.32],[rest[from],1220]);y=at(t,[0,.32,.42,.8],[62,62,20,-740],Easing.bezier(.42,0,.8,1));
+   rocket={x:1220,y:604+y+24+at(t,[0,.24],[110,0]),size:at(t,[.12,.28],[0,1]),lit:t>.35};
+   action=t<.32?'run':t<.42?'rocket-ready':'rocket-launch';
   }else{
-   y=at(t,[0,.38,.52,.62],[-740,46,62,62],Easing.bezier(.2,0,.5,1));
-   rocket={x,y:604+y+24+at(t,[.38,.7],[0,120]),size:at(t,[.42,.75],[1,0]),lit:t<.38};
-   action=t<.38?'rocket-return':t<.62?'land':'idle';
+   x=at(t,[0,.36,.7],[1220,1220,rest[to]]);y=at(t,[0,.32,.42,.64],[-740,20,40,62],Easing.bezier(.2,0,.5,1));
+   rocket={x:1220,y:604+y+24+at(t,[.32,.6],[0,150]),size:at(t,[.35,.6],[1,0]),lit:t<.32};
+   facing=t>.36?-1:1;action=t<.32?'rocket-return':t<.64?'rocket-dismount':t<.7?'run':'idle';
   }
  }else if(kind==='hole'&&(exiting||entering)){
   if(exiting){
@@ -197,11 +267,11 @@ function ArcadeScene({phase,kind,from,to,direction}){
   }
  }else if(kind==='balloon'&&(exiting||entering)){
   if(exiting){
-   y=at(t,[0,.24,.8],[62,62,-740],Easing.bezier(.42,0,.75,1));action=t<.24?'balloon-ready':'balloon-lift';
-   balloons={x:x-25,y:604+y-80};
+   x=at(t,[.16,.8],[rest[from],1400]);y=62-4*Math.sin(at(t,[.16,.8],[0,Math.PI]));action=t<.16?'balloon-ready':'balloon-lift';
+   balloons={x:x-14,y:604+y-35};
   }else{
-   y=at(t,[0,.48,.6],[-740,62,62],Easing.bezier(.2,0,.5,1));action=t<.48?'balloon-return':'idle';
-   balloons={x:x-25,y:604+y-80-at(t,[.48,.8],[0,850])};
+   x=at(t,[0,.52],[-80,rest[to]],Easing.out(Easing.cubic));y=at(t,[0,.52],[52,62]);action=t<.52?'balloon-return':'idle';
+   balloons={x:x-14+at(t,[.52,.8],[0,1300]),y:604+y-35-at(t,[.52,.8],[0,30])};
   }
  }else if(kind==='bowling'&&(exiting||entering)){
   if(exiting){
@@ -225,18 +295,24 @@ function ArcadeScene({phase,kind,from,to,direction}){
  }
  if(coverIdle){x=rest[to];y=14;action=`cover-${activity}`;rotation=activity==='sleep'?-10:0;}
  const running=['run','flee','skid'].includes(action);
+ const landing=entering&&action==='land'?1-.1*Math.sin(at(t,[.48,.66],[0,Math.PI])):1;
  const dinoWidth=champion?60:coverIdle?78:welcome?at(t,[0,.08],[78,35]):35;
  const dinoHeight=champion?65:coverIdle?86:welcome?at(t,[0,.08],[86,38]):38;
  return <>
   <div aria-hidden="true" style={{position:'absolute',left:0,top:704,width:1280,height:2,background:'#DADCE0'}}/>
   <div aria-hidden="true" style={{position:'absolute',left:0,top:710,width:1280,height:3,backgroundImage:'repeating-linear-gradient(90deg,transparent 0 28px,#E8EAED 28px 32px,transparent 32px 75px)'}}/>
   {coverIdle&&<CoverLounge activity={activity} seconds={seconds}/>}
+  {!coverIdle&&<div className="dino-shadow" aria-hidden="true" style={{position:'absolute',left:x+5,top:700,width:25*size,height:4,borderRadius:'50%',background:'#111315',opacity:.12*opacity*Math.max(0,1-Math.abs(62-y)/100)}}/>}
+  {bridge&&<DrawnBridge {...bridge}/>}
+  {plane&&<PaperPlane {...plane}/>}
+  {magnet&&<Magnet {...magnet}/>}
+  {train&&<Train {...train}/>}
   {board!==null&&<div className="springboard" aria-label="Springboard" style={{position:'absolute',left:592,top:686+board*7,width:60,height:18-board*7,borderBottom:'4px solid #4285F4',borderTop:'6px solid #EA4335',background:'repeating-linear-gradient(135deg,transparent 0 6px,#5F6368 6px 9px,transparent 9px 13px)'}}/>}
   {chaser!==null&&<PacMan x={chaser} direction={direction} t={t}/>}
   {ufo!==null&&<Ufo x={ufo} beam={beam} t={t}/>}
   {hole!==null&&<Trapdoor {...hole} opacity={entering?at(t,[.65,.8],[1,0]):1}/>}
   {rocket!==null&&<Rocket {...rocket} t={t}/>}
-  {balloons!==null&&<svg className="dino-balloons" aria-label="GDG balloons lifting the dinosaur" viewBox="0 0 90 112" style={{position:'absolute',left:balloons.x,top:balloons.y,width:90,height:112}}>
+  {balloons!==null&&<svg className="dino-balloons" aria-label="GDG balloons lifting the dinosaur" viewBox="0 0 90 112" style={{position:'absolute',left:balloons.x,top:balloons.y,width:52,height:64}}>
    <path d="M24 38L46 108L67 40M44 30L46 108" fill="none" stroke="#5F6368" strokeWidth="1.5"/>
    <ellipse cx="24" cy="26" rx="17" ry="23" fill="#4285F4"/><ellipse cx="66" cy="28" rx="17" ry="23" fill="#EA4335"/><ellipse cx="45" cy="19" rx="17" ry="24" fill="#FBBC04"/>
    <path d="M18 12L15 18M61 13L58 19M40 4L37 10" stroke="white" strokeWidth="3" strokeLinecap="round"/>
@@ -254,9 +330,9 @@ function ArcadeScene({phase,kind,from,to,direction}){
   </>}
   {welcome&&<WelcomeCape x={x} y={y} t={t}/>}
   <div style={{position:'absolute',inset:0,...(clip?{clipPath:'inset(0 0 68px 0)'}:{})}}>
-   <img id="arcade-dino" src={asset(running?`dino-run-${Math.floor(welcome?frame/fps*10:t*14)%2+1}.png`:'dinosaur.png')}
+   <img id="arcade-dino" src={asset(running?`dino-run-${Math.floor(seconds*12)%2+1}.png`:'dinosaur.png')}
     alt={`Dinosaur in ${names[exiting?from:to]}`} data-action={action} data-x={x} data-y={y} data-size={size} data-frame={frame}
-    style={{position:'absolute',visibility:coverIdle?'hidden':'visible',left:x,top:604+y-(welcome?dinoHeight-38:0),width:dinoWidth,height:dinoHeight,imageRendering:'pixelated',objectFit:'contain',scale:`${facing*size} ${size}`,opacity,rotate:`${action==='launch'?direction*-16:rotation}deg`}}/>
+    style={{position:'absolute',visibility:coverIdle?'hidden':'visible',left:x,top:604+y-(welcome?dinoHeight-38:0),width:dinoWidth,height:dinoHeight,imageRendering:'pixelated',objectFit:'contain',transformOrigin:'50% 100%',scale:`${facing*size/Math.sqrt(landing)} ${size*landing}`,opacity,rotate:`${action==='launch'?direction*-16:rotation}deg`}}/>
   </div>
   {surprise&&<span className="surprise" aria-label="Dinosaur is surprised" style={{position:'absolute',left:x+12,top:628,font:'bold 27px monospace',color:'#EA4335'}}>!</span>}
   {pipe!==null&&<Pipe x={pipe}/>}
@@ -269,7 +345,7 @@ function ArcadePlayer(){
  const initial=Math.max(0,names.indexOf(document.querySelector('.slide.active').getAttribute('aria-label')));
  const [job,setJob]=useState({phase:'idle',kind:'window',from:initial,to:initial,direction:1,id:0});
  const coverIdle=job.phase==='idle'&&names[job.to]==='Cover',fps=60;
- const durationInFrames=coverIdle?30*fps:job.phase==='exit'?(job.kind==='window'&&job.from===0&&job.to===1?4.5*fps:1.8*fps):fps;
+ const durationInFrames=coverIdle?30*fps:job.phase==='idle'?fps:Math.round((timing[job.kind]??timing.pipe)[job.phase==='exit'?0:1]*fps);
  const complete=()=>{host.dataset.phase='idle';const resolve=pending.current;pending.current=null;resolve?.();};
  useEffect(()=>{
   // ponytail: the Player's ended event is the slide-change clock; no second timer to drift.
@@ -282,7 +358,7 @@ function ArcadePlayer(){
  },[]);
  useLayoutEffect(()=>{
   lastFrame.current=durationInFrames-1;
-  player.current.pause();player.current.seekTo(0);host.dataset.phase=job.phase;host.dataset.scene=job.kind;
+  player.current.pause();player.current.seekTo(0);host.dataset.phase=job.phase;host.dataset.scene=job.kind;host.dataset.duration=durationInFrames;
   if(job.phase==='idle'&&!coverIdle)return;
   if(matchMedia('(prefers-reduced-motion: reduce)').matches){player.current.seekTo(lastFrame.current);complete();}else player.current.play();
  },[job]);

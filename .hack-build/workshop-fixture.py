@@ -11,7 +11,7 @@ spec.loader.exec_module(app)
 
 def fixture_judge(state,ideas):
     time.sleep(.2)
-    return list(reversed([dict(id=idea['id'],scores=[9-i,8,9],strength='A clear, useful test idea.',improve='Test the main assumption.') for i,idea in enumerate(ideas)]))
+    return list(reversed([dict(id=idea['id'],scores=[9-i]+[8]*(len(state['criteria'])-1),strength='A clear, useful test idea.',improve='Test the main assumption.') for i,idea in enumerate(ideas)]))
 
 with tempfile.TemporaryDirectory() as folder:
     app.DB=Path(folder)/'fixture.sqlite3'
@@ -20,8 +20,8 @@ with tempfile.TemporaryDirectory() as folder:
     app.setup()
     sample=[dict(id=1,name='Test',title='Test',idea='A useful test idea',created=0)]
     state=app.get_state()
-    assert app.validate_ratings([dict(id=1,scores=[10,8,9],strength='Useful',improve='Test')],state,sample)[0]['total']==91
-    for invalid in [[dict(id=999,scores=[10,8,9],strength='x',improve='x')],[],[dict(id=1,scores=[11,8,9],strength='x',improve='x')]]:
+    assert app.validate_ratings([dict(id=1,scores=[10,8,9,7,6],strength='Useful',improve='Test')],state,sample)[0]['total']==81.5
+    for invalid in [[dict(id=999,scores=[10,8,9,7,6],strength='x',improve='x')],[],[dict(id=1,scores=[11,8,9,7,6],strength='x',improve='x')]]:
         try:app.validate_ratings(invalid,state,sample)
         except ValueError:pass
         else:raise AssertionError('Invalid AI output must be rejected')
