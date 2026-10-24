@@ -32,11 +32,10 @@ def slido_slide(name):
 
 slides = [
  dict(name='Cover',elements=[
-    text('Beginner Series:',72,130,1136,48,32,BLUE,True),
-    text('Hackathon Masterclass',72,210,1136,96,76,INK,True),
-    text('& Hackathon Project Sharing',72,310,1136,86,62,INK,True),
-    dict(kind='coverControls',x=390,y=485,w=500,h=56)],
-    notes='Welcome to Beginner Series: Hackathon Masterclass & Hackathon Project Sharing. The cover dinosaur can watch TV, play Dino Run or nap. The activity buttons change only the cover scene. Advance to Slido Q&A when ready.'),
+    dict(text('Re:Zero Beginner series:',72,195,1136,48,32,BLUE,True),align='center'),
+    dict(text('Hackathon Masterclass',72,266,1136,96,76,INK,True),align='center'),
+    dict(text('& Hackathon Project Sharing',72,366,1136,86,62,INK,True),align='center')],
+    notes='Welcome to Re:Zero Beginner series: Hackathon Masterclass & Hackathon Project Sharing. The dinosaur automatically watches TV, plays Dino Run and drifts off to sleep. Advance to Slido Q&A when ready.'),
  slido_slide('Slido'),
  dict(name='Intro', elements=[
     text('Meet the builders.',72,117,1110,83,68,INK,True),
@@ -153,6 +152,10 @@ slides = [
     dict(text('',265,608,750,40,18,GRAY),align='center',liveStatus=True),
     dict(kind='link',text='Open dashboard',href='/board',dashboard=True,x=72,y=603,w=190,h=40)],
     notes='Set the theme, judging criteria and Gemini connection in the presenter dashboard. The saved theme appears above the large central QR code; leave it blank until ready. Participants scan and submit. Press the GDG Reveal rankings button to analyse all ideas and reveal the top three with the existing countdown and podium inside the presentation. It requires at least three ideas and a real Gemini connection. Existing ranked results can be shown again without re-analysing. Open dashboard plays the dinosaur warp-pipe jump, then opens the public title wall. Presenter controls stay at /host.'),
+ dict(name='Timer',elements=[
+    dict(text('GDG Clock',72,117,1136,83,64,INK,True),align='center'),
+    dict(kind='countdown',x=430,y=207,w=420,h=475)],
+    notes='Five-minute GDG countdown after the challenge announcement and before closing Slido Q&A. The Chrome dinosaur runs from the left to the right across the same five minutes; all timer controls also control the run. Press Start to begin, Pause to hold, Resume to continue, or Reset to return to 05:00. The timer keeps real elapsed time while this browser tab is in the background. It stays at 00:00 when finished; advance to Slido when ready.'),
  slido_slide('Questions'),
  dict(name='Thanks', elements=[
     dict(text('Thank You',72,117,1136,132,100,INK,True),align='center'),
@@ -169,9 +172,10 @@ slides = [
 # Portrait positions reuse the same elements, photos, galleries and click-to-reveal steps.
 # Each tuple is x, y, width, height, and optional font size on a 720 x 1280 canvas.
 portrait = {
- 'Cover': [(36,216,648,52,36),(36,305,648,190,76),(36,510,648,190,64),(36,1040,648,88)],
+ 'Cover': [(36,270,648,52,36),(36,370,648,190,76),(36,600,648,190,64)],
  'Slido': [(36,240,648,90,64),(72,350,576,576),(36,970,648,50,32)],
  'Questions': [(36,240,648,90,64),(72,350,576,576),(36,970,648,50,32)],
+ 'Timer': [(36,210,648,90,64),(36,358,648,716)],
  'Intro': [(36,210,648,92,64),(36,312,648,46,34),
     (36,375,282,244),(36,638,282,244),(36,901,282,244),
     (354,470,330,58,44),(354,733,330,58,44),(354,996,330,58,44)],
@@ -205,7 +209,7 @@ portrait = {
 }
 scenes = dict(Cover='window',Slido='portal',Intro='window',Stories='pipe',Brainstorm='balloon',
     Idea='chase',Build='spring',Showcase='bowling',Demo='ufo',Design='portal',Pitch='rocket',
-    Criteria='hole',Challenge='pipe',Questions='finish',Thanks='finish')
+    Criteria='hole',Challenge='pipe',Timer='portal',Questions='finish',Thanks='finish')
 for slide in slides:
     slide['scene'] = scenes[slide['name']]
     assert len(slide['elements']) == len(portrait[slide['name']])
@@ -218,4 +222,4 @@ for slide in slides:
 for label,file,color in [('UI example','good-ui-slot.svg',BLUE),('Slide example','good-slide-slot.svg',GREEN),('Bad UI example','bad-ui-slot.svg',RED),('Bad slide example','bad-slide-slot.svg',YELLOW)]:
     frame = '' if file.startswith('good-') else f'<rect x="2" y="2" width="542" height="298" rx="15" fill="#FAFBFD" stroke="{color}" stroke-width="2" stroke-dasharray="8 7"/>'
     (OUT/'assets'/file).write_text(f'''<svg xmlns="http://www.w3.org/2000/svg" width="546" height="302" viewBox="0 0 546 302">{frame}<rect x="239" y="92" width="68" height="52" rx="6" fill="none" stroke="#BDC1C6" stroke-width="3"/><circle cx="257" cy="108" r="6" fill="#BDC1C6"/><path d="M244 137L262 119L275 132L287 117L302 137" fill="none" stroke="#BDC1C6" stroke-width="3"/><text x="273" y="198" text-anchor="middle" font-family="Arial" font-size="25" fill="#5F6368">{label}</text></svg>''',encoding='utf-8')
-print('Prepared fifteen slides with an interactive cover, Slido Q&A and closing forms.')
+print('Prepared sixteen slides with a GDG countdown, Slido Q&A and closing forms.')

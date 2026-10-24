@@ -19,10 +19,14 @@ __pycache__/
 !/.hack-build/bundle-motion.mjs
 !/.hack-build/challenge-slide.js
 !/.hack-build/galleries.js
+!/.hack-build/countdown.js
 !/.hack-build/photos.json
 !/.hack-build/ai-logo-sources.json
 !/.hack-build/deck-spec.json
 !/.hack-build/verify-html.mjs
+!/.hack-build/verify-countdown.mjs
+!/.hack-build/verify-cover-loop.mjs
+!/.hack-build/cover-lounge-art.md
 !/.hack-build/verify-workshop.mjs
 !/.hack-build/verify-hosting.py
 !/.hack-build/workshop-fixture.py

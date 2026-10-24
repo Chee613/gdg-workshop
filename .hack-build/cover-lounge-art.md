@@ -1,0 +1,35 @@
+# Cover lounge artwork
+
+Generated with the built-in image_gen tool. All final PNGs preserve RGBA transparency and the same 1774 × 887 canvas. Project assets live in `gdg hackathon sharing/output/assets/`:
+
+- `cover-lounge-environment.png`: empty sofa and television, stationary background.
+- `cover-lounge-dino.png`: isolated seated dinosaur and controller, animated foreground.
+- `cover-lounge-blink.png`: matching closed-eye state, used only as a feathered eye patch.
+
+## Initial generation prompt
+
+Use case: stylized-concept. Asset type: animation-ready cover illustration for a GDG hackathon workshop. Create a premium charming soft 3D clay miniature scene on a GENUINELY TRANSPARENT background. Wide horizontal composition, camera at near-front eye level with just a little depth. On the LEFT a cute charcoal-gray Chrome offline T-rex dinosaur is seated very naturally in a comfortable low Google-blue two-seat sofa. Keep the recognizable Chrome dino big boxy head, short muzzle, tiny arms, stout body and tail, but round the corners slightly like a beautifully made clay toy. Give it a friendly tiny bright eye. The dinosaur's back is supported by the sofa, hips sink into the soft cushion, knees bend comfortably, both little feet rest toward the floor, and its two small hands hold a dark little game controller LOW ON ITS LAP. Make its anatomy and weight believable and adorable; it must clearly be sitting, not standing on furniture. The sofa is a believable upholstered miniature: wide soft seat cushions, plump back cushions and two padded armrests, not an office chair or blocky icon. On the RIGHT facing the dinosaur, with a small clean gap between, is a matching off-white retro television with a perfectly FLAT FRONT-FACING rectangular dark pale-blue screen, softly rounded bezel, tiny Google red/yellow/green control buttons, two short legs. Keep TV front screen nearly parallel to image plane to allow a game animation to be added later in code. Character and furniture use exactly the same premium matte clay material, soft studio light and coherent subtle contact shadows. Ground only via a small faint contact shadow, NO base platform, NO background rectangle, no room, no walls. Color accents #4285F4 #EA4335 #FBBC04 #34A853, charcoal body, ivory TV. Main scene centered and fully visible with 8% transparent margin all around; sofa+dino occupies left 50%, TV right 35%. No text, no words, no logos, no typography, no watermark, no extra props or people. Highest priority: appealing natural seated dinosaur pose, cohesive professional illustration rather than collaged stickers.
+
+## Environment edit prompt
+
+Edit target: the supplied transparent scene. Create an animation BACKGROUND PLATE by removing ONLY the dinosaur and its game controller. Reconstruct the now-empty sofa's seat and back cushions naturally where the dinosaur used to sit. Preserve the sofa, TV, screen, lighting, camera, colors, full original canvas aspect ratio and EXACT object coordinates and sizes. The sofa stays on the left and TV on the right at their original positions. Keep the pale-blue TV screen blank. Leave everything else identical. GENUINELY transparent background, no white backdrop. No text, no extra objects. Output the full same-size scene canvas, do not crop or reframe.
+
+## Dinosaur edit prompt
+
+Edit target: the supplied transparent scene. Create an animation FOREGROUND LAYER: isolate ONLY the exact charcoal dinosaur and the controller it is holding. Remove the ENTIRE sofa, TV, ground shadows and every other object, leaving actual transparent pixels. Preserve this exact dinosaur's appearance, open eye, seated posture, controller on its lap, lighting, scale, and EXACT pixel placement on the original full WIDE canvas. It is an isolated seated dinosaur with bent knees and feet down. The empty left/right space where furniture was must stay transparent. Do NOT center, enlarge, crop, change pose or reframe the dinosaur. Preserve original canvas aspect ratio. Complete obscured edges of dinosaur naturally where sofa touched it. No text.
+
+## Closed-eye edit prompt
+
+Precise animation state edit of the supplied isolated dinosaur. Change ONLY its one visible eye to be gently CLOSED, with a peaceful curved dark eyelid following the same eye position. This is the closed-eye blink/sleep layer for a web animation. EVERYTHING ELSE MUST remain identical: exact head shape, expression, body, sitting posture, tail, hands, controller, material, light, pixel position and size, and original full wide transparent canvas. Do not move the dinosaur, do not crop, do not change head or body pose. Background must stay genuinely transparent. No furniture, no new objects, no text. Preserve exact full canvas framing; only close the eye.
+
+## Pixel dinosaur revision (built-in image_gen)
+
+Final active foreground assets: `cover-lounge-dino-pixel.png`, `cover-lounge-blink-pixel.png`. The original rounded artwork remains available.
+
+### Open-eye edit prompt
+
+Edit target: this isolated seated dinosaur with controller on transparent wide canvas. Make ONLY the dinosaur substantially more PIXELATED, like the iconic Chrome offline T-Rex translated into a beautiful 3D voxel toy. Replace the rounded head and organic curved silhouette with clean stair-stepped square-pixel edges, a rectangular blocky T-Rex head, a tiny square white eye with dark pupil, a stepped jaw and muzzle, chunky rectangular body, stepped tail, cuboid thighs and feet, very short blocky arms. Clearly recognizable Chrome dinosaur, not a generic rounded dinosaur, not Minecraft clothing. Keep the premium charcoal-gray material and coherent soft studio lighting; broad flat voxel faces with subtle shading, NOT a blurry low-resolution image and NOT a mosaic filter applied over the whole canvas. Preserve the EXACT seated pose, body proportions, head position, overall silhouette bounds, bent knees, feet and controller held on lap, camera angle, lighting direction, original full 1774x887 wide transparent canvas, and exact dinosaur placement on the left. It must align over the existing sofa without moving or resizing. Keep the controller recognizable with tiny red/yellow/green buttons. The small eye stays at its existing location near canvas x605 y203 for animation alignment. No sofa, TV, floor, background, writing or other objects. Genuinely transparent background. Do not crop, re-center or zoom.
+
+### Closed-eye edit prompt
+
+Precise animation-state edit. Change ONLY the visible square eye of this seated voxel Chrome dinosaur to a CLOSED eye: a short straight horizontal dark pixel bar at the same eye location. Remove its white eye highlight for this closed state. Keep every other pixel detail as close as possible: exact voxel head, face, stair-stepped silhouette, seated posture, arms, controller, tail, feet, charcoal material, lighting, scale, exact dinosaur coordinates and full original 1774x887 wide transparent canvas. Do NOT move, recenter, resize, reframe, change pose, soften the voxel edges, or add objects. It must align perfectly with the open-eye source for a blink overlay. Genuinely transparent background. No text.

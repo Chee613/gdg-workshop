@@ -17,22 +17,25 @@ try{
  await page.goto(base+'/Hackathon-Tips.html#cover');
  await page.waitForSelector('#dino-motion[data-ready="true"]');await page.evaluate(()=>document.fonts.ready);
  await page.waitForFunction(()=>[...document.images].every(i=>i.complete&&i.naturalWidth>0));
- assert.equal(await page.locator('.slide').count(),15);assert.equal(await page.locator('.slide-jump button').count(),15);
+ assert.equal(await page.locator('.slide').count(),16);assert.equal(await page.locator('.slide-jump button').count(),16);
  assert.equal(await active(),'Cover');
- assert.equal((await page.locator('.slide.active .copy').allTextContents()).join(' '),'Beginner Series: Hackathon Masterclass & Hackathon Project Sharing');
- for(const [label,activity]of [['Dino Run','play'],['Nap','sleep'],['Watch TV','watch']]){
-  await page.getByRole('button',{name:label,exact:true}).click();
-  await page.waitForFunction(activity=>document.querySelector('#arcade-dino').dataset.action===`cover-${activity}`,activity);
-  assert.equal(await active(),'Cover','Cover activity controls do not advance the deck');
-  assert.equal(await page.getByRole('button',{name:label,exact:true}).getAttribute('aria-pressed'),'true');
+ assert.equal((await page.locator('.slide.active .copy').allTextContents()).join(' '),'Re:Zero Beginner series: Hackathon Masterclass & Hackathon Project Sharing');
+ assert.equal(await page.locator('[data-cover-activity],.cover-activities').count(),0,'Cover has no activity choices');
+ assert.equal(await page.locator('.slide.active .sticker').count(),0);
+ const breath=await page.locator('.cover-dino').getAttribute('data-breath');
+ await page.waitForTimeout(300);
+ assert.notEqual(await page.locator('.cover-dino').getAttribute('data-breath'),breath,'The dinosaur itself breathes');
+ for(const activity of ['watch','play','sleep']){
+  await page.waitForFunction(activity=>document.querySelector('#arcade-dino').dataset.action===`cover-${activity}`,activity,{timeout:25000});
+  assert.equal(await active(),'Cover','Automatic activities do not advance the deck');
   await page.locator('.stage').screenshot({path:path.join(dir,`cover-${activity}.png`)});
  }
  await page.locator('.viewport').focus();await page.keyboard.press('ArrowRight');await settle();assert.equal(await active(),'Slido');
  await page.keyboard.press('ArrowLeft');await settle();assert.equal(await active(),'Cover');
- assert.ok(await page.locator('.cover-lounge').isVisible(),'Returning to the cover restores its interactive lounge');
+ assert.ok(await page.locator('.cover-lounge').isVisible(),'Returning to the cover restores its automatic lounge');
  for(const name of ['Slido','Questions'])assert.ok((await page.locator(`.slide[aria-label="${name}"] img[alt="Slido Q&A QR code"]`).getAttribute('src')).endsWith('slido-qa.png'));
  assert.deepEqual(spec.slice(0,3).map(s=>s.name),['Cover','Slido','Intro']);
- assert.deepEqual(spec.slice(-2).map(s=>s.name),['Questions','Thanks']);
+ assert.deepEqual(spec.slice(-4).map(s=>s.name),['Challenge','Timer','Questions','Thanks']);
  assert.equal(await page.locator('.slide-jump').textContent(),'');assert.equal(await page.locator('.sticker').count(),4);
  await page.setViewportSize({width:390,height:844});
  const rotate=page.getByRole('dialog',{name:'Rotate your phone',exact:true});
@@ -314,6 +317,6 @@ try{
  await page.locator('.stage').screenshot({path:path.join(dir,'thank-you-finale.png')});
  await page.keyboard.press('End');await settle();assert.equal(await active(),'Thanks');
  assert.deepEqual(errors,[]);
- await fs.writeFile(path.join(dir,'html-checks.json'),JSON.stringify({passed:true,slides:15,names:spec.map(s=>s.name),sourceImages:[...sources],checks:['all original photos','both uploads','named portraits','fifteen direct pills','named arcade transitions','interactive cover activities','two supplied Slido codes','attendance and feedback codes','both centred titles and click-to-reveal morphs','bad and good screenshot carousels with a certification stamp','two pace memes with matching labels','separate criteria slide','interrupted title morph','static pictures','text fit','notes','keyboard','reduced motion','responsive fit']},null,2));
- console.log('Passed: fifteen slides, interactive dino cover, two Slido Q&A slides, closing form codes, Morphs, text fit, phone layouts and navigation.');
+ await fs.writeFile(path.join(dir,'html-checks.json'),JSON.stringify({passed:true,slides:16,names:spec.map(s=>s.name),sourceImages:[...sources],checks:['all original photos','both uploads','named portraits','sixteen direct pills','named arcade transitions','automatic articulated cover dinosaur','two supplied Slido codes','attendance and feedback codes','both centred titles and click-to-reveal morphs','bad and good screenshot carousels with a certification stamp','two pace memes with matching labels','separate criteria slide','interrupted title morph','static pictures','text fit','notes','keyboard','reduced motion','responsive fit']},null,2));
+ console.log('Passed: sixteen slides, automatic animated dino cover, two Slido Q&A slides, closing form codes, Morphs, text fit, phone layouts and navigation.');
 }finally{await browser.close();fixture.kill();}

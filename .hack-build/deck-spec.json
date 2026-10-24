@@ -4,17 +4,18 @@
     "elements": [
       {
         "kind": "text",
-        "text": "Beginner Series:",
+        "text": "Re:Zero Beginner series:",
         "x": 72,
-        "y": 130,
+        "y": 195,
         "w": 1136,
         "h": 48,
         "size": 32,
         "color": "#4285F4",
         "bold": true,
+        "align": "center",
         "mobile": {
           "x": 36,
-          "y": 216,
+          "y": 270,
           "w": 648,
           "h": 52,
           "size": 36
@@ -24,15 +25,16 @@
         "kind": "text",
         "text": "Hackathon Masterclass",
         "x": 72,
-        "y": 210,
+        "y": 266,
         "w": 1136,
         "h": 96,
         "size": 76,
         "color": "#111315",
         "bold": true,
+        "align": "center",
         "mobile": {
           "x": 36,
-          "y": 305,
+          "y": 370,
           "w": 648,
           "h": 190,
           "size": 76
@@ -42,35 +44,23 @@
         "kind": "text",
         "text": "& Hackathon Project Sharing",
         "x": 72,
-        "y": 310,
+        "y": 366,
         "w": 1136,
         "h": 86,
         "size": 62,
         "color": "#111315",
         "bold": true,
+        "align": "center",
         "mobile": {
           "x": 36,
-          "y": 510,
+          "y": 600,
           "w": 648,
           "h": 190,
           "size": 64
         }
-      },
-      {
-        "kind": "coverControls",
-        "x": 390,
-        "y": 485,
-        "w": 500,
-        "h": 56,
-        "mobile": {
-          "x": 36,
-          "y": 1040,
-          "w": 648,
-          "h": 88
-        }
       }
     ],
-    "notes": "Welcome to Beginner Series: Hackathon Masterclass & Hackathon Project Sharing. The cover dinosaur can watch TV, play Dino Run or nap. The activity buttons change only the cover scene. Advance to Slido Q&A when ready.",
+    "notes": "Welcome to Re:Zero Beginner series: Hackathon Masterclass & Hackathon Project Sharing. The dinosaur automatically watches TV, plays Dino Run and drifts off to sleep. Advance to Slido Q&A when ready.",
     "scene": "window"
   },
   {
@@ -1784,6 +1774,45 @@
     ],
     "notes": "Set the theme, judging criteria and Gemini connection in the presenter dashboard. The saved theme appears above the large central QR code; leave it blank until ready. Participants scan and submit. Press the GDG Reveal rankings button to analyse all ideas and reveal the top three with the existing countdown and podium inside the presentation. It requires at least three ideas and a real Gemini connection. Existing ranked results can be shown again without re-analysing. Open dashboard plays the dinosaur warp-pipe jump, then opens the public title wall. Presenter controls stay at /host.",
     "scene": "pipe"
+  },
+  {
+    "name": "Timer",
+    "elements": [
+      {
+        "kind": "text",
+        "text": "GDG Clock",
+        "x": 72,
+        "y": 117,
+        "w": 1136,
+        "h": 83,
+        "size": 64,
+        "color": "#111315",
+        "bold": true,
+        "align": "center",
+        "mobile": {
+          "x": 36,
+          "y": 210,
+          "w": 648,
+          "h": 90,
+          "size": 64
+        }
+      },
+      {
+        "kind": "countdown",
+        "x": 430,
+        "y": 207,
+        "w": 420,
+        "h": 475,
+        "mobile": {
+          "x": 36,
+          "y": 358,
+          "w": 648,
+          "h": 716
+        }
+      }
+    ],
+    "notes": "Five-minute GDG countdown after the challenge announcement and before closing Slido Q&A. The Chrome dinosaur runs from the left to the right across the same five minutes; all timer controls also control the run. Press Start to begin, Pause to hold, Resume to continue, or Reset to return to 05:00. The timer keeps real elapsed time while this browser tab is in the background. It stays at 00:00 when finished; advance to Slido when ready.",
+    "scene": "portal"
   },
   {
     "name": "Questions",

@@ -2,8 +2,9 @@ import React, {useEffect, useLayoutEffect, useRef, useState} from 'react';
 import {createRoot} from 'react-dom/client';
 import {Player} from '@remotion/player';
 import {Easing, interpolate, useCurrentFrame, useVideoConfig} from 'remotion';
+import {coverPose} from './cover-pose.mjs';
 
-const names=window.gdgStages,rest=names.map(name=>({Cover:535,Brainstorm:190,Idea:310,Showcase:190,Demo:190,Pitch:190,Criteria:190,Questions:190,Thanks:580})[name]??130);
+const names=window.gdgStages,rest=names.map(name=>({Cover:535,Brainstorm:190,Idea:310,Showcase:190,Demo:190,Pitch:190,Criteria:190,Timer:190,Questions:190,Thanks:580})[name]??130);
 const asset=name=>new URL(`assets/${name}`,document.baseURI).href;
 const at=(t,times,values,easing)=>interpolate(t,times,values,{extrapolateLeft:'clamp',extrapolateRight:'clamp',...(easing?{easing}:{})});
 
@@ -75,40 +76,55 @@ function Trapdoor({x,open,opacity}){
 }
 
 function CoverLounge({activity,seconds}){
- const jump=Math.max(0,Math.sin((seconds%1.8)/1.8*Math.PI*2))*17;
- return <svg className="cover-lounge" role="img" aria-label={activity==='sleep'?'Dinosaur taking a nap':activity==='play'?'Dinosaur playing Dino Run on TV':'Dinosaur watching TV'} viewBox="0 0 340 154" style={{position:'absolute',left:480,top:550,width:340,height:154}}>
-  <rect x="24" y="105" width="108" height="38" rx="12" fill="#4285F4"/>
-  <rect x="8" y="72" width="40" height="65" rx="15" fill="#D2E3FC" stroke="#4285F4" strokeWidth="3"/>
-  <path d="M37 143V154M116 143V154" stroke="#174EA6" strokeWidth="5"/>
-  <path d="M228 16L218 3M244 16L255 2" stroke="#5F6368" strokeWidth="3" strokeLinecap="round"/>
-  <rect x="188" y="18" width="144" height="104" rx="13" fill="white" stroke="#111315" strokeWidth="4"/>
-  <rect x="199" y="29" width="122" height="71" rx="5" fill={activity==='sleep'?'#F1F3F4':'#E8F0FE'}/>
-  <path d="M218 122L208 143M300 122L310 143M197 147H324" stroke="#111315" strokeWidth="4" strokeLinecap="round"/>
-  <circle cx="261" cy="111" r="3" fill={activity==='sleep'?'#DADCE0':'#34A853'}/>
-  {activity==='watch'&&<>
-   {['#4285F4','#EA4335','#FBBC04','#34A853'].map((color,i)=><rect key={color} x={207+i*28} y={57-Math.sin(seconds*2+i)*7} width="22" height={34+Math.sin(seconds*2+i)*7} rx="4" fill={color}/>)}
-   <text x="260" y="46" textAnchor="middle" fontFamily="Outfit,sans-serif" fontSize="11" fill="#174EA6">GDG TV</text>
-  </>}
-  {activity==='play'&&<>
-   <path d="M202 94H318" stroke="#5F6368"/>
-   <image href={asset(`dino-run-${Math.floor(seconds*10)%2+1}.png`)} x="211" y={65-jump} width="25" height="28" style={{imageRendering:'pixelated'}}/>
-   <image href={asset('cactus.png')} x={307-(seconds*54)%66} y="74" width="13" height="20" style={{imageRendering:'pixelated'}}/>
-   <rect x="119" y="118" width="43" height="23" rx="10" fill="#111315"/>
-   <path d="M127 125V135M122 130H132" stroke="white" strokeWidth="2"/>
-   <circle cx="149" cy="128" r="3" fill="#EA4335"/><circle cx="155" cy="133" r="3" fill="#FBBC04"/>
-  </>}
-  {activity==='sleep'&&<>
-   <path d="M270 46A18 18 0 1 0 274 77A17 17 0 0 1 270 46Z" fill="#4285F4"/>
-   <text x="75" y={38-Math.sin(seconds*1.5)*4} fontFamily="Outfit,sans-serif" fontWeight="700" fontSize="25" fill="#4285F4" opacity={.65+Math.sin(seconds*1.5)*.25}>z Z</text>
-  </>}
+ const {playing,sleeping,watching,breath,blink,head}=coverPose(seconds);
+ const gamePhase=(seconds%3.75)/3.75;
+ const jump=Math.sin(Math.PI*Math.max(0,Math.min(1,(gamePhase-.64)/.34)))**2*74;
+ const dino=asset('cover-lounge-dino-pixel.png');
+ return <svg className="cover-lounge" role="img" aria-label={activity==='sleep'?'Dinosaur taking a nap':activity==='play'?'Dinosaur playing Dino Run on TV':'Dinosaur watching TV'} viewBox="0 0 1774 887" style={{position:'absolute',left:390,top:455,width:500,height:250,overflow:'visible'}}>
+  <defs>
+   <clipPath id="cover-tv-screen"><rect x="1148" y="374" width="411" height="258" rx="23"/></clipPath>
+   <clipPath id="cover-dino-lower"><path d="M0 400H420V565H1000V887H0Z"/></clipPath>
+   <clipPath id="cover-dino-torso"><rect x="420" y="355" width="480" height="245"/></clipPath>
+   <clipPath id="cover-dino-head"><rect width="1000" height="420"/></clipPath>
+   <radialGradient id="cover-eye-feather"><stop offset=".7" stopColor="white"/><stop offset="1" stopColor="black"/></radialGradient>
+   <mask id="cover-eye-patch"><ellipse cx="605" cy="203" rx="75" ry="58" fill="url(#cover-eye-feather)"/></mask>
+  </defs>
+  <image className="cover-sofa" href={asset('cover-lounge-environment.png')} width="1774" height="887"/>
+  <ellipse cx="655" cy="775" rx="185" ry="12" fill="#111315" opacity=".07"/>
+  <g className="cover-dino" data-breath={breath}>
+   <image href={dino} width="1774" height="887" clipPath="url(#cover-dino-lower)"/>
+   <g className="cover-dino-body" transform={`rotate(${playing*.6+sleeping*1.4} 550 590) translate(0 ${590*(1-(1+breath*.003))}) scale(1 ${1+breath*.003})`}>
+    <image href={dino} width="1774" height="887" clipPath="url(#cover-dino-torso)"/>
+    <g className="cover-dino-head" transform={`rotate(${head} 550 375)`}>
+     <image href={dino} width="1774" height="887" clipPath="url(#cover-dino-head)"/>
+     <image href={asset('cover-lounge-blink-pixel.png')} width="1774" height="887" mask="url(#cover-eye-patch)" opacity={blink}/>
+    </g>
+   </g>
+  </g>
+  <g clipPath="url(#cover-tv-screen)">
+   <g opacity={watching*.9}>
+    {['#4285F4','#EA4335','#FBBC04','#34A853'].map((color,i)=><rect key={color} x={1182+i*89} y={470-Math.sin(seconds*Math.PI*2/5+i)*16} width="66" height={116+Math.sin(seconds*Math.PI*2/5+i)*16} rx="12" fill={color}/>)}
+   </g>
+   <g opacity={playing*.9}>
+    <path d="M1160 615H1550" stroke="white" strokeOpacity=".65" strokeWidth="3"/>
+    <image href={asset(`dino-run-${Math.floor(seconds*10)%2+1}.png`)} x="1200" y={539-jump} width="67" height="74" style={{imageRendering:'pixelated',filter:'brightness(0) invert(1)'}}/>
+    <image href={asset('cactus.png')} x={1630-gamePhase*520} y="551" width="38" height="62" style={{imageRendering:'pixelated',filter:'brightness(0) invert(1)'}}/>
+   </g>
+   <g opacity={sleeping*.9}>
+    <path d="M1378 440A66 66 0 1 0 1390 553A62 62 0 0 1 1378 440Z" fill="#D2E3FC"/>
+    <circle cx="1450" cy="455" r="5" fill="#FBBC04"/><circle cx="1252" cy="521" r="4" fill="white"/>
+   </g>
+  </g>
+  {[0,1,2].map(i=>{const drift=((seconds+i)%3)/3;return <text key={i} x={890+drift*30} y={250-drift*95} fontFamily="Arial,sans-serif" fontWeight="700" fontSize={40+drift*16} fill="#4285F4" opacity={sleeping*Math.sin(drift*Math.PI)**2*.65}>z</text>;})}
  </svg>;
 }
 
-function ArcadeScene({phase,kind,from,to,direction,activity='watch'}){
+function ArcadeScene({phase,kind,from,to,direction}){
  const frame=useCurrentFrame(),{durationInFrames,fps}=useVideoConfig(),t=frame/(durationInFrames-1)*.8;
  const exiting=phase==='exit', entering=phase==='enter';
  const champion=to===names.length-1&&!exiting;
  const coverIdle=phase==='idle'&&names[to]==='Cover',seconds=frame/fps;
+ const activity=seconds<8||seconds>=29?'watch':seconds<18?'play':'sleep';
  const welcome=exiting&&kind==='window'&&from===0&&to===1;
  let x=rest[exiting?from:to],y=62,facing=1,action='idle',pipe=null,chaser=null,board=null,clip=false,surprise=false;
  let size=1,opacity=1,rotation=0,ufo=null,beam=0,portal=null,portalOpen=1,rocket=null,hole=null,balloons=null,bowling=null;
@@ -240,7 +256,7 @@ function ArcadeScene({phase,kind,from,to,direction,activity='watch'}){
   <div style={{position:'absolute',inset:0,...(clip?{clipPath:'inset(0 0 68px 0)'}:{})}}>
    <img id="arcade-dino" src={asset(running?`dino-run-${Math.floor(welcome?frame/fps*10:t*14)%2+1}.png`:'dinosaur.png')}
     alt={`Dinosaur in ${names[exiting?from:to]}`} data-action={action} data-x={x} data-y={y} data-size={size} data-frame={frame}
-    style={{position:'absolute',left:x,top:604+y-(welcome?dinoHeight-38:0),width:dinoWidth,height:dinoHeight,imageRendering:'pixelated',objectFit:'contain',scale:`${facing*size} ${size}`,opacity,rotate:`${action==='launch'?direction*-16:rotation}deg`}}/>
+    style={{position:'absolute',visibility:coverIdle?'hidden':'visible',left:x,top:604+y-(welcome?dinoHeight-38:0),width:dinoWidth,height:dinoHeight,imageRendering:'pixelated',objectFit:'contain',scale:`${facing*size} ${size}`,opacity,rotate:`${action==='launch'?direction*-16:rotation}deg`}}/>
   </div>
   {surprise&&<span className="surprise" aria-label="Dinosaur is surprised" style={{position:'absolute',left:x+12,top:628,font:'bold 27px monospace',color:'#EA4335'}}>!</span>}
   {pipe!==null&&<Pipe x={pipe}/>}
@@ -252,19 +268,17 @@ function ArcadePlayer(){
  const player=useRef(null),pending=useRef(null),serial=useRef(0),lastFrame=useRef(59),host=document.getElementById('dino-motion');
  const initial=Math.max(0,names.indexOf(document.querySelector('.slide.active').getAttribute('aria-label')));
  const [job,setJob]=useState({phase:'idle',kind:'window',from:initial,to:initial,direction:1,id:0});
- const [activity,setActivity]=useState('watch');
  const coverIdle=job.phase==='idle'&&names[job.to]==='Cover',fps=60;
- const durationInFrames=coverIdle?6*fps:job.phase==='exit'?(job.kind==='window'&&job.from===0&&job.to===1?4.5*fps:1.8*fps):fps;
+ const durationInFrames=coverIdle?30*fps:job.phase==='exit'?(job.kind==='window'&&job.from===0&&job.to===1?4.5*fps:1.8*fps):fps;
  const complete=()=>{host.dataset.phase='idle';const resolve=pending.current;pending.current=null;resolve?.();};
  useEffect(()=>{
   // ponytail: the Player's ended event is the slide-change clock; no second timer to drift.
   player.current.addEventListener('ended',complete);
   window.arcadeTransition=options=>new Promise(resolve=>{pending.current=resolve;setJob({...options,id:++serial.current});});
   window.arcadeIdle=stage=>setJob({phase:'idle',kind:'window',from:stage,to:stage,direction:1,id:++serial.current});
-  window.setCoverActivity=activity=>{if(['watch','play','sleep'].includes(activity))setActivity(activity);};
   window.finishArcade=()=>{player.current.pause();player.current.seekTo(lastFrame.current);complete();};
   host.dataset.ready='true';
-  return()=>{player.current?.removeEventListener('ended',complete);delete window.arcadeTransition;delete window.arcadeIdle;delete window.setCoverActivity;delete window.finishArcade;};
+  return()=>{player.current?.removeEventListener('ended',complete);delete window.arcadeTransition;delete window.arcadeIdle;delete window.finishArcade;};
  },[]);
  useLayoutEffect(()=>{
   lastFrame.current=durationInFrames-1;
@@ -272,8 +286,8 @@ function ArcadePlayer(){
   if(job.phase==='idle'&&!coverIdle)return;
   if(matchMedia('(prefers-reduced-motion: reduce)').matches){player.current.seekTo(lastFrame.current);complete();}else player.current.play();
  },[job]);
- return <Player ref={player} component={ArcadeScene} inputProps={{...job,activity}} durationInFrames={durationInFrames} compositionWidth={1280} compositionHeight={720} fps={fps}
-  controls={false} autoPlay={false} loop={coverIdle} moveToBeginningWhenEnded={false} clickToPlay={false} doubleClickToFullscreen={false} spaceKeyToPlayOrPause={false}
+ return <Player ref={player} component={ArcadeScene} inputProps={job} durationInFrames={durationInFrames} compositionWidth={1280} compositionHeight={720} fps={fps}
+  controls={false} autoPlay={coverIdle&&!matchMedia('(prefers-reduced-motion: reduce)').matches} initiallyMuted loop={coverIdle} moveToBeginningWhenEnded={false} clickToPlay={false} doubleClickToFullscreen={false} spaceKeyToPlayOrPause={false}
   style={{width:1280,height:720,backgroundColor:'transparent'}}/>;
 }
 
