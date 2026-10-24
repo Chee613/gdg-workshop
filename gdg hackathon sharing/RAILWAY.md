@@ -4,9 +4,9 @@ The same service hosts the slides, participant form, live wall and judging API. 
 
 ## 1. Create the service
 
-1. Sign in at <https://railway.com> with GitHub. Stay on the Trial/Free plan if you want to use the free allowance; a paid subscription is not required for these steps.
-2. Create a new project and choose **Deploy from GitHub repo**. Authorize access to `Chee613/gdg-workshop1` if the private repo is missing.
-3. Select the repository. In the service's **Settings → Source**, select branch `codex/hackathon-masterclass-live-board` and set **Root Directory** to `/gdg hackathon sharing`.
+1. Sign in at <https://railway.com> with GitHub. Check the current plan allowance before deploying.
+2. Create a new project and choose **Deploy from GitHub repo**. Authorize access to `Chee613/gdg-workshop` if the private repo is missing.
+3. Select the repository. In the service's **Settings → Source**, select branch `main` and set **Root Directory** to `/gdg hackathon sharing`.
 4. Railway detects the included `Dockerfile`. Leave custom build and start commands empty. An initial deployment may fail until the root directory and presenter password are configured.
 
 ## 2. Add your private variables
@@ -25,7 +25,7 @@ The container already sets `WORKSHOP_DATA_DIR=/data` and requires presenter auth
 
 ## 3. Keep submissions across restarts
 
-Attach a **Volume** to this service, with mount path **`/data`**. The Free plan currently allows 0.5 GB of volume storage. Keep **one replica**. The database is `/data/session.sqlite3`; a separate database service is not needed.
+Attach a **Volume** to this service, with mount path **`/data`**. Keep **one replica**. The database is `/data/session.sqlite3`; a separate database service is not needed.
 
 In **Settings → Deploy**, set **Healthcheck Path** to **`/healthz`**. Deploy the pending changes. The deployment logs should include `Listening on 0.0.0.0:` followed by Railway's assigned port.
 

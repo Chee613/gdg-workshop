@@ -73,6 +73,26 @@ with tempfile.TemporaryDirectory(prefix='gdg-hosting-') as folder:
     with patch.object(app,'urlopen',gemini_response):
         ratings = app.judge_with_gemini(app.initial_state(),sample)
     assert ratings[0]['scores'] == [9,8,9,7,6]
+    submissions = [dict(id=i+1,name='Participant',title=f'Everyday idea {i+1}',
+        idea=' '.join([f'word{i+1}']*200),created=0) for i in range(50)]
+    calls = []
+    def fifty_response(req, timeout):
+        calls.append(req)
+        payload = json.loads(req.data)
+        prompt = payload['contents'][0]['parts'][0]['text']
+        batch = json.loads(prompt.split('\n',1)[1])
+        assert batch['criteria'] == [dict(index=i,**c) for i,c in enumerate(criteria)]
+        assert batch['ideas'] == [{k:s[k] for k in ('id','title','idea')} for s in submissions]
+        output_schema = payload['generationConfig']['responseFormat']['text']['schema']
+        assert output_schema['properties']['ratings']['minItems'] == 50
+        assert output_schema['properties']['ratings']['maxItems'] == 50
+        assert payload['generationConfig']['maxOutputTokens'] >= 12000
+        result = dict(ratings=[dict(id=s['id'],scores=[8,7,9,8,6],strength='Useful',improve='Validate') for s in reversed(submissions)])
+        return io.BytesIO(json.dumps(dict(candidates=[dict(content=dict(parts=[dict(text=json.dumps(result))]))])).encode())
+    with patch.object(app,'urlopen',fifty_response):
+        ranked = app.validate_ratings(app.judge_with_gemini(app.initial_state(),submissions),app.initial_state(),submissions)
+    assert len(calls) == 1 and len(ranked) == 50, '50 complete submissions use ONE generation request'
+    assert ranked[0]['total'] == 76 and ranked[0]['id'] == 1
     for body, expected in [
         (json.dumps(dict(error=dict(status='INVALID_ARGUMENT',message='Invalid mime_type. Key: '+app.KEY))).encode(),'INVALID_ARGUMENT'),
         (b'<html>Proxy failure</html>','Gemini returned HTTP 400'),
@@ -131,7 +151,7 @@ with tempfile.TemporaryDirectory(prefix='gdg-hosting-') as folder:
             process.stderr.close()
 
     with running() as base:
-        for path in ['/host','/host/','/session/host.html','/session/../session/host.html','/%73ession/host.html','/api/host']:
+        for path in ['/host','/host/','/session/host.html','/session/../session/host.html','/%73ession/host.html','/api/host','/api/export']:
             status, headers, _ = request(base,path)
             assert status == 401 and 'Basic' in headers.get('WWW-Authenticate',''), path
         wrong = 'Basic '+base64.b64encode(b'presenter:wrong').decode()
@@ -159,6 +179,11 @@ with tempfile.TemporaryDirectory(prefix='gdg-hosting-') as folder:
         assert all(c['guidance'] for c in private['criteria'])
         assert private['ideas'][0]['idea'].startswith('Help people') and private['aiReady']
         assert env['GEMINI_API_KEY'] not in json.dumps(private)
+        status, headers, body = request(base,'/api/export',auth=AUTH)
+        exported = json.loads(body)
+        assert status == 200 and headers['Content-Disposition'].startswith('attachment;')
+        assert exported['format'] == 'gdg-idea-backup-v1' and exported['ideas'] == private['ideas']
+        assert exported['criteria'] == private['criteria'] and env['GEMINI_API_KEY'] not in body.decode()
         state = app.get_state()
         state.update(phase='revealed', results=[dict(**private['ideas'][0], scores=[9,9,9,9,9],
             total=90, strength='Useful test idea.', improve='Validate the main assumption.')])
