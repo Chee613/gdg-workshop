@@ -5,7 +5,14 @@ const phaseLabel={collecting:'Submissions open',closed:'Submissions closed',judg
 const node=(tag,text,className)=>{const e=document.createElement(tag);if(text!==undefined)e.textContent=text;if(className)e.className=className;return e;};
 async function request(path,data){const response=await fetch(path,data===undefined?{cache:'no-store'}:{method:'POST',headers:{'Content-Type':'application/json','X-Workshop-Host':'1'},body:JSON.stringify(data)});const result=await response.json();if(!response.ok)throw Error(result.error||'Please try again.');return result;}
 function showError(message){$('error').textContent=message;}
-function rubric(container,criteria){container.replaceChildren(...criteria.map(c=>node('span',`${c.name} ${c.weight}%`)));}
+function rubric(container,criteria){
+ const labels={'Impact & Sustainability Value':'Impact','Innovation & Differentiation':'Innovation','Feasibility & Deliverability':'Feasibility','Strategic Fit & Theme Relevance':'Relevance','Commercial & Value Multiplication':'Value'};
+ container.replaceChildren(...criteria.map(c=>{
+  const label=labels[c.name]??c.name;
+  if(page!=='join')return node('span',`${label} ${c.weight}%`);
+  const row=node('tr'),heading=node('th',label);heading.scope='row';row.append(heading,node('td',`${c.weight}%`));return row;
+ }));
+}
 function renderWall(container,ideas){if(!ideas.length){const empty=node('div',undefined,'empty');const dino=node('img');dino.src='/assets/dinosaur.png';dino.alt='Waiting dinosaur';empty.append(dino,node('h3','The next big idea could be yours.'),node('p','Scan the code. Share one useful idea.'));container.replaceChildren(empty);return;}container.replaceChildren(...ideas.map(idea=>{const card=node('article',undefined,'idea-card');card.append(node('h3',idea.title),node('div',idea.name,'name'),node('p',idea.idea));return card;}));}
 let bubbleScene=null;
 const still=matchMedia('(prefers-reduced-motion: reduce)');

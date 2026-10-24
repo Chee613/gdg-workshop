@@ -19,8 +19,12 @@ try{
  assert.ok((await host.getByLabel('Judging criteria').inputValue()).includes(defaults.criteria[0].guidance));
  assert.ok(!(await board.locator('body').textContent()).includes(defaults.criteria[0].guidance));
  const preview=await browser.newPage({viewport:{width:390,height:844}});
- await preview.goto(base+'/join');await preview.waitForFunction(()=>document.querySelectorAll('#rubric span').length===5);
- assert.deepEqual(await preview.locator('#rubric span').allTextContents(),defaults.criteria.map(c=>`${c.name} ${c.weight}%`));
+ await preview.goto(base+'/join');await preview.waitForFunction(()=>document.querySelectorAll('#rubric tr').length===5);
+ assert.equal(await preview.getByRole('table',{name:'Judging criteria'}).count(),1);
+ assert.deepEqual(await preview.locator('#rubric th').allTextContents(),['Impact','Innovation','Feasibility','Relevance','Value']);
+ assert.deepEqual(await preview.locator('#rubric td').allTextContents(),defaults.criteria.map(c=>`${c.weight}%`));
+ assert.equal(await preview.locator('#idea-form [placeholder]').count(),0);
+ assert.equal(await preview.locator('#idea-help').textContent(),'Maximum 200 words.');
  assert.ok(!(await preview.locator('body').textContent()).includes(defaults.criteria[0].guidance));
  assert.equal(await preview.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
  await preview.screenshot({path:'.hack-build/session-default-rubric-mobile.png',fullPage:true});await preview.close();
