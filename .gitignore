@@ -32,3 +32,4 @@ __pycache__/
 !/.hack-build/workshop-fixture.py
 !/.hack-build/judging-fixture.py
 !/.hack-build/verify-judging-ui.mjs
+!/.hack-build/verify-share.mjs

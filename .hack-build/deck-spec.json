@@ -60,7 +60,7 @@
         }
       }
     ],
-    "notes": "Welcome to Re:Zero Beginner series: Hackathon Masterclass & Hackathon Project Sharing. The dinosaur automatically watches TV, plays Dino Run and drifts off to sleep. Advance to Slido Q&A when ready.",
+    "notes": "Welcome to Re:Zero Beginner series: Hackathon Masterclass & Hackathon Project Sharing. The dinosaur automatically watches TV, plays Dino Run and drifts off to sleep. Advance when ready.",
     "scene": "window"
   },
   {
@@ -122,6 +122,7 @@
       }
     ],
     "notes": "Scan the supplied Slido code to submit questions, or tap the code to open Slido on this device.",
+    "hidden": true,
     "scene": "pipe"
   },
   {
@@ -1930,6 +1931,7 @@
       }
     ],
     "notes": "Set the theme, judging criteria and Gemini connection in the presenter dashboard. The saved theme appears above the large central QR code; leave it blank until ready. Participants scan and submit. Press the GDG Reveal rankings button to analyse all ideas and reveal the top three with the existing countdown and podium inside the presentation. It requires at least three ideas and a real Gemini connection. Existing ranked results can be shown again without re-analysing. Open dashboard plays the dinosaur warp-pipe jump, then opens the public title wall. Presenter controls stay at /host.",
+    "hidden": true,
     "scene": "magnet"
   },
   {
@@ -1968,7 +1970,7 @@
         }
       }
     ],
-    "notes": "Five-minute GDG countdown after the challenge announcement and before closing Slido Q&A. The Chrome dinosaur runs from the left to the right across the same five minutes; all timer controls also control the run. Press Start to begin, Pause to hold, Resume to continue, or Reset to return to 05:00. The timer keeps real elapsed time while this browser tab is in the background. It stays at 00:00 when finished; advance to Slido when ready.",
+    "notes": "Five-minute GDG countdown. The Chrome dinosaur runs from the left to the right across the same five minutes; all timer controls also control the run. Press Start to begin, Pause to hold, Resume to continue, or Reset to return to 05:00. The timer keeps real elapsed time while this browser tab is in the background. It stays at 00:00 when finished; advance when ready.",
     "scene": "train"
   },
   {
@@ -2030,6 +2032,7 @@
       }
     ],
     "notes": "Scan the supplied Slido code to submit questions, or tap the code to open Slido on this device.",
+    "hidden": true,
     "scene": "finish"
   },
   {

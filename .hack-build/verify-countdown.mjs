@@ -14,7 +14,7 @@ try{
  assert.equal(await runner.evaluate(image=>image.getAnimations()[0].effect.getTiming().duration),300000);
  assert.equal(await face.textContent(),'05:00');
  const names=await page.locator('.slide').evaluateAll(slides=>slides.map(slide=>slide.getAttribute('aria-label')));
- assert.deepEqual(names.slice(-4),['Challenge','Timer','Questions','Thanks']);
+ assert.deepEqual(names.slice(-3),['Criteria','Timer','Thanks']);
  await clock.getByRole('button',{name:'Start',exact:true}).click();
  assert.equal(await page.locator('.slide.active').getAttribute('aria-label'),'Timer');
  await page.evaluate(()=>window.clockTestOffset+=61000);
@@ -41,7 +41,7 @@ try{
  await page.evaluate(()=>document.fonts.ready);
  await page.locator('.stage').screenshot({path:'.hack-build/gdg-clock-desktop.png'});
  await clock.getByRole('button',{name:'Start',exact:true}).click();
- await page.getByRole('button',{name:'Go directly to Questions',exact:true}).click();
+ await page.getByRole('button',{name:'Go directly to Thanks',exact:true}).click();
  await page.waitForFunction(()=>!document.querySelector('#arcade-dino').hasAttribute('data-clock-runner'));
  assert.equal(await runner.evaluate(image=>image.getAnimations().length),0,'Other slides retain their own dinosaur motion');
  await page.evaluate(()=>window.clockTestOffset+=10000);

@@ -5,7 +5,7 @@ import {fileURLToPath} from 'node:url';
 import {spawn} from 'node:child_process';
 import {chromium} from 'playwright';
 const root=fileURLToPath(new URL('../',import.meta.url)),dir=path.join(root,'.hack-build');
-const spec=JSON.parse(await fs.readFile(path.join(dir,'deck-spec.json'),'utf8'));
+const spec=JSON.parse(await fs.readFile(path.join(dir,'deck-spec.json'),'utf8')).filter(slide=>!slide.hidden);
 const fixture=spawn('python',[path.join(dir,'workshop-fixture.py')],{cwd:root,env:{...process.env,WORKSHOP_HOST_PASSWORD:''},windowsHide:true,stdio:['ignore','pipe','ignore']});
 const base=await new Promise((resolve,reject)=>{fixture.stdout.once('data',data=>resolve(data.toString().trim().split('\n')[0]));fixture.once('error',reject);fixture.once('exit',code=>reject(Error(`Fixture exited ${code}`)));});
 const browser=await chromium.launch({headless:true,channel:'chrome'});
@@ -17,8 +17,8 @@ try{
  await page.goto(base+'/Hackathon-Tips.html#cover');
  await page.waitForSelector('#dino-motion[data-ready="true"]');await page.evaluate(()=>document.fonts.ready);
  await page.waitForFunction(()=>[...document.images].every(i=>i.complete&&i.naturalWidth>0));
- assert.equal(await page.locator('.slide').count(),16);assert.equal(await page.locator('.slide-jump button').count(),16);
- assert.equal(new Set(spec.slice(0,-1).map(s=>s.scene)).size,15,'Every slide boundary has its own transition');
+ assert.equal(await page.locator('.slide').count(),spec.length);assert.equal(await page.locator('.slide-jump button').count(),spec.length);
+ assert.equal(new Set(spec.slice(0,-1).map(s=>s.scene)).size,spec.length-1,'Every slide boundary has its own transition');
  assert.equal(await active(),'Cover');
  await page.getByRole('button',{name:'Go directly to Idea',exact:true}).click();
  await page.keyboard.press('ArrowRight');await settle();assert.equal(await active(),'Build','Right arrow works after clicking a navigation button');
@@ -35,12 +35,12 @@ try{
   assert.equal(await active(),'Cover','Automatic activities do not advance the deck');
   await page.locator('.stage').screenshot({path:path.join(dir,`cover-${activity}.png`)});
  }
- await page.locator('.viewport').focus();await page.keyboard.press('ArrowRight');await settle();assert.equal(await active(),'Slido');
+ await page.locator('.viewport').focus();await page.keyboard.press('ArrowRight');await settle();assert.equal(await active(),spec[1].name);
  await page.keyboard.press('ArrowLeft');await settle();assert.equal(await active(),'Cover');
  assert.ok(await page.locator('.cover-lounge').isVisible(),'Returning to the cover restores its automatic lounge');
- for(const name of ['Slido','Questions'])assert.ok((await page.locator(`.slide[aria-label="${name}"] img[alt="Slido Q&A QR code"]`).getAttribute('src')).endsWith('slido-qa.png'));
- assert.deepEqual(spec.slice(0,3).map(s=>s.name),['Cover','Slido','Intro']);
- assert.deepEqual(spec.slice(-4).map(s=>s.name),['Challenge','Timer','Questions','Thanks']);
+ for(const name of ['Slido','Questions'].filter(name=>spec.some(slide=>slide.name===name)))assert.ok((await page.locator(`.slide[aria-label="${name}"] img[alt="Slido Q&A QR code"]`).getAttribute('src')).endsWith('slido-qa.png'));
+ assert.deepEqual(spec.slice(0,3).map(s=>s.name),['Cover','Intro','Stories']);
+ assert.deepEqual(spec.slice(-3).map(s=>s.name),['Criteria','Timer','Thanks']);
  assert.equal(await page.locator('.slide-jump').textContent(),'');assert.equal(await page.locator('.sticker').count(),4);
  await page.setViewportSize({width:390,height:844});
  const rotate=page.getByRole('dialog',{name:'Rotate your phone',exact:true});
@@ -195,7 +195,7 @@ try{
  assert.deepEqual(await page.locator('.slide[aria-label="Intro"] .speaker-badge span').allTextContents(),['9x Hackathon Winner','GDG AI/ML Team Lead']);
  assert.equal(await page.locator('.slide[aria-label="Intro"] [aria-label="Birthday cake badge"]').count(),1);
  assert.equal(await page.locator('.slide[aria-label="Stories"] [src*="upload-"]').count(),2);
- assert.deepEqual(spec.slice(2,9).map(s=>s.name),['Intro','Stories','Brainstorm','Idea','Build','Showcase','Demo']);
+ assert.deepEqual(spec.slice(1,8).map(s=>s.name),['Intro','Stories','Brainstorm','Idea','Build','Showcase','Demo']);
  assert.equal(await page.locator('.slide[aria-label="Brainstorm"] [src$="brainstorm-drake.png"]').count(),1);
  assert.equal(await page.locator('.slide[aria-label="Brainstorm"] [aria-label^="Ban sign"]').count(),1);
  assert.equal(await page.locator('.slide[aria-label="Showcase"] .copy').textContent(),'Project Showcase');
@@ -204,14 +204,8 @@ try{
  const storyTitle=await page.locator('.slide[aria-label="Stories"] .heading').evaluate(el=>({x:parseFloat(el.style.left),w:parseFloat(el.style.width)}));
  const trophyX=await page.locator('.slide[aria-label="Stories"] .sticker').evaluate(el=>parseFloat(el.style.left));
  assert.ok(trophyX>=storyTitle.x+storyTitle.w&&trophyX<storyTitle.x+storyTitle.w+30,'Trophy follows the Hackathon title');
- assert.equal(await page.locator('.slide[aria-label="Challenge"] .slide-action').count(),1);
- assert.equal(await page.locator('.slide[aria-label="Challenge"] a[href$="/board"]').count(),1);
- const qr=await page.locator('.slide[aria-label="Challenge"] [src$="challenge-qr.png"]').evaluate(el=>({x:parseFloat(el.style.left),y:parseFloat(el.style.top),w:parseFloat(el.style.width)}));
- assert.equal(qr.x+qr.w/2,640);assert.ok(qr.w>=380);
- assert.equal(await page.locator('[data-rank] img[src$="gdg-mark.png"]').count(),1);
+ assert.equal(await page.locator('.slide[aria-label="Challenge"],.slide[aria-label="Slido"],.slide[aria-label="Questions"],[data-rank]').count(),0);
  assert.equal(await page.locator('.slide[aria-label="Compare"]').count(),0);
- assert.ok(!spec.some(s=>s.name==='Compare'));
- assert.equal(qr.y,140,'QR sits closer to the theme');
  assert.equal(await page.locator('.slide[aria-label="Pitch"] .design-title').textContent(),'if (Pitch || Presentation_Video) {');
  assert.equal(await page.locator('.slide[aria-label="Pitch"] [src$="pace-too-slow.png"]').count(),1);
  assert.equal(await page.locator('.slide[aria-label="Pitch"] [src$="pace-too-fast.png"]').count(),1);
@@ -269,10 +263,10 @@ try{
   assert.ok(await page.locator('#arcade-dino').evaluate(el=>Number.isFinite(Number(el.dataset.x))&&Number(el.dataset.y)===(el.dataset.action==='champion'?35:62)&&Number(el.dataset.size)===1),'Dinosaur lands visibly on the next slide');
  }
  await page.getByRole('button',{name:'Go directly to Intro',exact:true}).click();await page.mouse.click(1110,220);
- await page.getByRole('button',{name:'Go directly to Challenge',exact:true}).click();await settle();assert.equal(await active(),'Challenge','Pills interrupt transitions');
+ await page.getByRole('button',{name:'Go directly to Timer',exact:true}).click();await settle();assert.equal(await active(),'Timer','Pills interrupt transitions');
  await page.getByRole('button',{name:'Go directly to Demo',exact:true}).click();
  await page.getByRole('button',{name:'Go directly to Demo',exact:true}).click();
- await page.mouse.click(1110,220);await page.getByRole('button',{name:'Go directly to Challenge',exact:true}).click();await settle();assert.equal(await active(),'Challenge','Pills cancel a title morph');
+ await page.mouse.click(1110,220);await page.getByRole('button',{name:'Go directly to Timer',exact:true}).click();await settle();assert.equal(await active(),'Timer','Pills cancel a title morph');
  await page.getByRole('button',{name:'Go directly to Demo',exact:true}).click();await page.getByRole('button',{name:'Go directly to Demo',exact:true}).click();
  await page.mouse.click(1110,220);await page.emulateMedia({reducedMotion:'reduce'});await settle();
  assert.equal(await active(),'Demo');assert.ok(await page.locator('.slide.active [src*="bad-design-meme"]').isVisible(),'Reduced motion completes the reveal');
@@ -286,8 +280,8 @@ try{
  await page.getByRole('button',{name:'Go directly to Design',exact:true}).click();
  await page.emulateMedia({reducedMotion:'no-preference'});
  await page.mouse.click(400,220);
- await page.getByRole('button',{name:'Go directly to Challenge',exact:true}).click();await settle();
- assert.equal(await active(),'Challenge','Pill navigation cancels a stamp animation');
+ await page.getByRole('button',{name:'Go directly to Timer',exact:true}).click();await settle();
+ assert.equal(await active(),'Timer','Pill navigation cancels a stamp animation');
  await page.emulateMedia({reducedMotion:'reduce'});
  await page.getByRole('button',{name:'Go directly to Pitch',exact:true}).click();
  await page.getByRole('button',{name:'Go directly to Pitch',exact:true}).click();
@@ -295,7 +289,7 @@ try{
  await page.mouse.click(1110,220);await settle();assert.equal(await active(),'Criteria');
  await page.mouse.click(100,400);await settle();assert.equal(await active(),'Pitch');
  assert.ok(await page.locator('.slide.active [src$="pace-too-slow.png"]').isVisible(),'Backward navigation keeps pitch revealed');
- await page.getByRole('button',{name:'Go directly to Challenge',exact:true}).click();
+ await page.getByRole('button',{name:'Go directly to Timer',exact:true}).click();
  await page.emulateMedia({reducedMotion:'reduce'});await page.mouse.click(100,400);await settle();assert.equal(await active(),'Criteria');
  await page.keyboard.press('Home');await settle();assert.equal(await active(),'Cover');
  await page.keyboard.press('n');assert.ok(await page.locator('#speaker').isVisible());await page.keyboard.press('Escape');
@@ -324,6 +318,6 @@ try{
  await page.locator('.stage').screenshot({path:path.join(dir,'thank-you-finale.png')});
  await page.keyboard.press('End');await settle();assert.equal(await active(),'Thanks');
  assert.deepEqual(errors,[]);
- await fs.writeFile(path.join(dir,'html-checks.json'),JSON.stringify({passed:true,slides:16,names:spec.map(s=>s.name),sourceImages:[...sources],checks:['all original photos','both uploads','named portraits','sixteen direct pills','named arcade transitions','automatic articulated cover dinosaur','two supplied Slido codes','attendance and feedback codes','both centred titles and click-to-reveal morphs','bad screenshot carousel and one-page good UI examples with certification','two pace memes with matching labels','separate criteria slide','interrupted title morph','static pictures','text fit','notes','keyboard','reduced motion','responsive fit']},null,2));
- console.log('Passed: sixteen slides, automatic animated dino cover, two Slido Q&A slides, closing form codes, Morphs, text fit, phone layouts and navigation.');
+ await fs.writeFile(path.join(dir,'html-checks.json'),JSON.stringify({passed:true,slides:spec.length,names:spec.map(s=>s.name),sourceImages:[...sources],checks:['all original photos','both uploads','named portraits','thirteen direct pills','named arcade transitions','automatic articulated cover dinosaur','event slides hidden from sharing','attendance and feedback codes','both centred titles and click-to-reveal morphs','bad screenshot carousel and one-page good UI examples with certification','two pace memes with matching labels','separate criteria slide','interrupted title morph','static pictures','text fit','notes','keyboard','reduced motion','responsive fit']},null,2));
+ console.log('Passed: thirteen shared slides, automatic animated dino cover, hidden event slides, closing form codes, Morphs, text fit, phone layouts and navigation.');
 }finally{await browser.close();fixture.kill();}

@@ -4,11 +4,13 @@
 
 # Re:Zero Beginner Series — Hackathon Masterclass
 
-An interactive workshop with 16 slides, animated Chrome dinosaurs, project demos and a live idea challenge. Participants submit a title and an introduction of up to 200 words; the host reviews a rubric-based ranking before revealing the top three.
+An interactive workshop with 13 shareable slides, animated Chrome dinosaurs, project demos and a live idea challenge. Participants submit a title and an introduction of up to 200 words; the host reviews a rubric-based ranking before revealing the top three.
 
 [Live slides](https://gdg-on-top.up.railway.app/Hackathon-Tips.html) · [Live board](https://gdg-on-top.up.railway.app/board) · [Submit an idea](https://gdg-on-top.up.railway.app/join) · [Presenter script](gdg%20hackathon%20sharing/Presenter-Script.md) · [Independent backup](https://github.com/Chee613/gdg-workshop-backup)
 
 ![The live idea board with its theme, weighted rubric and participant QR code](docs/images/live-board.png)
+
+The shared presentation omits the Challenge slide and both Slido Q&A slides, including their navigation, QR links and print pages. All 16 source slides remain in `.hack-build/deck-spec.json`; those three have `hidden: true`. To restore them permanently, remove their hidden flags in `.hack-build/rearrange-deck.py`, regenerate the spec and rebuild. The independent idea-challenge dashboards remain available separately.
 
 ## Start locally
 
@@ -97,7 +99,7 @@ There is no automatic cross-repository database sync. Keep recovery files privat
 | Location | Responsibility |
 | --- | --- |
 | [Workshop guide](gdg%20hackathon%20sharing/README.md) | Presentation controls, local use and editing |
-| [Presenter script](gdg%20hackathon%20sharing/Presenter-Script.md) | All 16 slides, audience prompts and demo cues |
+| [Presenter script](gdg%20hackathon%20sharing/Presenter-Script.md) | Original 16-slide presenter script, including the hidden event sections |
 | [Railway guide](gdg%20hackathon%20sharing/RAILWAY.md) | Deployment, authentication, storage and rehearsal |
 | [Live challenge guide](gdg%20hackathon%20sharing/workshop/README.md) | Host workflow, rubric and data recovery |
 | [Judging and CSV guide](gdg%20hackathon%20sharing/workshop/JUDGING.md) | Gemini/manual fallback, ChatGPT instructions and exact import format |
@@ -121,6 +123,7 @@ python "gdg hackathon sharing/workshop/test_judging.py"
 node .hack-build/verify-judging-ui.mjs
 node .hack-build/verify-workshop.mjs
 node .hack-build/verify-html.mjs
+node .hack-build/verify-share.mjs
 ```
 
 The hosting and judging checks cover the single-request 50-entry scenario, provider-failure fallback, complete CSV validation, custom rubrics, weighted totals and persistence. Browser checks cover manual scores/drafts, prompt downloads, CSV uploads and reveal in both applications. They use isolated data and a synthetic provider; no real Gemini requests or live submissions are used. The two-app browser check expects the independent backup checkout at `.hack-build/backup-repo`; without it, it checks the main application only.

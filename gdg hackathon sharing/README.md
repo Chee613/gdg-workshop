@@ -47,3 +47,7 @@ node .hack-build/verify-workshop.mjs
 ```
 
 The workshop checks use a temporary database and synthetic judging provider. Real AI judging requires your own Gemini connection. Keys, session submissions, dependency folders, and local test captures are excluded from Git.
+
+## Shared presentation
+
+The published HTML contains 13 slides. Challenge and both Slido Q&A slides are excluded from navigation, direct links, notes and print output. They remain in `.hack-build/deck-spec.json` with `hidden: true`; the source generator preserves these flags. Remove the matching flags in `.hack-build/rearrange-deck.py` and rebuild to restore them. The original presenter script includes those event-only sections; the separate live challenge service is unchanged.

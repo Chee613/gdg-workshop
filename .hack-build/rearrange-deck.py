@@ -35,7 +35,7 @@ slides = [
     dict(text('Re:Zero Beginner series:',72,195,1136,48,32,BLUE,True),align='center'),
     dict(text('Hackathon Masterclass',72,266,1136,96,76,INK,True),align='center'),
     dict(text('& Hackathon Project Sharing',72,366,1136,86,62,INK,True),align='center')],
-    notes='Welcome to Re:Zero Beginner series: Hackathon Masterclass & Hackathon Project Sharing. The dinosaur automatically watches TV, plays Dino Run and drifts off to sleep. Advance to Slido Q&A when ready.'),
+    notes='Welcome to Re:Zero Beginner series: Hackathon Masterclass & Hackathon Project Sharing. The dinosaur automatically watches TV, plays Dino Run and drifts off to sleep. Advance when ready.'),
  slido_slide('Slido'),
  dict(name='Intro', elements=[
     text('Meet the builders.',72,117,1110,83,68,INK,True),
@@ -164,7 +164,7 @@ slides = [
  dict(name='Timer',elements=[
     dict(text('GDG Clock',72,117,1136,83,64,INK,True),align='center'),
     dict(kind='countdown',x=450,y=207,w=380,h=425)],
-    notes='Five-minute GDG countdown after the challenge announcement and before closing Slido Q&A. The Chrome dinosaur runs from the left to the right across the same five minutes; all timer controls also control the run. Press Start to begin, Pause to hold, Resume to continue, or Reset to return to 05:00. The timer keeps real elapsed time while this browser tab is in the background. It stays at 00:00 when finished; advance to Slido when ready.'),
+    notes='Five-minute GDG countdown. The Chrome dinosaur runs from the left to the right across the same five minutes; all timer controls also control the run. Press Start to begin, Pause to hold, Resume to continue, or Reset to return to 05:00. The timer keeps real elapsed time while this browser tab is in the background. It stays at 00:00 when finished; advance when ready.'),
  slido_slide('Questions'),
  dict(name='Thanks', elements=[
     dict(text('Thank You',72,117,1136,132,100,INK,True),align='center'),
@@ -225,6 +225,8 @@ scenes = dict(Cover='window',Slido='pipe',Intro='plane',Stories='balloon',Brains
     Criteria='hole',Challenge='magnet',Timer='train',Questions='finish',Thanks='finish')
 assert len({scenes[s['name']] for s in slides[:-1]}) == len(slides)-1
 for slide in slides:
+    if slide['name'] in ('Challenge','Slido','Questions'):
+        slide['hidden'] = True
     slide['scene'] = scenes[slide['name']]
     assert len(slide['elements']) == len(portrait[slide['name']])
     for element, rect in zip(slide['elements'], portrait[slide['name']]):
@@ -236,4 +238,4 @@ for slide in slides:
 for label,file,color in [('UI example','good-ui-slot.svg',BLUE),('Slide example','good-slide-slot.svg',GREEN),('Bad UI example','bad-ui-slot.svg',RED),('Bad slide example','bad-slide-slot.svg',YELLOW)]:
     frame = '' if file.startswith('good-') else f'<rect x="2" y="2" width="542" height="298" rx="15" fill="#FAFBFD" stroke="{color}" stroke-width="2" stroke-dasharray="8 7"/>'
     (OUT/'assets'/file).write_text(f'''<svg xmlns="http://www.w3.org/2000/svg" width="546" height="302" viewBox="0 0 546 302">{frame}<rect x="239" y="92" width="68" height="52" rx="6" fill="none" stroke="#BDC1C6" stroke-width="3"/><circle cx="257" cy="108" r="6" fill="#BDC1C6"/><path d="M244 137L262 119L275 132L287 117L302 137" fill="none" stroke="#BDC1C6" stroke-width="3"/><text x="273" y="198" text-anchor="middle" font-family="Arial" font-size="25" fill="#5F6368">{label}</text></svg>''',encoding='utf-8')
-print('Prepared sixteen slides with a GDG countdown, Slido Q&A and closing forms.')
+print('Prepared sixteen source slides; Challenge and both Slido Q&A slides are hidden in the shared presentation.')
