@@ -1,12 +1,19 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0a0a0b">
 <title>What is an AI agent, really? · GDG on Campus UM</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=STIX+Two+Text:ital,wght@0,400;0,500;1,400;1,500&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#0a0a0b;--fg:#ece6d9;--dim:#8a8780;--line:#55534e;--blue:#58c4dd;--yellow:#f4d35e;--green:#83c167;--red:#fc6255;
  --serif:'STIX Two Text',Cambria,Georgia,serif;--sans:'IBM Plex Sans','Segoe UI',Arial,sans-serif;--mono:'IBM Plex Mono',Consolas,monospace}
-*{box-sizing:border-box}html,body{height:100%}body{margin:0;background:#000;overflow:hidden;font-family:var(--sans);color:var(--fg)}
+*{box-sizing:border-box}html,body{height:100%;height:100dvh}body{margin:0;background:#000;overflow:hidden;font-family:var(--sans);color:var(--fg);touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+/* phones held upright get asked to turn sideways */
+.rotate{display:none;position:fixed;inset:0;z-index:50;background:var(--bg);flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:32px;text-align:center}
+@media (orientation:portrait) and (pointer:coarse) and (max-width:600px){body:not(.portrait-ok) .rotate{display:flex}}
+.rotate svg{width:92px;height:92px;animation:turn 2.6s ease-in-out infinite}@keyframes turn{0%,20%{transform:rotate(0)}50%,75%{transform:rotate(-90deg)}100%{transform:rotate(0)}}
+.rotate h2{margin:0;font-family:var(--serif);font-weight:400;font-style:italic;font-size:32px}
+.rotate p{margin:0;font-size:17px;line-height:1.4;color:var(--dim);max-width:280px}
+.rotate button{margin-top:10px;background:none;border:1px solid var(--line);border-radius:999px;color:var(--fg);font:inherit;font-size:15px;padding:11px 20px;cursor:pointer}
 h1,p{margin:0}:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
 .deck{width:1280px;height:720px;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) scale(var(--scale,1));transform-origin:center;background:var(--bg)}
 .slide{display:none;position:absolute;inset:0;padding:34px 50px 0}.slide.active{display:block}
@@ -56,7 +63,7 @@ text{font-family:var(--serif);font-style:italic;fill:var(--fg);font-size:23px}te
 .ours{position:absolute;left:340px;width:200px;font-family:var(--serif);font-style:italic;font-size:28px;line-height:100px;height:100px}
 /* 10 code */
 .code{position:absolute;left:60px;font-family:var(--mono);font-size:23px;white-space:pre;line-height:1}.code .q,.code.q{color:var(--dim)}
-@media(prefers-reduced-motion:reduce){[data-at],.draw,.runner,.trail,.stn,.var b,.part{transition:none}.dot-spin{animation:none}}
+@media(prefers-reduced-motion:reduce){[data-at],.draw,.runner,.trail,.stn,.var b,.part{transition:none}.dot-spin,.rotate svg{animation:none}}
 </style></head><body>
 <main class="deck" id="deck" aria-label="What is an AI agent, really? An introduction in ten slides">
 
@@ -248,10 +255,16 @@ text{font-family:var(--serif);font-style:italic;fill:var(--fg);font-size:23px}te
 <div class="cap" id="cap" aria-live="polite"></div>
 <div class="foot"><div class="pips" id="pips"></div><span id="where"></span><button id="back" aria-label="Back">←</button><button id="fwd" aria-label="Forward">→ to continue</button></div>
 </main>
+<div class="rotate" role="dialog" aria-modal="true" aria-labelledby="rotT">
+<svg viewBox="0 0 96 96" aria-hidden="true"><rect x="30" y="12" width="36" height="72" rx="7" fill="none" stroke="#ece6d9" stroke-width="3"/><circle cx="48" cy="75" r="2.6" fill="#ece6d9"/><rect x="36" y="20" width="24" height="46" rx="2" fill="#f4d35e" opacity=".85"/></svg>
+<h2 id="rotT">Rotate your phone</h2>
+<p>Turn it sideways to see the slides full size.</p>
+<button id="portraitOk">Continue in portrait</button>
+</div>
 <script>
 const $=id=>document.getElementById(id),slides=[...document.querySelectorAll('.slide')],caps=slides.map(s=>JSON.parse(s.dataset.caps));
 let cur=0,step=0,timers=[];const later=(t,f)=>timers.push(setTimeout(f,t));
-function fit(){$('deck').style.setProperty('--scale',Math.min(innerWidth/1280,innerHeight/720));}
+function fit(){const v=window.visualViewport,w=v?v.width:innerWidth,h=v?v.height:innerHeight;$('deck').style.setProperty('--scale',Math.min(w/1280,h/720));}
 
 // Cards show NAME.webp. If a NAME.mp4 clip exists beside it, the clip plays on top, muted and looping.
 const clip={};
@@ -295,5 +308,16 @@ function go(d){if(d>0){if(step<caps[cur].length-1)step++;else if(cur<slides.leng
 $('fwd').onclick=()=>go(1);$('back').onclick=()=>go(-1);
 document.addEventListener('keydown',e=>{if(e.target.closest('button'))return;if(['ArrowRight','PageDown',' ','Enter'].includes(e.key)){e.preventDefault();go(1);}if(['ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();go(-1);}
  if(e.key==='Home'){cur=0;step=0;render();}if(e.key==='f'||e.key==='F')document.documentElement.requestFullscreen?.();});
-addEventListener('resize',fit);fit();render();
+addEventListener('resize',fit);addEventListener('orientationchange',()=>setTimeout(fit,250));window.visualViewport?.addEventListener('resize',fit);
+
+// Phones: swipe left or right, or tap (left third goes back, the rest goes forward).
+let tx=0,ty=0,swiped=false;
+document.addEventListener('touchstart',e=>{const t=e.touches[0];tx=t.clientX;ty=t.clientY;swiped=false;},{passive:true});
+document.addEventListener('touchend',e=>{const t=e.changedTouches[0],dx=t.clientX-tx,dy=t.clientY-ty;if(Math.abs(dx)>40&&Math.abs(dx)>Math.abs(dy)*1.5){swiped=true;go(dx<0?1:-1);}},{passive:true});
+document.addEventListener('click',e=>{if(swiped){swiped=false;return;}if(e.target.closest('button,a,.rotate'))return;go(e.clientX<innerWidth/3?-1:1);});
+// Portrait prompt: "Continue in portrait" hides it for the rest of this visit.
+const okPortrait=()=>document.body.classList.add('portrait-ok');
+try{if(sessionStorage.getItem('portraitOk'))okPortrait();}catch(e){}
+$('portraitOk').onclick=()=>{okPortrait();try{sessionStorage.setItem('portraitOk','1');}catch(e){}};
+fit();render();
 </script></body></html>
