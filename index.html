@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>What is an AI agent, really? · GDG on Campus UM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=STIX+Two+Text:ital,wght@0,400;0,500;1,400;1,500&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0a0b;--fg:#ece6d9;--dim:#8a8780;--line:#55534e;--blue:#58c4dd;--yellow:#f4d35e;--green:#83c167;--red:#fc6255;
+ --serif:'STIX Two Text',Cambria,Georgia,serif;--sans:'IBM Plex Sans','Segoe UI',Arial,sans-serif;--mono:'IBM Plex Mono',Consolas,monospace}
+*{box-sizing:border-box}html,body{height:100%}body{margin:0;background:#000;overflow:hidden;font-family:var(--sans);color:var(--fg)}
+h1,p{margin:0}:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
+.deck{width:1280px;height:720px;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) scale(var(--scale,1));transform-origin:center;background:var(--bg)}
+.slide{display:none;position:absolute;inset:0;padding:34px 50px 0}.slide.active{display:block}
+.chap,.k{font-size:13px;letter-spacing:2.5px;text-transform:uppercase;color:var(--dim)}
+.stage{position:relative;width:1180px;height:500px;margin-top:14px}
+.stage>svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.cap{position:absolute;left:0;right:0;bottom:62px;text-align:center;font-size:27px;line-height:1.3;padding:0 130px;min-height:70px;display:flex;align-items:flex-end;justify-content:center}
+.foot{position:absolute;left:50px;right:50px;bottom:20px;display:flex;align-items:center;gap:14px;font-size:12px;letter-spacing:1.5px;color:var(--dim)}
+.pips{display:flex;gap:6px;margin-right:auto}.pips i{width:18px;height:2px;background:#3a3935}.pips i.on{background:var(--fg)}
+.foot button{background:none;border:0;color:var(--dim);font:inherit;letter-spacing:1.5px;cursor:pointer;padding:4px 6px}.foot button:hover{color:var(--fg)}
+/* reveal: [data-at] fades in at its step */
+[data-at]{opacity:0;transition:opacity .5s}.on[data-at]{opacity:1}
+text{font-family:var(--serif);font-style:italic;fill:var(--fg);font-size:23px}text.sm{font-size:17px;fill:var(--dim)}
+.ln{fill:none;stroke:var(--line);stroke-width:1.6}.bx{fill:var(--bg);stroke:var(--fg);stroke-width:1.6}
+.draw{stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset .9s ease,opacity .3s,stroke .3s}.on.draw{stroke-dashoffset:0}
+.ring{fill:none;stroke-width:2}
+/* illustrations sit on the dark canvas like printed cards on a table */
+.card{position:absolute;aspect-ratio:3/2;border-radius:5px;background:#222 center/cover no-repeat;box-shadow:0 14px 34px rgba(0,0,0,.65);overflow:hidden}
+.card video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.lab{position:absolute;font-family:var(--serif);font-style:italic;font-size:25px;text-align:center}
+.b{color:var(--blue)}.y{color:var(--yellow)}.g{color:var(--green)}.r{color:var(--red)}
+.dot-spin{animation:spin 9s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+/* 1 cover */
+.title{position:absolute;left:0;top:130px;width:620px}.title h1{font-family:var(--serif);font-weight:400;font-size:86px;line-height:1.02;letter-spacing:-1.5px}.title h1 em{color:var(--yellow);font-style:italic}
+.title p{margin-top:30px;font-size:22px;color:var(--dim);line-height:1.4}
+/* shared right-hand panel */
+.panel{position:absolute;left:600px;top:50px;width:560px}.panel .k{margin:26px 0 8px}.panel .k:first-child{margin-top:0}
+.goal{font-family:var(--serif);font-style:italic;font-size:30px}
+.var{font-family:var(--serif);font-size:28px;line-height:1.55;display:flex;gap:12px}.var i{width:200px}.var b{font-weight:400;font-style:italic;color:var(--dim);transition:color .4s}.var.set b{color:var(--green)}
+.call{font-family:var(--mono);font-size:19px;color:var(--blue);min-height:54px;white-space:pre-wrap;line-height:1.4}
+.eq{position:absolute;left:0;right:0;top:428px;text-align:center;font-family:var(--serif);font-size:38px}.eq i{color:var(--yellow)}.eq b{font-weight:400;color:var(--blue);font-style:italic}
+/* 4 + 8 loop */
+.stn{transition:fill .3s}.stn.now{fill:var(--yellow)}
+.runner{transition:transform .8s cubic-bezier(.45,0,.25,1)}
+.trail{fill:none;stroke-width:3;stroke-linecap:round;stroke-dasharray:1;transition:stroke-dashoffset .8s cubic-bezier(.45,0,.25,1)}
+/* 5 layers */
+.layer{position:absolute;left:40px;width:460px}.layer b{display:block;font-family:var(--serif);font-style:italic;font-weight:400;font-size:36px;line-height:1.1}.layer span{display:block;font-size:18px;color:var(--dim);margin-top:5px}
+/* 6 runs */
+.run{font-family:var(--serif);font-size:32px;line-height:1.7}.run em{color:var(--dim);font-size:24px;margin:0 10px;font-style:normal}
+/* 7 take one away */
+.part{position:absolute;inset:0;transition:opacity .45s}.part.gone{opacity:.13}
+.miss{position:absolute;left:0;right:0;top:428px;text-align:center;font-family:var(--serif);font-style:italic;font-size:36px;color:var(--red);transition:opacity .3s}
+/* 8 guardrails */
+.rule{margin-bottom:24px}.rule b{display:block;font-family:var(--serif);font-weight:400;font-size:34px;line-height:1.15}.rule b i{font-style:italic}.rule span{display:block;font-size:18px;color:var(--dim);margin-top:4px}
+/* 9 listen for */
+.hear{position:absolute;left:640px;font-family:var(--serif);font-size:36px;line-height:100px;height:100px}
+.ours{position:absolute;left:340px;width:200px;font-family:var(--serif);font-style:italic;font-size:28px;line-height:100px;height:100px}
+/* 10 code */
+.code{position:absolute;left:60px;font-family:var(--mono);font-size:23px;white-space:pre;line-height:1}.code .q,.code.q{color:var(--dim)}
+@media(prefers-reduced-motion:reduce){[data-at],.draw,.runner,.trail,.stn,.var b,.part{transition:none}.dot-spin{animation:none}}
+</style></head><body>
+<main class="deck" id="deck" aria-label="What is an AI agent, really? An introduction in ten slides">
+
+<!-- 1 · cover -->
+<section class="slide active" data-caps='[""]'>
+<div class="chap">Agentic AI · Part 1</div>
+<div class="stage">
+<div class="title"><h1>What is an<br>AI <em>agent</em>,<br>really?</h1><p>GDG on Campus UM · a beginner's intro</p></div>
+<svg viewBox="0 0 1180 500" aria-hidden="true"><circle class="ln" cx="880" cy="250" r="225"/><g class="dot-spin" style="transform-origin:880px 250px"><circle cx="880" cy="25" r="8" fill="#f4d35e"/></g></svg>
+<div class="card" data-n="01-cover" style="left:715px;top:140px;width:330px;transform:rotate(-3deg)" role="img" aria-label="A small robot intern arriving at its desk"></div>
+</div>
+</section>
+
+<!-- 2 · chatbot vs agent -->
+<section class="slide" data-hook="vs" data-caps='["Give both the same request: plan our next GDG meetup.","A chatbot passes it through the model once, and replies.","Then it stops. The work is still yours.","An agent passes it to the model too. But this model can use tools.","Act, look at the result, go again. When the job is done, it asks you."]'>
+<div class="chap">The difference</div>
+<div class="stage">
+<div class="card" data-n="02-chatbot" style="left:60px;top:0;width:190px" role="img" aria-label="A robot at a counter, talking"></div><div class="lab" style="left:270px;top:44px">chatbot</div>
+<div class="card" data-n="03-agent" style="left:680px;top:0;width:190px" role="img" aria-label="A robot handing over finished work"></div><div class="lab" style="left:890px;top:44px">agent</div>
+<svg viewBox="0 0 1180 500" role="img" aria-label="Left: request, model, reply, then stop. Right: request, model, tools, and a result arrow looping back to the model, ending with a check by you.">
+<defs><marker id="ar" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M1 1l7 4-7 4" fill="none" stroke="#8a8780" stroke-width="1.5"/></marker></defs>
+<line class="ln" x1="590" y1="0" x2="590" y2="470" stroke-dasharray="2 8"/>
+<text x="20" y="318">request</text>
+<g data-at="1"><path class="ln" d="M112 310H186" marker-end="url(#ar)"/><rect class="bx" x="190" y="275" width="150" height="70" rx="3"/><text x="265" y="318" text-anchor="middle">model</text><path class="ln" d="M340 310H414" marker-end="url(#ar)"/><text x="424" y="318">reply</text></g>
+<circle id="d1" r="7" fill="#58c4dd" opacity="0"><animateMotion id="m1" dur="2.2s" begin="indefinite" fill="freeze" path="M112 310H414"/></circle>
+<g data-at="2"><rect x="500" y="300" width="18" height="18" fill="#fc6255"/><text class="sm" x="509" y="346" text-anchor="middle" style="fill:#fc6255">stops</text></g>
+<text x="630" y="318">request</text>
+<g data-at="3"><path class="ln" d="M722 310H786" marker-end="url(#ar)"/><rect class="bx" x="790" y="275" width="140" height="70" rx="3"/><text x="860" y="318" text-anchor="middle">model</text><path class="ln" d="M930 310H1006" marker-end="url(#ar)"/><rect class="bx" x="1010" y="275" width="140" height="70" rx="3"/><text x="1080" y="318" text-anchor="middle">tools</text>
+<path class="ln" d="M1080 345C1080 440 860 440 860 351" marker-end="url(#ar)"/><text class="sm" x="970" y="446" text-anchor="middle">result</text></g>
+<circle id="d2" r="7" fill="#f4d35e" opacity="0"><animateMotion id="m2" dur="7s" begin="indefinite" fill="freeze" path="M722 310H1080C1080 440 860 440 860 310H1080C1080 440 860 440 860 310H1080C1080 440 860 440 860 310V200"/></circle>
+<g fill="none" stroke="#83c167" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path class="tk" opacity="0" d="M1030 248l7 7 13-15"/><path class="tk" opacity="0" d="M1068 248l7 7 13-15"/><path class="tk" opacity="0" d="M1106 248l7 7 13-15"/></g>
+<g id="you" opacity="0" style="transition:opacity .5s"><path class="ln" d="M860 275V214" marker-end="url(#ar)"/><text x="860" y="196" text-anchor="middle" style="fill:#83c167">done. you approve?</text></g>
+</svg>
+</div>
+</section>
+
+<!-- 3 · the parts -->
+<section class="slide" data-caps='["Start with a model. On its own, it can only produce text.","Give it tools, and it can act: search, book, send.","Give it memory, and it remembers what happened last time.","Give it instructions, and it does the job your way.","Keep a human in charge of the goal, and of the final yes.","Put together, and run in a loop: that is an agent."]'>
+<div class="chap">What it is made of</div>
+<div class="stage">
+<svg viewBox="0 0 1180 500" aria-hidden="true">
+<path class="ln draw" pathLength="1" data-at="1" d="M700 170L850 110"/><path class="ln draw" pathLength="1" data-at="2" d="M480 170L330 110"/><path class="ln draw" pathLength="1" data-at="3" d="M480 240L330 330"/><path class="ln draw" pathLength="1" data-at="4" d="M700 240L850 330"/>
+</svg>
+<div class="card" data-n="04-brain" style="left:480px;top:95px;width:220px" role="img" aria-label="The robot thinking"></div><div class="lab" style="left:480px;top:250px;width:220px">model</div>
+<div data-at="1"><div class="card" data-n="05-tools" style="left:850px;top:20px;width:190px" role="img" aria-label="An open toolbox"></div><div class="lab b" style="left:1050px;top:66px">tools</div></div>
+<div data-at="2"><div class="card" data-n="06-memory" style="left:140px;top:20px;width:190px" role="img" aria-label="A notebook"></div><div class="lab g" style="left:20px;top:66px;width:110px">memory</div></div>
+<div data-at="3"><div class="card" data-n="07-instructions" style="left:140px;top:270px;width:190px" role="img" aria-label="A checklist"></div><div class="lab y" style="left:0;top:316px;width:130px;font-size:22px">instructions</div></div>
+<div data-at="4"><div class="card" data-n="08-boss" style="left:850px;top:270px;width:190px" role="img" aria-label="A hand stamping approval"></div><div class="lab r" style="left:1050px;top:316px">you</div></div>
+<div class="eq" data-at="5"><i>agent</i> = model + tools + goal + <b>loop</b></div>
+</div>
+</section>
+
+<!-- 4 · the loop -->
+<section class="slide" data-hook="lap" data-caps='["Let us follow one request around the loop.","Read. It checks its notes: the last meetup was Friday, 5 pm.","Choose. The model picks the next step: find a room.","Act. It calls a tool, and the tool answers: DK1 is free.","Check. Is the goal met? Not yet. So it goes around again.","Read. This time the instructions: a poster needs date, venue and a QR code.","Choose. Next step: draft the announcement.","Act. Another tool call. The draft is saved.","Check. Everything is ready, so it stops and asks you.","You approve. Only now does anything go public."]'>
+<div class="chap">How it works</div>
+<div class="stage">
+<svg viewBox="0 0 1180 500" role="img" aria-label="A dot travelling round a circle through four stops: read, choose, act, check">
+<circle class="ln" cx="250" cy="250" r="170"/>
+<circle id="t1" class="trail" pathLength="1" cx="250" cy="250" r="170" stroke="#58c4dd" stroke-dashoffset="1" transform="rotate(-90 250 250)"/>
+<circle id="t2" class="trail" pathLength="1" cx="250" cy="250" r="182" stroke="#83c167" stroke-dashoffset="1" transform="rotate(-90 250 250)"/>
+<g stroke="#ece6d9" stroke-width="1.6"><path d="M250 72v16M428 250h-16M250 428v-16M72 250h16"/></g>
+<text class="stn" data-s="0" x="250" y="52" text-anchor="middle">read</text><text class="stn" data-s="1" x="446" y="258">choose</text><text class="stn" data-s="2" x="250" y="466" text-anchor="middle">act</text><text class="stn" data-s="3" x="54" y="258" text-anchor="end">check</text>
+<g id="run" class="runner" style="transform-origin:250px 250px"><circle cx="250" cy="80" r="9" fill="#f4d35e"/></g>
+<text class="sm" x="250" y="236" text-anchor="middle" style="letter-spacing:2px;font-style:normal;font-family:var(--sans);font-size:13px">LAP</text><text id="lap" x="250" y="290" text-anchor="middle" style="font-size:58px;font-style:normal">1</text>
+</svg>
+<div class="panel">
+<div class="k">Goal</div><div class="goal">"plan our next GDG meetup"</div>
+<div class="k">What it knows so far</div>
+<div class="var" id="v0"><i>room</i>= <b>?</b></div><div class="var" id="v1"><i>announcement</i>= <b>?</b></div><div class="var" id="v2"><i>approved</i>= <b>?</b></div>
+<div class="k">This step</div><div class="call" id="call"></div>
+</div>
+</div>
+</section>
+
+<!-- 5 · four layers -->
+<section class="slide" data-caps='["Four words you will hear. Each one wraps around the one before.","Prompt engineering: writing a good message to the model.","Context engineering: choosing everything the model sees. Notes, instructions, examples.","The harness: the tools, and the wiring that lets the model use them.","Loop engineering: designing what runs the agent again, and what counts as done.","That last term is new, from 2026. People still define it differently."]'>
+<div class="chap">How we got here</div>
+<div class="stage">
+<svg viewBox="0 0 1180 500" role="img" aria-label="Four rings around a model: prompt, context, harness, loop">
+<circle cx="860" cy="250" r="6" fill="#ece6d9"/><text class="sm" x="860" y="280" text-anchor="middle">model</text>
+<circle class="ring draw" pathLength="1" data-at="1" cx="860" cy="250" r="62" stroke="#ece6d9" transform="rotate(-90 860 250)"/>
+<circle class="ring draw" pathLength="1" data-at="2" cx="860" cy="250" r="116" stroke="#83c167" transform="rotate(-90 860 250)"/>
+<circle class="ring draw" pathLength="1" data-at="3" cx="860" cy="250" r="170" stroke="#58c4dd" transform="rotate(-90 860 250)"/>
+<circle class="ring draw" pathLength="1" data-at="4" cx="860" cy="250" r="224" stroke="#f4d35e" transform="rotate(-90 860 250)"/>
+<g data-at="4"><g class="dot-spin" style="transform-origin:860px 250px;animation-duration:6s"><circle cx="860" cy="26" r="8" fill="#f4d35e"/></g></g>
+</svg>
+<div class="layer" data-at="1" style="top:40px"><b>prompt</b><span>the message you write</span></div>
+<div class="layer" data-at="2" style="top:150px"><b class="g">context</b><span>everything the model sees</span></div>
+<div class="layer" data-at="3" style="top:260px"><b class="b">harness</b><span>tools, and the wiring around them</span></div>
+<div class="layer" data-at="4" style="top:370px"><b class="y">loop</b><span>what runs it again, and when it stops</span></div>
+</div>
+</section>
+
+<!-- 6 · two loops -->
+<section class="slide" data-hook="two" data-caps='["So there are two loops. Do not mix them up.","The inner loop is the agent itself: read, choose, act, check, inside one task.","The outer loop wraps the whole agent. Run it, then test what it made.","Test failed? It runs the agent again. Nobody types a new prompt.","Test passed, or the lap limit is hit: stop.","Designing that outer loop is loop engineering. In Google ADK, it is a LoopAgent."]'>
+<div class="chap">Two loops</div>
+<div class="stage">
+<svg viewBox="0 0 1180 500" role="img" aria-label="A small inner loop labelled agent, inside a larger outer loop with two stops: run the agent, test the result">
+<circle class="ln" cx="300" cy="250" r="80"/><circle class="ln" cx="300" cy="250" r="195"/>
+<circle class="ring draw" pathLength="1" data-at="1" cx="300" cy="250" r="80" stroke="#58c4dd" transform="rotate(-90 300 250)"/>
+<circle class="ring draw" pathLength="1" data-at="2" cx="300" cy="250" r="195" stroke="#f4d35e" transform="rotate(-90 300 250)"/>
+<g data-at="1"><g class="dot-spin" style="transform-origin:300px 250px;animation-duration:2.6s"><circle cx="300" cy="170" r="6" fill="#58c4dd"/></g><text x="300" y="258" text-anchor="middle" style="fill:#58c4dd">agent</text></g>
+<g data-at="2"><path d="M300 47v16M300 453v-16" stroke="#ece6d9" stroke-width="1.6"/><text x="300" y="32" text-anchor="middle">run the agent</text><text x="300" y="486" text-anchor="middle">test the result</text>
+<g id="orun" class="runner" style="transform-origin:300px 250px"><circle cx="300" cy="55" r="9" fill="#f4d35e"/></g></g>
+</svg>
+<div class="panel" style="top:70px">
+<div class="k" data-at="2">Runs</div>
+<div class="run" data-at="2">run 1 <em>→</em> test <span class="r">✗</span></div>
+<div class="run" data-at="3">run 2 <em>→</em> test <span class="r">✗</span></div>
+<div class="run" data-at="4">run 3 <em>→</em> test <span class="g">✓</span> <em>→</em> <i class="g">stop</i></div>
+<div class="k" data-at="5" style="margin-top:34px">In Google ADK</div>
+<div class="call" data-at="5">LoopAgent(
+  sub_agents=[planner, tester],
+  max_iterations=5,
+)</div>
+</div>
+</div>
+</section>
+
+<!-- 7 · take one away -->
+<section class="slide" data-hook="away" data-caps='["What does each part really do? Take one away and watch.","No tools: it can only talk. Or worse, it invents a room that does not exist.","No memory: it starts from zero, and asks you the same questions every time.","No instructions: it finishes the job, just not your way.","No stop rule: it never decides it is done. The laps and the bill keep growing.","No human: it posts to everyone, and nobody checked."]'>
+<div class="chap">Take one away</div>
+<div class="stage">
+<svg viewBox="0 0 1180 500" aria-hidden="true">
+<path class="ln" id="w1" d="M700 170L850 110"/><path class="ln" id="w2" d="M480 170L330 110"/><path class="ln" id="w3" d="M480 240L330 330"/><path class="ln" id="w5" d="M700 240L850 330"/>
+<g id="p4" class="part" style="position:static"><circle class="ln" cx="590" cy="168" r="150" stroke-dasharray="3 9" style="stroke:#f4d35e"/><text class="sm" x="590" y="346" text-anchor="middle" style="fill:#f4d35e">stop rule</text></g>
+</svg>
+<div class="card" data-n="04-brain" style="left:480px;top:95px;width:220px" role="img" aria-label="The model"></div>
+<div class="part" id="p1"><div class="card" data-n="05-tools" style="left:850px;top:20px;width:190px" role="img" aria-label="Tools"></div><div class="lab b" style="left:1050px;top:66px">tools</div></div>
+<div class="part" id="p2"><div class="card" data-n="06-memory" style="left:140px;top:20px;width:190px" role="img" aria-label="Memory"></div><div class="lab g" style="left:20px;top:66px;width:110px">memory</div></div>
+<div class="part" id="p3"><div class="card" data-n="07-instructions" style="left:140px;top:270px;width:190px" role="img" aria-label="Instructions"></div><div class="lab y" style="left:0;top:316px;width:130px;font-size:22px">instructions</div></div>
+<div class="part" id="p5"><div class="card" data-n="08-boss" style="left:850px;top:270px;width:190px" role="img" aria-label="You, approving"></div><div class="lab r" style="left:1050px;top:316px">you</div></div>
+<div class="miss" id="miss"></div>
+</div>
+</section>
+
+<!-- 8 · guardrails -->
+<section class="slide" data-hook="guard" data-caps='["Each of those failures has a matching guardrail.","A lap limit: stop after a set number of laps, finished or not.","A budget: every lap spends tokens. One agent run costs several times more than one chat reply.","A check: tests, or a second model, judge the result. The agent does not mark its own work.","A human: anything public, paid or permanent waits for your yes."]'>
+<div class="chap">Guardrails</div>
+<div class="stage">
+<svg viewBox="0 0 1180 500" role="img" aria-label="A dot running laps on a circle until a lap limit stops it">
+<circle class="ln" cx="250" cy="250" r="170"/>
+<g id="grun" style="transform-origin:250px 250px"><circle cx="250" cy="80" r="9" fill="#f4d35e"/></g>
+<text class="sm" x="250" y="226" text-anchor="middle" style="letter-spacing:2px;font-style:normal;font-family:var(--sans);font-size:13px">LAP</text><text id="glap" x="250" y="280" text-anchor="middle" style="font-size:58px;font-style:normal">0</text>
+<text id="gstop" x="250" y="318" text-anchor="middle" style="fill:#fc6255;opacity:0;transition:opacity .3s">limit reached. stop.</text>
+</svg>
+<div class="panel" style="top:40px">
+<div class="rule" data-at="1"><b class="y"><i>laps</i> ≤ 5</b><span>stop after N laps, done or not</span></div>
+<div class="rule" data-at="2"><b class="r"><i>cost</i> ≤ <i>budget</i></b><span>every lap spends tokens</span></div>
+<div class="rule" data-at="3"><b class="b"><i>check</i>(<i>result</i>) = pass</b><span>tests or a second model judge it</span></div>
+<div class="rule" data-at="4"><b class="g"><i>you</i> = yes</b><span>before anything public, paid or permanent</span></div>
+</div>
+</div>
+</section>
+
+<!-- 9 · listen for -->
+<section class="slide" data-caps='["Next: someone who runs a system like this for real work, every day.","When he says MCP tool servers, think: tools.","Memory files: the notebook.","Skills: instructions that worked once, saved to use again.","Final QC: the human who gives the last yes.","Same parts you just met. Listen for them."]'>
+<div class="chap">Up next · listen for these</div>
+<div class="stage">
+<div class="k" style="position:absolute;left:170px;top:0">What we called it</div><div class="k" style="position:absolute;left:640px;top:0">What you will hear</div>
+<svg viewBox="0 0 1180 500" aria-hidden="true"><defs><marker id="ar2" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M1 1l7 4-7 4" fill="none" stroke="#8a8780" stroke-width="1.5"/></marker></defs>
+<path class="ln" data-at="1" d="M530 90H615" marker-end="url(#ar2)"/><path class="ln" data-at="2" d="M530 200H615" marker-end="url(#ar2)"/><path class="ln" data-at="3" d="M530 310H615" marker-end="url(#ar2)"/><path class="ln" data-at="4" d="M530 420H615" marker-end="url(#ar2)"/></svg>
+<div data-at="1"><div class="card" data-n="05-tools" style="left:170px;top:40px;width:150px" role="img" aria-label="Tools"></div><div class="ours b" style="top:40px">tools</div><div class="hear" style="top:40px">"MCP tool servers"</div></div>
+<div data-at="2"><div class="card" data-n="06-memory" style="left:170px;top:150px;width:150px" role="img" aria-label="Memory"></div><div class="ours g" style="top:150px">memory</div><div class="hear" style="top:150px">"memory files"</div></div>
+<div data-at="3"><div class="card" data-n="07-instructions" style="left:170px;top:260px;width:150px" role="img" aria-label="Instructions"></div><div class="ours y" style="top:260px">instructions</div><div class="hear" style="top:260px">"skills"</div></div>
+<div data-at="4"><div class="card" data-n="08-boss" style="left:170px;top:370px;width:150px" role="img" aria-label="You"></div><div class="ours r" style="top:370px">you</div><div class="hear" style="top:370px">"final QC"</div></div>
+</div>
+</section>
+
+<!-- 10 · hand-over to ADK -->
+<section class="slide" data-caps='["After the talk, you build one. In Google ADK, an agent is a few lines of Python.","The model: the part that decides.","The instruction: how you want the job done.","The tools: plain Python functions it is allowed to call.","Memory lives in the session. The loop is run for you.","In an hour, this is running on your laptop."]'>
+<div class="chap">After the talk · Google ADK</div>
+<div class="stage">
+<div class="code q" style="top:40px">from google.adk.agents import Agent</div>
+<div class="code" style="top:118px">root_agent = Agent(</div>
+<div class="code" style="top:170px">    name=<span class="q">"meetup_planner"</span>,</div>
+<div class="code" data-at="1" style="top:222px">    model=<span class="q">"gemini-…"</span>,</div>
+<div class="code" data-at="2" style="top:274px">    <span class="y">instruction</span>=<span class="q">"Plan GDG meetups. Ask before posting."</span>,</div>
+<div class="code" data-at="3" style="top:326px">    <span class="b">tools</span>=[check_rooms, draft_post],</div>
+<div class="code" style="top:378px">)</div>
+<div class="code g" data-at="4" style="top:440px"># memory → session state      loop → run by ADK</div>
+<div data-at="1"><div class="card" data-n="04-brain" style="left:930px;top:206px;width:72px" role="img" aria-label="Model"></div><div class="lab" style="left:1016px;top:214px;font-size:22px">model</div></div>
+<div data-at="2"><div class="card" data-n="07-instructions" style="left:930px;top:258px;width:72px" role="img" aria-label="Instructions"></div><div class="lab y" style="left:1016px;top:266px;font-size:22px">instructions</div></div>
+<div data-at="3"><div class="card" data-n="05-tools" style="left:930px;top:310px;width:72px" role="img" aria-label="Tools"></div><div class="lab b" style="left:1016px;top:318px;font-size:22px">tools</div></div>
+<div data-at="4"><div class="card" data-n="06-memory" style="left:930px;top:424px;width:72px" role="img" aria-label="Memory"></div><div class="lab g" style="left:1016px;top:432px;font-size:22px">memory</div></div>
+</div>
+</section>
+
+<div class="cap" id="cap" aria-live="polite"></div>
+<div class="foot"><div class="pips" id="pips"></div><span id="where"></span><button id="back" aria-label="Back">←</button><button id="fwd" aria-label="Forward">→ to continue</button></div>
+</main>
+<script>
+const $=id=>document.getElementById(id),slides=[...document.querySelectorAll('.slide')],caps=slides.map(s=>JSON.parse(s.dataset.caps));
+let cur=0,step=0,timers=[];const later=(t,f)=>timers.push(setTimeout(f,t));
+function fit(){$('deck').style.setProperty('--scale',Math.min(innerWidth/1280,innerHeight/720));}
+
+// Cards show NAME.webp. If a NAME.mp4 clip exists beside it, the clip plays on top, muted and looping.
+const clip={};
+document.querySelectorAll('.card[data-n]').forEach(c=>{const n=c.dataset.n,base='assets/intro/'+n;c.style.backgroundImage='url('+base+'.webp)';
+ clip[n]=clip[n]||fetch(base+'.mp4',{method:'HEAD'}).then(r=>r.ok&&(r.headers.get('content-type')||'').startsWith('video')).catch(()=>false);
+ clip[n].then(ok=>{if(!ok)return;const v=document.createElement('video');v.muted=v.loop=v.autoplay=v.playsInline=true;v.src=base+'.mp4';c.append(v);if(!c.closest('.slide.active'))v.pause();});});
+// only the slide on screen plays its clips
+function clips(){document.querySelectorAll('.card video').forEach(v=>v.closest('.slide.active')?v.play().catch(()=>{}):v.pause());}
+
+const hooks={
+ // 2: the two travelling dots
+ vs(){const tk=[...document.querySelectorAll('.tk')],you=$('you');$('d1').setAttribute('opacity',step===1?1:0);$('d2').setAttribute('opacity',step===3?1:0);
+  tk.forEach(t=>t.setAttribute('opacity',step>=4?1:0));you.style.opacity=step>=4?1:0;if(step===1)$('m1').beginElement();
+  if(step===3){$('m2').beginElement();[1500,3400,5300].forEach((t,i)=>later(t,()=>tk[i].setAttribute('opacity',1)));later(7000,()=>you.style.opacity=1);}},
+ // 4: one request, two laps
+ lap(){const s=LOOP[step],q=Math.min(Math.max(step-1,0),7);document.querySelectorAll('.stn').forEach(t=>t.classList.toggle('now',+t.dataset.s===s[0]));
+  $('run').style.transform='rotate('+q*90+'deg)';$('t1').style.strokeDashoffset=1-Math.min(q,4)/4;$('t2').style.strokeDashoffset=1-Math.max(q-4,0)/4;
+  $('lap').textContent=step<5?1:2;$('call').textContent=s[1];
+  [0,1,2].forEach(k=>{const hit=LOOP.slice(0,step+1).find(x=>x[2]===k);$('v'+k).classList.toggle('set',!!hit);$('v'+k).querySelector('b').textContent=hit?hit[3]:'?';});},
+ // 6: the outer loop's dot: half a lap to the test, half a lap back to run again
+ two(){$('orun').style.transform='rotate('+[0,0,180,540,900,900][step]+'deg)';},
+ // 7: remove one part at a time
+ away(){[1,2,3,4,5].forEach(k=>{$('p'+k).classList.toggle('gone',k===step);const w=$('w'+k);if(w)w.style.stroke=k===step?'#fc6255':'';if(w)w.style.strokeDasharray=k===step?'4 8':'';});
+  const m=$('miss');m.textContent=['','talk only','starts from zero','not your way','','nobody checked'][step];
+  if(step===4){let n=2;m.textContent='laps = 2';timers.push(setInterval(()=>{n+=1+Math.floor(n/9);m.textContent='laps = '+n;},160));}},
+ // 8: five laps, then the limit stops it
+ guard(){const g=$('grun'),set=(t,deg)=>{g.style.transition=t;g.style.transform='rotate('+deg+'deg)';};$('gstop').style.opacity=0;
+  if(step===0){set('none',0);$('glap').textContent=0;return;}
+  if(step===1){set('none',0);g.getBoundingClientRect();set('transform 5s linear',1800);$('glap').textContent=1;[1,2,3,4].forEach(i=>later(i*1000,()=>$('glap').textContent=i+1));later(5000,()=>$('gstop').style.opacity=1);return;}
+  set('none',1800);$('glap').textContent=5;$('gstop').style.opacity=1;}
+};
+// [stop on the circle (-1 none), this step, variable set, its value]
+const LOOP=[[-1,''],[0,'notes → last meetup: Fri 5 pm, ~40 people'],[1,'next = check_rooms'],[2,'check_rooms("Fri 5 pm")\n→ "DK1 is free"',0,'DK1, Fri 5 pm'],[3,'goal met?  no → again'],
+ [0,'instructions → date, venue, QR code'],[1,'next = draft_post'],[2,'draft_post(date, venue)\n→ saved',1,'drafted'],[3,'goal met?  ready → ask the human'],[-1,'approved → posted',2,'yes']];
+
+function render(){timers.forEach(t=>{clearTimeout(t);clearInterval(t);});timers=[];const s=slides[cur];slides.forEach((x,k)=>x.classList.toggle('active',k===cur));
+ s.querySelectorAll('[data-at]').forEach(e=>e.classList.toggle('on',step>=+e.dataset.at));
+ $('cap').textContent=caps[cur][step];$('pips').innerHTML=caps[cur].map((_,i)=>'<i class="'+(i<=step?'on':'')+'"></i>').join('');
+ $('where').textContent=(cur+1)+' / '+slides.length;clips();if(s.dataset.hook)hooks[s.dataset.hook]();}
+function go(d){if(d>0){if(step<caps[cur].length-1)step++;else if(cur<slides.length-1){cur++;step=0;}else return;}else{if(step>0)step--;else if(cur>0){cur--;step=caps[cur].length-1;}else return;}render();}
+$('fwd').onclick=()=>go(1);$('back').onclick=()=>go(-1);
+document.addEventListener('keydown',e=>{if(e.target.closest('button'))return;if(['ArrowRight','PageDown',' ','Enter'].includes(e.key)){e.preventDefault();go(1);}if(['ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();go(-1);}
+ if(e.key==='Home'){cur=0;step=0;render();}if(e.key==='f'||e.key==='F')document.documentElement.requestFullscreen?.();});
+addEventListener('resize',fit);fit();render();
+</script></body></html>
