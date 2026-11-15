@@ -20,7 +20,9 @@ h1,p{margin:0}:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
 .chap,.k{font-size:13px;letter-spacing:2.5px;text-transform:uppercase;color:var(--dim)}
 .stage{position:relative;width:1180px;height:500px;margin-top:14px}
 .stage>svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
-.cap{position:absolute;left:0;right:0;bottom:62px;text-align:center;font-size:27px;line-height:1.3;padding:0 130px;min-height:70px;display:flex;align-items:flex-end;justify-content:center}
+.cap{position:absolute;left:0;right:0;bottom:62px;text-align:center;font-size:27px;line-height:1.3;padding:0 130px;min-height:70px;display:flex;flex-direction:column;justify-content:flex-end;align-items:center}
+.cap .qk{display:block;font-size:12px;letter-spacing:2.5px;text-transform:uppercase;color:var(--yellow);margin-bottom:8px}
+.part.ask .card{box-shadow:0 0 0 3px #f4d35e,0 14px 34px rgba(0,0,0,.65)}#p4.ask circle{stroke-width:3.5}
 .foot{position:absolute;left:50px;right:50px;bottom:20px;display:flex;align-items:center;gap:14px;font-size:12px;letter-spacing:1.5px;color:var(--dim)}
 .pips{display:flex;gap:6px;margin-right:auto}.pips i{width:18px;height:2px;background:#3a3935}.pips i.on{background:var(--fg)}
 .foot button{background:none;border:0;color:var(--dim);font:inherit;letter-spacing:1.5px;cursor:pointer;padding:4px 6px}.foot button:hover{color:var(--fg)}
@@ -78,7 +80,7 @@ text{font-family:var(--serif);font-style:italic;fill:var(--fg);font-size:23px}te
 </section>
 
 <!-- 2 · chatbot vs agent -->
-<section class="slide" data-hook="vs" data-caps='["Give both the same request: plan our next GDG meetup.","A chatbot passes it through the model once, and replies.","Then it stops. The work is still yours.","An agent passes it to the model too. But this model can use tools.","Act, look at the result, go again. When the job is done, it asks you."]'>
+<section class="slide" data-hook="vs" data-caps='["? We give both the same request: plan our next GDG meetup. What will each one give back?","A chatbot passes it through the model once, and replies.","Then it stops. The work is still yours.","An agent passes it to the model too. But this model can use tools.","Act, look at the result, go again. When the job is done, it asks you."]'>
 <div class="chap">The difference</div>
 <div class="stage">
 <div class="card" data-n="02-chatbot" style="left:60px;top:0;width:190px" role="img" aria-label="A robot at a counter, talking"></div><div class="lab" style="left:270px;top:44px">chatbot</div>
@@ -116,8 +118,22 @@ text{font-family:var(--serif);font-style:italic;fill:var(--fg);font-size:23px}te
 </div>
 </section>
 
+<!-- 3b · role-play, before the loop diagram -->
+<section class="slide" data-caps='["Your turn. Before the diagram, we act it out.","One volunteer is the agent. You hold the goal, and you cannot do anything yourself.","One helper holds the tools. Hand over a tool card, and you get an answer card back.","Write every answer in your notebook. Then check the goal: done, or go round again?","Someone in the audience is the boss, and gives the final yes. Ready? Go."]'>
+<div class="chap">Your turn · be the agent</div>
+<div class="stage">
+<svg viewBox="0 0 1180 500" aria-hidden="true"><defs><marker id="ar3" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M1 1l7 4-7 4" fill="none" stroke="#8a8780" stroke-width="1.5"/></marker></defs>
+<path class="ln" data-at="2" d="M262 137H306" marker-end="url(#ar3)"/><path class="ln" data-at="3" d="M562 137H606" marker-end="url(#ar3)"/><path class="ln" data-at="4" d="M862 137H906" marker-end="url(#ar3)"/></svg>
+<div data-at="1"><div class="card" data-n="04-brain" style="left:20px;top:60px;width:230px" role="img" aria-label="The agent"></div><div class="lab" style="left:20px;top:230px;width:230px">the agent</div><div class="lab" style="left:20px;top:268px;width:230px;font:16px var(--sans);color:var(--dim)">goal card + rules card</div></div>
+<div data-at="2"><div class="card" data-n="05-tools" style="left:320px;top:60px;width:230px" role="img" aria-label="Tools"></div><div class="lab b" style="left:320px;top:230px;width:230px">tools helper</div><div class="lab" style="left:320px;top:268px;width:230px;font:16px var(--sans);color:var(--dim)">tool cards → answer cards</div></div>
+<div data-at="3"><div class="card" data-n="06-memory" style="left:620px;top:60px;width:230px" role="img" aria-label="Notebook"></div><div class="lab g" style="left:620px;top:230px;width:230px">notebook</div><div class="lab" style="left:620px;top:268px;width:230px;font:16px var(--sans);color:var(--dim)">write every answer down</div></div>
+<div data-at="4"><div class="card" data-n="08-boss" style="left:920px;top:60px;width:230px" role="img" aria-label="The boss"></div><div class="lab r" style="left:920px;top:230px;width:230px">the boss</div><div class="lab" style="left:920px;top:268px;width:230px;font:16px var(--sans);color:var(--dim)">says yes, or "not yet"</div></div>
+<div class="eq" style="top:340px">be the <i>agent</i></div>
+</div>
+</section>
+
 <!-- 4 · the loop -->
-<section class="slide" data-hook="lap" data-caps='["Let us follow one request around the loop.","Read. It checks its notes: the last meetup was Friday, 5 pm.","Choose. The model picks the next step: find a room.","Act. It calls a tool, and the tool answers: DK1 is free.","Check. Is the goal met? Not yet. So it goes around again.","Read. This time the instructions: a poster needs date, venue and a QR code.","Choose. Next step: draft the announcement.","Act. Another tool call. The draft is saved.","Check. Everything is ready, so it stops and asks you.","You approve. Only now does anything go public."]'>
+<section class="slide" data-hook="lap" data-caps='["Let us follow one request around the loop.","Read. It checks its notes: the last meetup was Friday, 5 pm.","Choose. The model picks the next step: find a room.","? Act. It calls a tool, and the tool answers: BK1 is free. So, is the job done?","Check. Is the goal met? Not yet. So it goes around again.","Read. This time the instructions: a poster needs date, venue and a QR code.","Choose. Next step: draft the announcement.","Act. Another tool call. The draft is saved.","Check. Everything is ready, so it stops and asks you.","You approve. Only now does anything go public."]'>
 <div class="chap">How it works</div>
 <div class="stage">
 <svg viewBox="0 0 1180 500" role="img" aria-label="A dot travelling round a circle through four stops: read, choose, act, check">
@@ -184,7 +200,7 @@ text{font-family:var(--serif);font-style:italic;fill:var(--fg);font-size:23px}te
 </section>
 
 <!-- 7 · take one away -->
-<section class="slide" data-hook="away" data-caps='["What does each part really do? Take one away and watch.","No tools: it can only talk. Or worse, it invents a room that does not exist.","No memory: it starts from zero, and asks you the same questions every time.","No instructions: it finishes the job, just not your way.","No stop rule: it never decides it is done. The laps and the bill keep growing.","No human: it posts to everyone, and nobody checked."]'>
+<section class="slide" data-hook="away" data-caps='["We take one part away at a time. Guess what breaks before I show you.","? No tools. What can it still do?","It can only talk. Or worse, it invents a room that does not exist.","? No memory. What happens the next time you ask?","It starts from zero, and asks you the same questions every time.","? No instructions. What goes wrong?","It finishes the job, just not your way.","? No stop rule. When does it finish?","Never. The laps and the bill keep growing.","? No human. What could go wrong?","It posts to everyone, and nobody checked."]'>
 <div class="chap">Take one away</div>
 <div class="stage">
 <svg viewBox="0 0 1180 500" aria-hidden="true">
@@ -201,7 +217,7 @@ text{font-family:var(--serif);font-style:italic;fill:var(--fg);font-size:23px}te
 </section>
 
 <!-- 8 · guardrails -->
-<section class="slide" data-hook="guard" data-caps='["Each of those failures has a matching guardrail.","A lap limit: stop after a set number of laps, finished or not.","A budget: every lap spends tokens. One agent run costs several times more than one chat reply.","A check: tests, or a second model, judge the result. The agent does not mark its own work.","A human: anything public, paid or permanent waits for your yes."]'>
+<section class="slide" data-hook="guard" data-caps='["? Each failure needs a safety rule. How would you stop an agent that never finishes?","A lap limit: stop after a set number of laps, finished or not.","A budget: every lap spends tokens. One agent run costs several times more than one chat reply.","A check: tests, or a second model, judge the result. The agent does not mark its own work.","A human: anything public, paid or permanent waits for your yes."]'>
 <div class="chap">Guardrails</div>
 <div class="stage">
 <svg viewBox="0 0 1180 500" role="img" aria-label="A dot running laps on a circle until a lap limit stops it">
@@ -287,9 +303,12 @@ const hooks={
  // 6: the outer loop's dot: half a lap to the test, half a lap back to run again
  two(){$('orun').style.transform='rotate('+[0,0,180,540,900,900][step]+'deg)';},
  // 7: remove one part at a time
- away(){[1,2,3,4,5].forEach(k=>{$('p'+k).classList.toggle('gone',k===step);const w=$('w'+k);if(w)w.style.stroke=k===step?'#fc6255':'';if(w)w.style.strokeDasharray=k===step?'4 8':'';});
-  const m=$('miss');m.textContent=['','talk only','starts from zero','not your way','','nobody checked'][step];
-  if(step===4){let n=2;m.textContent='laps = 2';timers.push(setInterval(()=>{n+=1+Math.floor(n/9);m.textContent='laps = '+n;},160));}},
+ // odd steps ask about part k (highlighted), even steps remove it and show what breaks
+ away(){const k=Math.ceil(step/2),shown=step>0&&step%2===0;
+  [1,2,3,4,5].forEach(i=>{const hit=i===k&&step>0;$('p'+i).classList.toggle('gone',hit&&shown);$('p'+i).classList.toggle('ask',hit&&!shown);
+   const w=$('w'+i);if(w){w.style.stroke=hit&&shown?'#fc6255':'';w.style.strokeDasharray=hit&&shown?'4 8':'';}});
+  const m=$('miss');m.textContent=shown?['','talk only','starts from zero','not your way','','nobody checked'][k]:'';
+  if(shown&&k===4){let n=2;m.textContent='laps = 2';timers.push(setInterval(()=>{n+=1+Math.floor(n/9);m.textContent='laps = '+n;},160));}},
  // 8: five laps, then the limit stops it
  guard(){const g=$('grun'),set=(t,deg)=>{g.style.transition=t;g.style.transform='rotate('+deg+'deg)';};$('gstop').style.opacity=0;
   if(step===0){set('none',0);$('glap').textContent=0;return;}
@@ -297,12 +316,14 @@ const hooks={
   set('none',1800);$('glap').textContent=5;$('gstop').style.opacity=1;}
 };
 // [stop on the circle (-1 none), this step, variable set, its value]
-const LOOP=[[-1,''],[0,'notes → last meetup: Fri 5 pm, ~40 people'],[1,'next = check_rooms'],[2,'check_rooms("Fri 5 pm")\n→ "DK1 is free"',0,'DK1, Fri 5 pm'],[3,'goal met?  no → again'],
+const LOOP=[[-1,''],[0,'notes → last meetup: Fri 5 pm, ~40 people'],[1,'next = check_rooms'],[2,'check_rooms("Fri 5 pm")\n→ "BK1 is free"',0,'BK1, Fri 5 pm'],[3,'goal met?  no → again'],
  [0,'instructions → date, venue, QR code'],[1,'next = draft_post'],[2,'draft_post(date, venue)\n→ saved',1,'drafted'],[3,'goal met?  ready → ask the human'],[-1,'approved → posted',2,'yes']];
 
 function render(){timers.forEach(t=>{clearTimeout(t);clearInterval(t);});timers=[];const s=slides[cur];slides.forEach((x,k)=>x.classList.toggle('active',k===cur));
  s.querySelectorAll('[data-at]').forEach(e=>e.classList.toggle('on',step>=+e.dataset.at));
- $('cap').textContent=caps[cur][step];$('pips').innerHTML=caps[cur].map((_,i)=>'<i class="'+(i<=step?'on':'')+'"></i>').join('');
+ // a caption starting with "? " is a question: the room guesses before the next step reveals it
+ const c=caps[cur][step],q=c.startsWith('? '),cap=$('cap');cap.textContent=q?c.slice(2):c;
+ if(q){const k=document.createElement('span');k.className='qk';k.textContent='Your guess';cap.prepend(k);}$('pips').innerHTML=caps[cur].map((_,i)=>'<i class="'+(i<=step?'on':'')+'"></i>').join('');
  $('where').textContent=(cur+1)+' / '+slides.length;clips();if(s.dataset.hook)hooks[s.dataset.hook]();}
 function go(d){if(d>0){if(step<caps[cur].length-1)step++;else if(cur<slides.length-1){cur++;step=0;}else return;}else{if(step>0)step--;else if(cur>0){cur--;step=caps[cur].length-1;}else return;}render();}
 $('fwd').onclick=()=>go(1);$('back').onclick=()=>go(-1);
