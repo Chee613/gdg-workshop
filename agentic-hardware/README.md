@@ -4,7 +4,7 @@ GDGoC UM AI/ML × Robotics Engineering Club (REC), September 2026. Participants 
 
 **Hand → webcam → MediaPipe in the browser → USB serial → ESP32 → MOSFET → 5 V LED**
 
-**Demo:** https://chee613.github.io/gdg-workshop1/agentic-hardware/
+**Demo:** https://chee613.github.io/gdg-workshop/agentic-hardware/
 
 | File | What it is |
 | --- | --- |

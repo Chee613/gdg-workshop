@@ -2,7 +2,7 @@
 
 GDG on Campus Universiti Malaya, November 2026. Three parts in one deck: what an AI agent really is, an industry talk on running work with agents, and a Google ADK hands-on lab.
 
-**Slides:** https://chee613.github.io/gdg-workshop1/agentic-ai/
+**Slides:** https://chee613.github.io/gdg-workshop/agentic-ai/
 
 | File | What it is |
 | --- | --- |

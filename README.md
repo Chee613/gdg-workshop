@@ -2,13 +2,13 @@
 
 Slides and materials from workshops run with GDG on Campus Universiti Malaya. Each workshop lives in its own folder, and every folder is published to GitHub Pages at its own address.
 
-**All slides:** https://chee613.github.io/gdg-workshop1/
+**All slides:** https://chee613.github.io/gdg-workshop/
 
 | Workshop | Folder | Slides |
 | --- | --- | --- |
-| Agentic AI Workshop (Nov 2026) | [`agentic-ai/`](agentic-ai/) | [/agentic-ai/](https://chee613.github.io/gdg-workshop1/agentic-ai/) |
-| Hackathon Masterclass (Oct 2026) | [`hackathon/`](hackathon/) | [/hackathon/](https://chee613.github.io/gdg-workshop1/hackathon/) |
-| Gesture Lamp & AI Hardware (Sep 2026) | [`agentic-hardware/`](agentic-hardware/) | [/agentic-hardware/](https://chee613.github.io/gdg-workshop1/agentic-hardware/) |
+| Agentic AI Workshop (Nov 2026) | [`agentic-ai/`](agentic-ai/) | [/agentic-ai/](https://chee613.github.io/gdg-workshop/agentic-ai/) |
+| Hackathon Masterclass (Oct 2026) | [`hackathon/`](hackathon/) | [/hackathon/](https://chee613.github.io/gdg-workshop/hackathon/) |
+| Gesture Lamp & AI Hardware (Sep 2026) | [`agentic-hardware/`](agentic-hardware/) | [/agentic-hardware/](https://chee613.github.io/gdg-workshop/agentic-hardware/) |
 
 ## Folder layout
 
