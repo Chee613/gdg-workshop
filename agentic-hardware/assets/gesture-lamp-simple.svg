@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">Gesture-controlled lamp: three actions</title>
+  <desc id="desc">Open palm turns the lamp on. Closed fist turns it off. Rotate an open palm left or right to adjust brightness. Webcam, computer, and ESP32 connect the hand to the lamp.</desc>
+  <rect width="1200" height="675" rx="28" fill="#0e1b3d"/>
+  <text x="60" y="77" font-family="Arial, sans-serif" font-size="43" font-weight="700" fill="#fff">Control a lamp with your hand</text>
+  <text x="60" y="119" font-family="Arial, sans-serif" font-size="22" fill="#aebee5">Three gestures. One small 5V light.</text>
+  <g font-family="Arial, sans-serif" text-anchor="middle">
+    <rect x="60" y="162" width="340" height="288" rx="22" fill="#1b2d56"/>
+    <text x="230" y="270" font-size="92">✋</text>
+    <text x="230" y="342" font-size="29" font-weight="700" fill="#fff">Open palm</text>
+    <text x="230" y="391" font-size="26" fill="#ffdd78">Lamp ON</text>
+    <rect x="430" y="162" width="340" height="288" rx="22" fill="#1b2d56"/>
+    <text x="600" y="270" font-size="92">✊</text>
+    <text x="600" y="342" font-size="29" font-weight="700" fill="#fff">Closed fist</text>
+    <text x="600" y="391" font-size="26" fill="#c5d1eb">Lamp OFF</text>
+    <rect x="800" y="162" width="340" height="288" rx="22" fill="#1b2d56"/>
+    <text x="970" y="270" font-size="92">↶ ✋ ↷</text>
+    <text x="970" y="342" font-size="29" font-weight="700" fill="#fff">Rotate open palm</text>
+    <text x="970" y="391" font-size="26" fill="#ffdd78">Dim ↔ Brighten</text>
+    <text x="600" y="521" font-size="25" font-weight="700" fill="#fff">How it works</text>
+    <text x="600" y="584" font-size="26" fill="#dce5fb">Hand → Webcam → Computer → ESP32 → 5V lamp</text>
+    <text x="600" y="628" font-size="18" fill="#aebee5">Camera sees the hand · computer reads the gesture · ESP32 controls the light</text>
+  </g>
+</svg>

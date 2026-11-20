@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GDG Workshops · Chee</title>
+<meta name="description" content="Slides and materials from GDG on Campus UM workshops.">
+<link rel="icon" href="agentic-hardware/assets/gdg-mark-reference.png">
+<style>
+  :root {
+    --bg: #0d1117;
+    --card: #161b22;
+    --line: #30363d;
+    --text: #e6edf3;
+    --muted: #9da7b3;
+    --blue: #4285f4;
+    --red: #ea4335;
+    --yellow: #fbbc04;
+    --green: #34a853;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: 16px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  main { max-width: 1080px; margin: 0 auto; padding: 56px 16px 72px; }
+  header { display: flex; align-items: center; gap: 14px; margin-bottom: 8px; }
+  header img { width: 44px; height: auto; }
+  h1 { font-size: clamp(1.6rem, 4vw, 2.3rem); margin: 0; letter-spacing: -0.01em; }
+  .lede { color: var(--muted); margin: 0 0 36px; max-width: 60ch; }
+  .grid { display: grid; gap: 20px; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
+  article {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  article > a.cover { display: block; aspect-ratio: 16 / 9; background: #000; }
+  article > a.cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .body { padding: 18px 20px 20px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+  .tag { font-size: 0.78rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; }
+  .ai .tag { color: var(--blue); }
+  .hack .tag { color: var(--green); }
+  .hw .tag { color: var(--yellow); }
+  h2 { font-size: 1.2rem; margin: 0; }
+  p { margin: 0; color: var(--muted); }
+  ul { list-style: none; margin: auto 0 0; padding: 10px 0 0; display: flex; flex-wrap: wrap; gap: 8px; }
+  ul a {
+    display: inline-block;
+    padding: 6px 12px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    color: var(--text);
+    text-decoration: none;
+    font-size: 0.9rem;
+  }
+  ul a:hover, ul a:focus-visible { border-color: var(--blue); outline: none; }
+  ul a.primary { background: var(--blue); border-color: var(--blue); color: #fff; }
+  footer { margin-top: 48px; color: var(--muted); font-size: 0.85rem; }
+  footer a { color: var(--muted); }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <img src="agentic-hardware/assets/gdg-mark-reference.png" alt="">
+    <h1>GDG Workshops</h1>
+  </header>
+  <p class="lede">Slides and hands-on materials from workshops run with GDG on Campus Universiti Malaya. Use ← and → to move through each deck.</p>
+
+  <div class="grid">
+    <article class="ai">
+      <a class="cover" href="agentic-ai/"><img src="agentic-ai/assets/intro/01-cover.webp" alt="" loading="lazy"></a>
+      <div class="body">
+        <span class="tag">Nov 2026 · Agentic AI</span>
+        <h2>Agentic AI Workshop</h2>
+        <p>What an AI agent really is, an industry talk on running work with agents, and a Google ADK hands-on lab.</p>
+        <ul>
+          <li><a class="primary" href="agentic-ai/">Full deck</a></li>
+          <li><a href="agentic-ai/intro.html">Intro only</a></li>
+          <li><a href="agentic-ai/roleplay-cards.html">Role-play cards</a></li>
+        </ul>
+      </div>
+    </article>
+
+    <article class="hack">
+      <a class="cover" href="hackathon/"><img src="hackathon/output/assets/cover-lounge-environment.png" alt="" loading="lazy"></a>
+      <div class="body">
+        <span class="tag">Oct 2026 · Re:Zero Beginner Series</span>
+        <h2>Hackathon Masterclass</h2>
+        <p>How to pick an idea, design, build and pitch at a hackathon, with a live idea challenge.</p>
+        <ul>
+          <li><a class="primary" href="hackathon/">Slides</a></li>
+          <li><a href="https://gdg-on-top.up.railway.app/board">Live board</a></li>
+        </ul>
+      </div>
+    </article>
+
+    <article class="hw">
+      <a class="cover" href="agentic-hardware/"><img src="agentic-hardware/assets/gesture-lamp-diorama.png" alt="" loading="lazy"></a>
+      <div class="body">
+        <span class="tag">Sep 2026 · GDGoC UM × REC</span>
+        <h2>Gesture Lamp &amp; AI Hardware</h2>
+        <p>Turn a lamp on and off with hand gestures using MediaPipe in the browser and an ESP32.</p>
+        <ul>
+          <li><a class="primary" href="agentic-hardware/">Gesture demo</a></li>
+          <li><a href="agentic-hardware/mediapipe-slides.html">MediaPipe slides</a></li>
+          <li><a href="agentic-hardware/agentic-hardware-slides.html">Hardware lab slides</a></li>
+          <li><a href="agentic-hardware/hardware-wiring.html">Wiring</a></li>
+        </ul>
+      </div>
+    </article>
+  </div>
+
+  <footer>Source on <a href="https://github.com/Chee613/gdg-workshop1">GitHub</a>.</footer>
+</main>
+</body>
+</html>

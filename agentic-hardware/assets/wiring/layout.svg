@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1600" height="1200" viewBox="0 0 1600 1200">
+<title>Gesture lamp physical wiring with real ESP32 and MOSFET driver photographs</title>
+<desc>GPIO25 connects to In. The external five volt supply connects to V+. The power supply negative, ESP32 ground and driver ground share a three port connector. The LED strip connects to the driver positive and negative output terminals. USB powers the ESP32 separately.</desc>
+<style>text{font-family:Arial,sans-serif;fill:#202124}.title{font-size:49px;font-weight:700;letter-spacing:-1.5px}.sub{font-size:21px;fill:#5f6368}.part{font-size:23px;font-weight:700}.small{font-size:19px;fill:#5f6368}.tag{font-size:20px;font-weight:700;paint-order:stroke;stroke:white;stroke-width:8px;stroke-linejoin:round}.wire{fill:none;stroke-linecap:round;stroke-linejoin:round}.halo{stroke:white;stroke-width:14px}.red{stroke:#ea4335;stroke-width:7px}.black{stroke:#25272b;stroke-width:7px}.blue{stroke:#4285f4;stroke-width:7px}.point{stroke:white;stroke-width:3px}.foot{font-size:17px;fill:#5f6368}</style>
+<rect width="1600" height="1200" fill="#fff"/>
+<path d="M55 38H420" stroke="#4285f4" stroke-width="5"/><path d="M420 38H490" stroke="#ea4335" stroke-width="5"/><path d="M490 38H560" stroke="#fbbc04" stroke-width="5"/><path d="M560 38H630" stroke="#34a853" stroke-width="5"/>
+<text x="55" y="103" class="title">The actual wiring setup.</text>
+<text x="55" y="143" class="sub">GDGoC UM × REC · Real component photos, with wires drawn onto the connection points</text>
+
+<text x="105" y="280" class="part">ESP32-DevKitC V4</text>
+<svg x="100" y="310" width="570" height="287" viewBox="395 185 835 420"><image xlink:href="PHOTO:esp-photo.png" width="1738" height="751"/></svg>
+<text x="790" y="233" class="part">MOSFET driver</text>
+<text x="790" y="260" class="small">Adafruit #5648 · 3.3V signal compatible</text>
+<svg x="775" y="280" width="340" height="239" viewBox="160 140 640 450"><image xlink:href="PHOTO:mosfet.jpg" width="970" height="728"/></svg>
+<text x="1170" y="195" class="part">5V white LED strip</text>
+<text x="1170" y="222" class="small">Adafruit #5851 · 1m, 1.3A at 5V</text>
+<svg x="1170" y="245" width="180" height="303" viewBox="390 300 220 370"><image xlink:href="PHOTO:led-leads.jpg" width="970" height="728"/></svg><image xlink:href="PHOTO:led.jpg" x="1370" y="300" width="165" height="124"/><text x="1370" y="452" class="small">Full strip</text><text x="1170" y="578" class="small">Wire ends enlarged</text>
+<text x="1170" y="609" class="small">Use one red / black pair.</text>
+<text x="1170" y="636" class="small">Insulate the unused pair separately.</text>
+<text x="560" y="605" class="part">Shared ground</text>
+<svg x="560" y="614" width="150" height="124" viewBox="380 250 230 190"><image xlink:href="PHOTO:ground-connector.jpg" width="970" height="728"/></svg>
+
+<text x="100" y="822" class="part">5V / 2A power adapter</text>
+<image xlink:href="PHOTO:power.jpg" x="100" y="842" width="380" height="285"/>
+<text x="600" y="822" class="part">DC jack adapter</text>
+<image xlink:href="PHOTO:adapter.jpg" x="600" y="842" width="200" height="150"/>
+
+<!-- Wires use the actual photographed pin locations. Inputs are soldered pigtails. -->
+<path d="M114 453 C68 453 55 460 55 515 V614" class="wire halo"/><path d="M114 453 C68 453 55 460 55 515 V614" class="wire black"/>
+<text x="75" y="635" class="tag">Micro-USB data cable</text><text x="75" y="662" class="small">to laptop · powers the ESP32</text>
+<path d="M387 324 V207 H745 V550 H962 V493" class="wire halo"/><path d="M387 324 V207 H745 V550 H962 V493" class="wire blue"/>
+<path d="M594 581 H510 V775 H593 V722" class="wire halo"/><path d="M594 581 H510 V775 H593 V722" class="wire black"/>
+<path d="M894 493 V752 H630 V722" class="wire halo"/><path d="M894 493 V752 H630 V722" class="wire black"/>
+<path d="M733 878 H815 V793 H669 V722" class="wire halo"/><path d="M733 878 H815 V793 H669 V722" class="wire black"/>
+<path d="M742 888 H944 V607 H928 V493" class="wire halo"/><path d="M742 888 H944 V607 H928 V493" class="wire red"/>
+<path d="M1108 378 H1137 V539 H1191" class="wire halo"/><path d="M1108 378 H1137 V539 H1191" class="wire black"/>
+<path d="M1108 429 H1154 V523 H1325" class="wire halo"/><path d="M1108 429 H1154 V523 H1325" class="wire red"/>
+<path d="M196 1058 C525 1180 527 991 652 946" class="wire halo"/><path d="M196 1058 C525 1180 527 991 652 946" class="wire black"/>
+
+<circle cx="387" cy="324" r="7" fill="#4285f4" class="point"/><circle cx="594" cy="581" r="7" fill="#25272b" class="point"/>
+<circle cx="894" cy="493" r="7" fill="#25272b" class="point"/><circle cx="928" cy="493" r="7" fill="#ea4335" class="point"/><circle cx="962" cy="493" r="7" fill="#4285f4" class="point"/>
+<circle cx="1108" cy="378" r="7" fill="#25272b" class="point"/><circle cx="1108" cy="429" r="7" fill="#ea4335" class="point"/>
+<text x="327" y="304" class="tag" style="fill:#1967d2">GPIO25</text><text x="400" y="193" class="tag" style="fill:#1967d2">Brightness control (PWM)</text>
+<text x="613" y="565" class="tag">GND</text>
+<text x="868" y="534" class="tag">GND</text><text x="911" y="579" class="tag" style="fill:#c5221f">V+</text><text x="979" y="534" class="tag" style="fill:#1967d2">In</text>
+<text x="1081" y="366" class="tag">−</text><text x="1081" y="451" class="tag" style="fill:#c5221f">+</text>
+<text x="1200" y="551" class="tag">−</text><text x="1330" y="518" class="tag" style="fill:#c5221f">+</text>
+<text x="968" y="639" class="tag" style="fill:#c5221f">5V to V+</text>
+<text x="706" y="875" class="tag">−</text><text x="756" y="925" class="tag" style="fill:#c5221f">+</text>
+
+
+<rect x="990" y="683" width="545" height="336" rx="18" fill="#f8fafd" stroke="#e8eaed"/>
+<text x="1020" y="729" class="part">Connect these five points</text>
+<text x="1020" y="774" font-size="21" style="fill:#1967d2">1   GPIO25 → driver In</text>
+<text x="1020" y="813" font-size="21">2   All three GND wires → ground connector</text>
+<text x="1020" y="852" font-size="21" style="fill:#c5221f">3   Adapter +5V → driver V+</text>
+<text x="1020" y="891" font-size="21" style="fill:#c5221f">4   Driver + output → LED red wire</text>
+<text x="1020" y="930" font-size="21">5   Driver − output → LED black wire</text>
+<text x="1020" y="979" class="small">USB connects the laptop to the ESP32.</text>
+
+<text x="990" y="1060" font-size="20" font-weight="700">REC preparation: solder three driver input leads.</text>
+<text x="990" y="1090" class="small">Use the GND, V+ and In pads; leave Out unused.</text>
+<text x="990" y="1119" class="small">Use 22 AWG leads for the lamp power circuit.</text>
+<text x="55" y="1164" class="foot">5V lamp circuit only · Leave ESP32 5V / 3V3 pins unconnected while using USB · Board sizes enlarged for clarity</text>
+<text x="55" y="1190" class="foot">Component photography: Espressif and Adafruit · Proposed wiring layout, not a photo of a tested assembly</text>
+</svg>

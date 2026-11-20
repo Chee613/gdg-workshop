@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Gesture Lamp — Physical Wiring</title>
+<style>body{margin:0;background:#f1f3f4;color:#202124;font:17px/1.6 Arial,sans-serif}main{max-width:1600px;margin:auto;background:white}img{display:block;width:100%;height:auto}section{max-width:1100px;margin:auto;padding:24px 32px 48px}h2{font-size:25px}a{color:#1967d2}table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:12px;border-bottom:1px solid #dadce0}th{background:#f8fafd}summary{cursor:pointer;font-weight:bold}a:focus-visible,summary:focus-visible{outline:3px solid #4285f4} @media print{body{background:white}section{break-before:page}}</style>
+<main>
+<img src="assets/hardware-wiring.svg" alt="Physical wiring: ESP32 GPIO25 to MOSFET In, external supply positive to V+, all grounds joined in a three-port connector, LED red and black wires connected to the driver positive and negative outputs. Laptop USB powers the ESP32 separately.">
+<section>
+<p><a href="assets/hardware-wiring.png" download>Download PNG</a> · <a href="assets/hardware-wiring.svg" download>Download editable SVG</a> · <a href="index.html">Open webcam demo</a></p>
+<details><summary>Exact parts and preparation</summary>
+<table><thead><tr><th>Part</th><th>Quantity / preparation</th></tr></thead><tbody>
+<tr><td><a href="https://docs.espressif.com/projects/esp-dev-kits/en/latest/esp32/esp32-devkitc/user_guide.html">ESP32-DevKitC V4</a> with ESP32-WROOM-32E</td><td>1, with soldered male headers; GPIO25 and the GND pin shown in the photo</td></tr>
+<tr><td><a href="https://www.adafruit.com/product/5648">Adafruit MOSFET driver #5648</a></td><td>1; REC solders leads to GND, V+ and In on the four-pad edge. Viewed from the front as pictured: GND, V+, In, Out from left to right. Leave Out unused; use the two load terminals.</td></tr>
+<tr><td><a href="https://www.adafruit.com/product/5851">5V white analog LED strip #5851</a></td><td>1m; about 1.3A at 5V. Connect one pair of leads and insulate each unused lead individually.</td></tr>
+<tr><td><a href="https://www.adafruit.com/product/276">Regulated 5V / 2A adapter</a></td><td>1, centre-positive 5.5mm / 2.1mm barrel plug. The reference photo shows a US plug; choose a local plug version or suitable plug adapter.</td></tr>
+<tr><td><a href="https://www.adafruit.com/product/368">Female DC jack to screw-terminal adapter #368</a></td><td>1; follow its moulded + and − labels</td></tr>
+<tr><td><a href="https://www.adafruit.com/product/866">WAGO 221 three-port ground connector</a></td><td>1 connector; ESP32 GND, supply − and MOSFET GND each occupy one port</td></tr>
+<tr><td>Micro-USB data cable and wire</td><td>1 USB cable; 22 AWG lamp power leads; female-to-bare jumper leads for GPIO25 and GND, with 22 AWG for the ground connector</td></tr>
+</tbody></table>
+<p>Disconnect power while wiring. Keep the external adapter away from the ESP32 5V and 3V3 pins; USB supplies the ESP32. GPIO25 carries only the control signal. The MOSFET switches the LED strip's negative return. A breadboard is unnecessary for this version.</p>
+<p>This is a proposed assembly layout using real manufacturer photos and drawn wires. It has not been physically assembled or tested. The current webcam demo still needs USB serial support and ESP32 firmware before this circuit responds to gestures.</p>
+</details>
+<p>Pin verification: <a href="https://learn.adafruit.com/adafruit-mosfet-driver/pinouts">Adafruit driver pinouts</a> and <a href="https://docs.espressif.com/projects/esp-dev-kits/en/latest/esp32/esp32-devkitc/user_guide.html">Espressif board and power documentation</a>. Component photography belongs to Espressif and Adafruit.</p>
+</section></main></html>

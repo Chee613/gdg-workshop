@@ -6,30 +6,41 @@ __pycache__/
 !.env.example
 *.log
 
-# Workshop submissions and machine-specific connection details.
-/gdg hackathon sharing/workshop/.data/
-/gdg hackathon sharing/output/session-config.json
+# Local-only reference decks from other GDG chapters (not ours to publish).
+/_reference/
 
-# Keep the current authoring/test sources; omit earlier build experiments and captures.
-/.hack-build/*
-!/.hack-build/package.json
-!/.hack-build/package-lock.json
-!/.hack-build/rearrange-deck.py
-!/.hack-build/build-html.mjs
-!/.hack-build/bundle-motion.mjs
-!/.hack-build/challenge-slide.js
-!/.hack-build/galleries.js
-!/.hack-build/countdown.js
-!/.hack-build/photos.json
-!/.hack-build/ai-logo-sources.json
-!/.hack-build/deck-spec.json
-!/.hack-build/verify-html.mjs
-!/.hack-build/verify-countdown.mjs
-!/.hack-build/verify-cover-loop.mjs
-!/.hack-build/cover-lounge-art.md
-!/.hack-build/verify-workshop.mjs
-!/.hack-build/verify-hosting.py
-!/.hack-build/workshop-fixture.py
-!/.hack-build/judging-fixture.py
-!/.hack-build/verify-judging-ui.mjs
-!/.hack-build/verify-share.mjs
+# Local editor and agent settings.
+/.claude/
+
+# Agentic AI: rough venue sketches used while drawing the floor plan.
+/agentic-ai/venue/sketch_rot*.png
+
+# Hackathon: workshop submissions and machine-specific connection details.
+/hackathon/workshop/.data/
+/hackathon/output/session-config.json
+
+# Hackathon build folder: keep the authoring and test sources; omit experiments and captures.
+/hackathon/build/*
+!/hackathon/build/source-art/
+!/hackathon/build/package.json
+!/hackathon/build/package-lock.json
+!/hackathon/build/rearrange-deck.py
+!/hackathon/build/build-html.mjs
+!/hackathon/build/bundle-motion.mjs
+!/hackathon/build/challenge-slide.js
+!/hackathon/build/galleries.js
+!/hackathon/build/countdown.js
+!/hackathon/build/photos.json
+!/hackathon/build/ai-logo-sources.json
+!/hackathon/build/deck-spec.json
+!/hackathon/build/verify-html.mjs
+!/hackathon/build/verify-countdown.mjs
+!/hackathon/build/verify-cover-loop.mjs
+!/hackathon/build/cover-lounge-art.md
+!/hackathon/build/verify-workshop.mjs
+!/hackathon/build/verify-hosting.py
+!/hackathon/build/workshop-fixture.py
+!/hackathon/build/judging-fixture.py
+!/hackathon/build/verify-judging-ui.mjs
+!/hackathon/build/verify-share.mjs
+!/hackathon/build/prepare-assets.py
