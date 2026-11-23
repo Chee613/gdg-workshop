@@ -126,17 +126,18 @@ test('send_file uploads small files, links big files and Google Docs, and refuse
 
 test('list_deadlines returns the window soonest first, marks overdue items and filters by course', () => {
   const events = [
-    event('Assignment 2 is due', NOW - 1 * DAY, 'WIA2001 Database\nSource: https://spectrum.um.edu.my/mod/assign/view.php?id=1'),
+    event('Due at: Assignment 2 is due', NOW - 1 * DAY, 'WIA2001 Database\nSpectrum: not submitted yet\nSource: https://spectrum.um.edu.my/mod/assign/view.php?id=1'),
     event('Quiz 3 closes', NOW + 2 * DAY, 'WIX1002'),
     event('Project report due', NOW + 30 * DAY, 'WIA2001')
   ];
   const { g } = load({ events });
   assert.deepStrictEqual(g.listDeadlines_({}).items.map(i => i.title), ['Quiz 3 closes']);
   const withOverdue = g.listDeadlines_({ overdue_days: 3, course: 'wia2001' });
-  assert.deepStrictEqual(withOverdue.items.map(i => i.title), ['Assignment 2 is due']);
+  assert.deepStrictEqual(withOverdue.items.map(i => i.title), ['Due at: Assignment 2 is due']);
   assert.strictEqual(withOverdue.items[0].overdue, true);
+  assert.strictEqual(withOverdue.items[0].status, 'not submitted yet');
   assert.strictEqual(withOverdue.items[0].link, 'https://spectrum.um.edu.my/mod/assign/view.php?id=1');
-  assert.strictEqual(withOverdue.items[0].details, 'WIA2001 Database');
+  assert.strictEqual(withOverdue.items[0].details, 'WIA2001 Database\nSpectrum: not submitted yet');
 });
 
 test('the agent loop calls tools, sends the file and the final reply, and keeps short-term memory', () => {
@@ -242,7 +243,8 @@ const markup = msg => JSON.parse(msg.payload.reply_markup).inline_keyboard;
 const labels = msg => markup(msg).flat().map(b => b.text);
 
 test('/start shows a home screen with counts, the next deadline and menu buttons', () => {
-  const events = [event('Quiz 3 closes', NOW + 20 * 3600000), event('Lab 2 report', NOW - 2 * DAY)];
+  const events = [event('Quiz 3 closes', NOW + 20 * 3600000), event('Due at: Lab 2 report', NOW - 2 * DAY, 'Spectrum: not submitted yet'),
+    event('Due at: Tutorial 3 (OCC4) is due', NOW - 3 * DAY, 'Spectrum: nothing left to submit')];
   const { g, telegram } = load({ events });
   g.handleMessage_({ chat: { id: 42 }, from: { first_name: 'Chee' }, text: '/start' });
   const home = telegram.pop();
@@ -299,4 +301,29 @@ test('button taps from strangers are ignored, and HTML in names is escaped', () 
   assert.deepStrictEqual(telegram.map(t => t.method), ['answerCallbackQuery']);
   tap(g, 'due', 42, 2);
   assert.match(telegram.pop().payload.text, /&lt;b&gt;Hack&lt;\/b&gt; &amp; co/);
+});
+
+test('Overdue lists only deadlines SPeCTRUM still shows as not done, not ones already submitted', () => {
+  const events = [
+    event('Due at: TUTORIAL 3 (OCC4) is due', NOW - 26 * DAY, 'Spectrum: nothing left to submit'),
+    event('Due at: Tutorial 5 Submission Link is due', NOW - 19 * DAY, 'Spectrum: not submitted yet'),
+    event('Due at: Quiz 2', NOW - 5 * DAY, 'Spectrum: not attempted yet'),
+    event('Due at: Older sync without a status line', NOW - 4 * DAY, 'WIA2003'),
+    event('Mid-term briefing', NOW - 2 * DAY, 'WIA2001'),
+    event('Due at: Tutorial 9 is due', NOW + 2 * DAY, 'Spectrum: not submitted yet'),
+    event('Due at: Poster (OCC4) is due', NOW + 3 * DAY, 'Spectrum: nothing left to submit')
+  ];
+  const { g, telegram } = load({ events });
+  tap(g, 'overdue');
+  const text = telegram.pop().payload.text;
+  assert.match(text, /Tutorial 5 Submission Link/);
+  assert.match(text, /Quiz 2/);
+  assert.match(text, /Older sync without a status line/, 'a deadline from an older UM Spec still counts until it is re-synced');
+  assert.doesNotMatch(text, /TUTORIAL 3|Mid-term briefing|Tutorial 9/);
+  g.handleMessage_({ chat: { id: 42 }, from: { first_name: 'Chee' }, text: '/start' });
+  assert.match(telegram.pop().payload.text, /1 due this week · ⚠️ 3 overdue/, 'an upcoming deadline already submitted is not counted as due');
+  tap(g, 'due', 42, 51);
+  const due = telegram.pop().payload.text;
+  assert.match(due, /✅ <b>Due at: Poster \(OCC4\) is due/);
+  assert.match(due, /🟢 <b>Due at: Tutorial 9 is due/);
 });

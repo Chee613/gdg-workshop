@@ -84,7 +84,7 @@ Script Properties keep the keys out of the code, so you can share the code safel
 
 Send `/start` to open the home menu. Its buttons answer instantly from Drive and Calendar, without asking Gemini:
 
-- **📅 Due this week** and **⚠️ Overdue**: colour-coded deadlines with time left and a link to SPeCTRUM.
+- **📅 Due this week** and **⚠️ Overdue**: colour-coded deadlines with time left and a link to SPeCTRUM. Overdue lists only deadlines SPeCTRUM still shows as not submitted; UM Spec writes that status into each calendar event when it syncs dates.
 - **🆕 New files**: what synced in the last 7 days. Tap a file to get it.
 - **📚 My courses**: browse a course, then a type (slides, tutorials…), then tap a file.
 
