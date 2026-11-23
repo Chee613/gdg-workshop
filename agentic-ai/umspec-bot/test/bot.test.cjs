@@ -311,7 +311,9 @@ test('Overdue lists only deadlines SPeCTRUM still shows as not done, not ones al
     event('Due at: Older sync without a status line', NOW - 4 * DAY, 'WIA2003'),
     event('Mid-term briefing', NOW - 2 * DAY, 'WIA2001'),
     event('Due at: Tutorial 9 is due', NOW + 2 * DAY, 'Spectrum: not submitted yet'),
-    event('Due at: Poster (OCC4) is due', NOW + 3 * DAY, 'Spectrum: nothing left to submit')
+    event('Due at: Poster (OCC4) is due', NOW + 3 * DAY, 'Spectrum: nothing left to submit'),
+    event('Due at: Assignment. Occ 1, Occ 1M is due', NOW - 6 * DAY, 'Spectrum: for OCC 1, 1M, not your OCC (3)'),
+    event('Due at: Lab report (OCC 1) is due', NOW + 1 * DAY, 'Spectrum: for OCC 1, not your OCC (3)')
   ];
   const { g, telegram } = load({ events });
   tap(g, 'overdue');
@@ -319,11 +321,12 @@ test('Overdue lists only deadlines SPeCTRUM still shows as not done, not ones al
   assert.match(text, /Tutorial 5 Submission Link/);
   assert.match(text, /Quiz 2/);
   assert.match(text, /Older sync without a status line/, 'a deadline from an older UM Spec still counts until it is re-synced');
-  assert.doesNotMatch(text, /TUTORIAL 3|Mid-term briefing|Tutorial 9/);
+  assert.doesNotMatch(text, /TUTORIAL 3|Mid-term briefing|Tutorial 9|Occ 1M/, 'another OCC\'s deadline is never overdue');
   g.handleMessage_({ chat: { id: 42 }, from: { first_name: 'Chee' }, text: '/start' });
   assert.match(telegram.pop().payload.text, /1 due this week · ⚠️ 3 overdue/, 'an upcoming deadline already submitted is not counted as due');
   tap(g, 'due', 42, 51);
   const due = telegram.pop().payload.text;
   assert.match(due, /✅ <b>Due at: Poster \(OCC4\) is due/);
   assert.match(due, /🟢 <b>Due at: Tutorial 9 is due/);
+  assert.doesNotMatch(due, /Lab report \(OCC 1\)/, 'another OCC\'s deadline is not due for this student');
 });
