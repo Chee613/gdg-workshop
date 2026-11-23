@@ -1,240 +1,206 @@
-# Personal Productivity Agent — Pre-Workshop Setup Guide
+# Agentic AI Workshop — Participant Setup Guide
 
-**GDG on Campus Universiti Malaya × Robotics Engineering Club | Let Him Cook**
+**GDG on Campus Universiti Malaya × Robotics Engineering Club | "Let Him Cook"**
 
-Follow this step-by-step guide **before the hands-on session** so your laptop is ready to run your own AI agent with **Google ADK** and **Gemini**. Total setup time is about **10–15 minutes**.
+Get your laptop ready in ~10 minutes to run your own personal productivity agent with **Google ADK** and **Gemini**. All download and setup links below are direct.
 
----
-
-## Pre-Workshop Checklist (What to Install Beforehand)
-
-Check off each item below before moving to Part 1.
-
-| Requirement | Required Version | How to Check If Already Installed | Download Link |
-| --- | --- | --- | --- |
-| **Python** | **3.11 or 3.12** (recommended) | Windows: `py --list` / macOS: `python3 --version` | [python.org/downloads/release/python-31210](https://www.python.org/downloads/release/python-31210/) |
-| **Visual Studio Code** | Latest stable | Open VS Code from Start Menu / Applications | [code.visualstudio.com/download](https://code.visualstudio.com/download) |
-| **Git** *(optional if using ZIP)* | Any recent version | Run `git --version` in terminal | [git-scm.com/downloads](https://git-scm.com/downloads) |
-| **Google Account** | Personal Gmail recommended | Used to generate your free Gemini API key | [aistudio.google.com/app/apikey](https://aistudio.google.com/app/apikey) |
-
-**Important Privacy Note:** During the workshop, use **fictional or non-sensitive** profile details, tasks, and schedule items. Prompts, instructions, and tool outputs are sent to Gemini.
+> 💡 **Notice for Participants Without an AI Coding Assistant:**  
+> If you don't already have an AI assistant (like Claude Code, Codex, or Cursor), **please check the `Antigravity Setup Guide` and `Gemini Plus Redemption Guide` tabs in the left sidebar first!**  
+> • **Antigravity Setup Guide Tab:** Install Google Antigravity IDE (free, AI-first) and use its built-in agent to set up and run this entire workshop automatically in 1 prompt.  
+> • **Gemini Plus Redemption Guide Tab:** Claim 12 months of complimentary Google One AI Premium (Gemini Advanced).
 
 ---
 
-## Step 1: Install Python 3.11 or 3.12 (If Not Installed)
+## ⚡ Choose Your Setup Path
 
-First, check whether you already have Python 3.11 or 3.12 by opening **PowerShell** (Windows) or **Terminal** (macOS/Linux) and running:
+Choose the setup method that fits how you work:
 
-```bash
-# Windows (PowerShell)
-py --list
+* 🤖 **Option 1: The "Lazy Way" (Agent 1-Prompt Auto-Setup):** Have Google Antigravity, Claude Code, Codex, or Cursor? Drop our setup prompt into your agent and let it configure Python, virtual environment, and files automatically. *(See the **Antigravity Setup Guide** tab for complete installation instructions and screenshots).*
+* 🛠️ **Option 2: The Step-by-Step Manual Way (VS Code / Terminal):** Follow the visual walkthrough below with direct download links and commands.
+* ☁️ **Plan B: 1-Click Cloud (GitHub Codespaces):** Runs 100% in your browser without installing anything locally.
 
-# macOS / Linux
-python3 --version
+---
+
+## 1. Pre-Workshop Checklist
+
+| Requirement | Supported Version | Quick Verification | Direct Download Link |
+| :--- | :--- | :--- | :--- |
+| **Python** | 3.11 or 3.12 (avoid 3.13) | `py --list` (Win) / `python3 --version` (Mac) | [Windows Installer](https://www.python.org/ftp/python/3.12.10/python-3.12.10-amd64.exe) · [macOS Installer](https://www.python.org/ftp/python/3.12.10/python-3.12.10-macos11.pkg) · [All Python Downloads](https://www.python.org/downloads/release/python-31210/) |
+| **Code Editor** | Antigravity or VS Code | Open from Start / Applications | [Antigravity IDE](https://antigravity.google) · [VS Code Windows (x64)](https://code.visualstudio.com/sha/download?build=stable&os=win32-x64-user) · [VS Code macOS](https://code.visualstudio.com/sha/download?build=stable&os=darwin-universal) |
+| **Git** *(Optional)* | Any recent version | `git --version` (or use direct ZIP) | [Git Windows 64-bit](https://github.com/git-for-windows/git/releases/download/v2.47.1.windows.1/Git-2.47.1-64-bit.exe) · [Direct Project ZIP](https://github.com/faizmibadurrahman/gdg-personal-productivity-agent/archive/refs/heads/main.zip) |
+| **Gemini API & Subscription** | Free tier + Gemini Plus perk | Sign in with personal Gmail | [Direct Key Creator (AI Studio)](https://aistudio.google.com/app/apikey) · [Redeem Gemini Plus Guide ↗](https://canva.link/rfqh4rvnmxlw7zt) |
+
+> 🎁 **Complimentary Workshop Perk — Gemini Plus Subscription:**  
+> Workshop participants can claim a complimentary 1-year Gemini Plus / Google One AI Premium subscription! Follow the official Canva walkthrough slide:  
+> 👉 **[How to Redeem Gemini Plus Subscription (Canva Guide)](https://canva.link/rfqh4rvnmxlw7zt)** *(Or check the **Gemini Plus Redemption Guide** tab on the left).*
+
+> ⚠️ **Personal Gmail Required:** You must generate your Gemini API key using a **personal `@gmail.com` account**. University student emails (`@siswa.um.edu.my`) block external AI API key creation.
+
+> 🔒 **Privacy Note:** Use fictional or non-sensitive details for tasks and schedules. Prompts and tool outputs are processed by Gemini. Keep your API key private.
+
+---
+
+## 🤖 Option 1: The "Lazy Way" (Agent 1-Prompt Auto-Setup)
+
+If you are using **Google Antigravity**, **Claude Code**, **Codex**, or **Cursor**, you can let your agent configure everything autonomously.
+
+1. Open your agent chat sidebar (`Ctrl+L` / `Cmd+L`).
+2. Paste this single setup prompt into the chat:
+
+```text
+Please set up the gdg-personal-productivity-agent project for me:
+1. Clone https://github.com/faizmibadurrahman/gdg-personal-productivity-agent.git
+2. Create an isolated Python virtual environment (.venv) using Python 3.11 or 3.12.
+3. Install dependencies from requirements.txt into .venv.
+4. Copy productivity_agent/.env.example to productivity_agent/.env.
+5. Ask me for my Gemini API key to insert into .env, then verify the setup is ready.
 ```
 
-If you see **Python 3.11.x** or **Python 3.12.x**, you can skip straight to **Step 2**.
-
-If you do **not** have Python 3.11 or 3.12 installed (or only have a newer/older version):
-
-1. Open [Python 3.12.10 Downloads](https://www.python.org/downloads/release/python-31210/) in your browser.
-2. Scroll down to the **Files** section at the bottom of the page:
-   - **Windows:** Click **Windows installer (64-bit)**.
-   - **macOS:** Click **macOS 64-bit universal2 installer**.
-3. Run the downloaded installer.
-4. **Windows users — CRITICAL:** On the very first installer screen, tick the checkbox **"Add python.exe to PATH"** at the bottom before clicking **Install Now**.
-5. Close and reopen your terminal, then verify with `py --list` (Windows) or `python3 --version` (macOS).
-
-*Figure 1: Downloading Python 3.12 and ticking "Add python.exe to PATH" on Windows.*
+3. Paste your Gemini API key when prompted, then launch the agent with `.\.venv\Scripts\adk.exe web` (Windows) or `.venv/bin/adk web` (macOS/Linux).
+> 📘 **New to Antigravity?** Refer to the **Antigravity Setup Guide** tab on the left sidebar for step-by-step download, sign-in, and installation screenshots!
 
 ---
 
-## Step 2: Install Visual Studio Code (If Not Installed)
+## 🛠️ Option 2: Step-by-Step Manual Setup (VS Code / Terminal)
 
-You will use **Visual Studio Code (VS Code)** to edit your `.env` API key, explore `agent.py`, and run terminal commands in one place.
+### Step 1: Install Python 3.11 or 3.12
+1. Check version in terminal: `py --list` (Win) or `python3 --version` (Mac). If missing, download directly: [Windows Direct Installer (.exe)](https://www.python.org/ftp/python/3.12.10/python-3.12.10-amd64.exe) or [macOS Direct Installer (.pkg)](https://www.python.org/ftp/python/3.12.10/python-3.12.10-macos11.pkg).
+2. **Windows:** **CRITICAL** — Check **"Add python.exe to PATH"** on the first installer screen.
+3. **macOS:** Open Applications → Python 3.12 → double-click **`Install Certificates.command`** (fixes SSL errors).
 
-1. Go to [code.visualstudio.com/download](https://code.visualstudio.com/download).
-2. Click the installer for your operating system:
-   - **Windows:** Download **x64 · User Installer** (or Arm64 for Snapdragon laptops).
-   - **macOS:** Download **Universal · .dmg**, open it, and drag **Visual Studio Code** into **Applications**.
-   - **Linux:** Download **.deb** (Ubuntu/Debian) or **.rpm** (Fedora).
-3. Run the installer with the default settings and open VS Code once to confirm it launches cleanly.
-
-*Figure 2: Choosing the Visual Studio Code installer for Windows, macOS, or Linux.*
+![Figure 1: Ensure Add python.exe to PATH is checked](images/01-install-python.png)
 
 ---
 
-## Step 3: Install Git (Recommended for Cloning the Repo)
+### Step 2: Install Visual Studio Code
+Download directly: [VS Code for Windows (x64 User Installer)](https://code.visualstudio.com/sha/download?build=stable&os=win32-x64-user) or [VS Code for macOS (Universal)](https://code.visualstudio.com/sha/download?build=stable&os=darwin-universal).
 
-Check whether Git is already installed by running `git --version` in your terminal. If you see a version number (for example `git version 2.49.0`), skip to **Step 4**.
-
-If Git is not installed:
-
-1. Go to [git-scm.com/downloads](https://git-scm.com/downloads) and choose your OS (**Windows**, **macOS**, or **Linux**).
-2. **Windows:** Download and run the **64-bit Git for Windows Setup**. Keep all default options and click **Next** through to **Install**.
-3. **macOS:** Run `xcode-select --install` in Terminal (or install via Homebrew: `brew install git`).
-4. Close and open a **new** terminal window, then verify both Git and Python are recognized:
-
-```bash
-git --version
-```
-
-**No Git? No problem:** You can skip installing Git and use the **Download ZIP** option in Step 5 instead.
-
-*Figure 3: Selecting your OS on git-scm.com and verifying Git and Python in a new terminal.*
+![Figure 2: Selecting VS Code installer](images/02-install-vscode.png)
 
 ---
 
-## Step 4: Get Your Free Gemini API Key (Google AI Studio)
+### Step 3: Get Your Free Gemini API Key & Redeem Gemini Plus
+1. Open the [Google AI Studio API Key Console](https://aistudio.google.com/app/apikey) directly (sign in with your personal `@gmail.com`).
+2. Click **+ Create API key**.
+3. In the project dropdown, select **`+ Create project`**, type a project name (e.g. `agentic-ai-workshop`), and click **`Create project`**.
+4. In the next popup, name your key (e.g. `Let Him Cook`), confirm the project is selected, and click **`Create key`**.
+5. When the **API key details** modal appears, click **`Copy key`** and save it. (Never share or publicly commit your API key!).
+6. 🎁 **Claim Your Gemini Plus Subscription:** Follow the visual Canva guide at **[How to Redeem Gemini Plus Subscription](https://canva.link/rfqh4rvnmxlw7zt)** (or check the **Gemini Plus Redemption Guide** tab on the left) to activate your complimentary Google One AI Premium / Gemini Plus perks!
 
-Every participant needs their own Gemini API key so your agent can talk to Gemini.
-
-1. Open [Google AI Studio — API Keys](https://aistudio.google.com/app/apikey) and sign in with your Google account.
-2. Click the blue **+ Create API key** button in the top right.
-3. Follow the prompt to create a key in a new or existing Google Cloud project.
-4. Once created, click **Copy** next to your key (it starts with `AIza...`) and keep the tab open or store it temporarily until Step 8.
-
-**Keep your API key private:** Never paste your key into WhatsApp, Discord, GitHub, or screenshots. Only paste it into your local `productivity_agent/.env` file, which is listed in `.gitignore`.
-
-*Figure 4: Creating and copying your Gemini API key in Google AI Studio.*
+![Figure 3: Google AI Studio 4-Step API Key & Project Creation Flow](images/04-gemini-api-key.png)
 
 ---
 
-## Step 5: Clone the Workshop Repository (or Download ZIP)
+### Step 4: Download & Open the Project
+* **Option A (Git):** In your terminal, run:
+  ```bash
+  git clone https://github.com/faizmibadurrahman/gdg-personal-productivity-agent.git
+  ```
+* **Option B (Direct ZIP Download):** Download the [Starter Project ZIP directly](https://github.com/faizmibadurrahman/gdg-personal-productivity-agent/archive/refs/heads/main.zip), extract it, and open the folder in VS Code (`File` → `Open Folder...`).
+* **Sidebar check:** Ensure `requirements.txt` is directly visible in the root sidebar (not nested inside an outer folder).
+* **Terminal shortcut:** Press ``Ctrl+Shift+` `` (Windows) or ``Cmd+Shift+` `` (macOS) to open the integrated terminal.
 
-Open the workshop repository on GitHub: [github.com/faizmibadurrahman/gdg-personal-productivity-agent](https://github.com/faizmibadurrahman/gdg-personal-productivity-agent)
+![Figure 4: Cloning or downloading ZIP from GitHub](images/05-github-clone-or-zip.png)
 
-### Option A: Clone with Git (Recommended)
-
-1. On GitHub, click the green **`<> Code`** button.
-2. Under **Local → HTTPS**, click the **Copy** icon.
-3. Open your terminal, navigate to the folder where you keep projects (for example `Documents`), and run:
-
-```bash
-git clone https://github.com/faizmibadurrahman/gdg-personal-productivity-agent.git
-cd gdg-personal-productivity-agent
-```
-
-### Option B: Download ZIP (If You Don't Have Git)
-
-1. Click the green **`<> Code`** button → click **Download ZIP**.
-2. Right-click the downloaded ZIP file and click **Extract All...** (Windows) or double-click to unzip (macOS).
-3. Remember the extracted folder location — you will open it in VS Code next.
-
-*Figure 5: Clicking the green Code button on GitHub to copy the HTTPS clone URL or download the ZIP.*
+![Figure 5: Opening project folder in VS Code and launching integrated terminal](images/06-vscode-open-terminal.png)
 
 ---
 
-## Step 6: Open the Project in VS Code & Launch Terminal
+### Step 5: Setup Environment & Install Dependencies
+Run these 3 commands in your VS Code terminal:
 
-1. Open **VS Code**.
-2. Click **File → Open Folder...** (`Ctrl+K Ctrl+O` on Windows / `Cmd+O` on macOS) and select your `gdg-personal-productivity-agent` folder.
-3. Check the **Explorer** sidebar on the left — make sure you directly see **`requirements.txt`** and the **`productivity_agent/`** folder (not a nested outer folder).
-4. Open VS Code's built-in terminal via **Terminal → New Terminal** (shortcut: `` Ctrl+Shift+` ``).
-5. Confirm your terminal prompt path ends with `gdg-personal-productivity-agent`.
-
-*Figure 6: Opening the project root in VS Code and starting the integrated terminal.*
-
----
-
-## Step 7: Create Your Python Environment & Install Google ADK
-
-Run the following commands **one line at a time** inside the VS Code terminal at the project root folder.
-
-### Windows (PowerShell)
-
+**Windows (PowerShell):**
 ```powershell
-py -3.11 -m venv .venv
+py -3.12 -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r requirements.txt
 Copy-Item productivity_agent\.env.example productivity_agent\.env
 ```
 
-**Using Python 3.12 on Windows?** Replace `-3.11` with `-3.12` in the first line: `py -3.12 -m venv .venv`.
-
-### macOS / Linux (Terminal)
-
+**macOS / Linux (Terminal):**
 ```bash
 python3 -m venv .venv
 .venv/bin/python -m pip install -r requirements.txt
 cp productivity_agent/.env.example productivity_agent/.env
 ```
 
-**What these 3 commands do:**
-1. Create an isolated `.venv` virtual environment for this workshop.
-2. Install `google-adk==2.14.0` and all required dependencies (this takes 30–60 seconds).
-3. Copy `.env.example` to `.env` so you can add your Gemini API key. *(Skip command 3 if you already created `.env`.)*
-
-*Figure 7: Running the three setup commands for Windows PowerShell or macOS/Linux.*
+![Figure 6: Running the 3 setup commands in VS Code terminal](images/07-setup-venv-install.png)
 
 ---
 
-## Step 8: Paste Your Gemini API Key into `.env`
+### Step 6: Configure Your Gemini API Key
+1. In VS Code, open `productivity_agent/.env`.
+2. Replace `YOUR_API_KEY` with your actual Gemini API key (no quotes, no extra spaces):
+   ```ini
+   GOOGLE_GENAI_USE_ENTERPRISE=FALSE
+   GOOGLE_API_KEY=AIzaSy_your_actual_key_here
+   GEMINI_MODEL=gemini-3.5-flash
+   ```
+3. Save the file (`Ctrl+S` / `Cmd+S`).  
+   *(Note: If `gemini-3.5-flash` gives quota errors during testing, change model to `GEMINI_MODEL=gemini-2.0-flash`).*
 
-1. In the VS Code **Explorer** sidebar, expand **`productivity_agent/`** and click **`.env`**.
-2. Find the line `GOOGLE_API_KEY=YOUR_API_KEY`.
-3. Replace `YOUR_API_KEY` with the Gemini API key you copied in Step 4 (no quotes, no extra spaces):
-
-```env
-GOOGLE_GENAI_USE_ENTERPRISE=FALSE
-GOOGLE_API_KEY=AIzaSy_your_actual_api_key_here
-GEMINI_MODEL=gemini-3.5-flash
-```
-
-4. Save the file using **Ctrl+S** (Windows) or **Cmd+S** (macOS). Make sure the unsaved dot on the `.env` tab disappears.
-
-*Figure 8: Replacing YOUR_API_KEY in productivity_agent/.env and saving the file.*
+![Figure 7: Editing productivity_agent/.env with your Gemini API key](images/08-configure-env.png)
 
 ---
 
-## Step 9: Launch the Agent with Google ADK Web
+### Step 7: Launch the Agent Web Server
+From the project root terminal, run:
+* **Windows:**
+  ```powershell
+  .\.venv\Scripts\adk.exe web
+  ```
+* **macOS / Linux:**
+  ```bash
+  .venv/bin/adk web
+  ```
+*(If port 8000 is occupied, add `--port 8080`). Keep this terminal open and running!*
 
-From the same VS Code terminal (project root folder), run the launch command for your OS:
-
-```powershell
-# Windows (PowerShell)
-.\.venv\Scripts\adk.exe web
-```
-
-```bash
-# macOS / Linux
-.venv/bin/adk web
-```
-
-When you see **`ADK Web Server started`** with the link **`http://localhost:8000`**, your agent is live! **Keep this terminal window running** while using the agent (press `Ctrl+C` later when you want to stop or restart it).
-
-*Figure 9: Launching ADK Web from the project root and opening localhost:8000.*
+![Figure 8: ADK Web server running at localhost:8000](images/09-run-adk-web.png)
 
 ---
 
-## Step 10: Test Your Agent in the Browser
+### Step 8: Verify & Test in Browser
+1. Open your browser and navigate directly to: **[http://localhost:8000](http://localhost:8000)**.
+2. Select **`productivity_agent`** in the agent dropdown, then click **Start Session**.
+3. In the chat box, send:
+   > *"What tasks do I have?"*
+4. You should see `get_tasks()` executed and sample tasks returned!
 
-1. Open [http://localhost:8000](http://localhost:8000) in your browser.
-2. In the top-left dropdown, select **`productivity_agent`**.
-3. Start a session and send your first test prompt:
-
-```text
-What tasks do I have?
-```
-
-4. Check the **Events / Tool Trace** panel on the left — you should see the agent call **`get_tasks()`** and return your sample tasks from `productivity_agent/data.json`!
-5. Try the rest of the workshop prompts:
-   - `Plan my day on 27 November 2026 around my schedule and deadlines, taking my preferences into account.`
-   - `Add a task called Submit group assignment, due 2026-11-29, priority high.`
-   - `Show my tasks again.`
-
-*Figure 10: Selecting productivity_agent in ADK Web and verifying the get_tasks() tool call.*
+![Figure 9: Verifying productivity_agent in ADK Web interface](images/10-adk-web-chat.png)
 
 ---
 
-## Quick Troubleshooting & Common Fixes
+## 🧪 Workshop Test Prompts
 
-| Issue | Fix |
-| --- | --- |
-| **`py -3.11` or `python` not recognized** | Re-run the Python 3.12 installer and tick **"Add python.exe to PATH"**, or try `py -3.12 -m venv .venv`. Close and reopen VS Code after installing. |
-| **PowerShell script execution error** | We invoke `.\.venv\Scripts\python.exe` and `.\.venv\Scripts\adk.exe` directly so you do **not** need to run `Activate.ps1`. |
-| **`productivity_agent` missing in ADK dropdown** | Make sure you ran `adk web` from the **project root** folder (the one containing `requirements.txt`), NOT inside `productivity_agent/`. |
-| **API key / quota / authentication error** | Check `productivity_agent/.env` for typos or extra spaces, save the file, restart ADK (`Ctrl+C` then run again), and verify your key & quota in Google AI Studio. |
-| **Edits to `agent.py` not taking effect** | Save `agent.py`, stop ADK with `Ctrl+C`, run `adk web` again, and start a **new session** in the browser. |
-| **Want to reset sample tasks/schedule?** | Stop ADK and delete only `productivity_agent/data.json`. It will be recreated automatically on your next tool call. |
+Test your running agent with these interactive prompts:
 
-**You're all set!** See you at the **Let Him Cook** hands-on session!
+| Prompt to Send | Tool Called | Expected Output |
+| :--- | :--- | :--- |
+| `What tasks do I have?` | `get_tasks()` | Lists sample assignments from `data.json`. |
+| `Plan my day on 27 November 2026 around my schedule and deadlines.` | `get_tasks()` + `get_schedule()` | Generates full daily schedule matching preferences. |
+| `Add a task called Submit group assignment, due 2026-11-29, priority high.` | `add_task()` | Saves the task to local `data.json`. |
+| `Show my tasks again.` | `get_tasks()` | Confirms new task appears in task list. |
+
+---
+
+## 🛠️ Quick Troubleshooting (Top 5 Gotchas)
+
+| Issue / Error | Root Cause | Immediate Fix |
+| :--- | :--- | :--- |
+| **`py` or `python` not recognized** | Python not in PATH | Re-run installer, choose **Modify**, tick **"Add Python to PATH"**, restart terminal. |
+| **`python` opens Microsoft Store** | Windows app execution alias | Use `py` launcher (`py -3.12 -m venv .venv`) or disable execution aliases in Windows Settings. |
+| **`SSL: CERTIFICATE_VERIFY_FAILED` (Mac)** | Missing root certificates | Run: `open "/Applications/Python 3.12/Install Certificates.command"` in Terminal. |
+| **`Could not open requirements.txt`** | Wrong folder opened | Check left sidebar. If nested, use `File` → `Open Folder` to open inner folder. |
+| **`Port 8000 already in use`** | Another process on 8000 | Run ADK on port 8080: `adk web --port 8080` (open `http://localhost:8080`). |
+
+---
+
+## ☁️ Plan B: 1-Click Cloud (GitHub Codespaces)
+
+If your laptop cannot install Python (Chromebook, iPad, locked laptop):
+
+1. **Launch:** **[Click Here to Launch Codespace (1-Click Direct) ↗](https://codespaces.new/faizmibadurrahman/gdg-personal-productivity-agent)**
+2. In the bottom terminal, run:
+   ```bash
+   pip install -r requirements.txt && cp productivity_agent/.env.example productivity_agent/.env
+   ```
+3. Paste your Gemini API key into `productivity_agent/.env`, run `adk web`, and click **Open in Browser**!
