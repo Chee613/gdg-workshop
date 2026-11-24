@@ -182,8 +182,16 @@ function buildView_(view, from) {
   if (parts[0] === 'due' || parts[0] === 'overdue') {
     const overdue = parts[0] === 'overdue';
     const result = overdue ? listDeadlines_({ days_ahead: 1, overdue_days: 30 }) : listDeadlines_({ days_ahead: 7 });
+    if (result.connected === false) {
+      return {
+        text: '📅 <b>Google Calendar is not connected</b>\n\n' +
+          'Calendar sync is optional. You can still use this bot to browse and download your course files from Drive!\n\n' +
+          'If you want deadlines and reminders here, connect Google Calendar in the UM Spec extension and click <b>Dates → Analyse dates</b>.',
+        buttons: [[{ text: '📚 Browse my courses', callback_data: 'courses', style: 'success' }], [{ text: '🏠 Menu', callback_data: 'home', style: 'primary' }]]
+      };
+    }
     if (result.error) return { text: '⚠️ ' + esc_(result.error), buttons: [back('home')] };
-    const items = result.items.filter(i => overdue ? i.overdue : !i.past && !i.other_occ);
+    const items = (result.items || []).filter(i => overdue ? i.overdue : !i.past && !i.other_occ);
     const title = overdue ? '⚠️ <b>Overdue</b> · last 30 days' : '📅 <b>Due in the next 7 days</b>';
     return { text: title + '\n\n' + (items.length ? items.map(deadlineLine_).join('\n\n') : (overdue ? 'Nothing overdue. 🎉' : 'Nothing due. 🎉')),
       buttons: [[{ text: overdue ? '📅 Due this week' : '⚠️ Overdue', callback_data: overdue ? 'due' : 'overdue', style: 'success' },
@@ -252,24 +260,36 @@ function buildView_(view, from) {
 
   // Home screen
   const name = from && from.first_name ? ', ' + esc_(from.first_name) : '';
-  const due = safe_(() => listDeadlines_({ days_ahead: 7, overdue_days: 30 }).items, []);
-  const fresh = safe_(() => findFiles_({ new_within_days: 7 }).total_matches, 0);
+  const dueResult = safe_(() => listDeadlines_({ days_ahead: 7, overdue_days: 30 }), { connected: false, items: [] });
+  const hasCalendar = Boolean(dueResult && dueResult.connected !== false && Array.isArray(dueResult.items));
+  const due = hasCalendar ? dueResult.items : [];
+  const filesResult = safe_(() => findFiles_({ new_within_days: 7 }), null);
+  const fresh = (filesResult && typeof filesResult.total_matches === 'number') ? filesResult.total_matches : 0;
   // Deadlines already submitted on SPeCTRUM still show in the list (with a tick) but do not count as due.
   const dueCount = due.filter(i => !i.past && !i.done && !i.other_occ).length;
   const overdueCount = due.filter(i => i.overdue).length;
   const next = due.filter(i => !i.past && !i.done && !i.other_occ)[0];
+
+  const summary = hasCalendar
+    ? '📅 ' + dueCount + ' due this week · ⚠️ ' + overdueCount + ' overdue · 🆕 ' + (fresh || 0) + ' new files' +
+      (next ? '\n\n⏰ <b>Next:</b> ' + esc_(next.title) + ' · ' + esc_(next.time_left) : '')
+    : '🆕 ' + (fresh || 0) + ' new files this week\n<i>(Google Calendar optional / not connected)</i>';
+
   return {
     text: '🎓 <b>Welcome back' + name + '</b>\nTap a button, or just ask me in your own words.\n\n' +
-      '📅 ' + dueCount + ' due this week · ⚠️ ' + overdueCount + ' overdue · 🆕 ' + (fresh || 0) + ' new files' +
-      (next ? '\n\n⏰ <b>Next:</b> ' + esc_(next.title) + ' · ' + esc_(next.time_left) : '') +
+      summary +
       '\n\n🛡️ I only read what UM Spec synced, and I never ask for your password.',
     // style: 'success' = green, 'danger' = red, 'primary' = blue (Telegram Bot API 9.4 and later)
-    buttons: [
+    buttons: hasCalendar ? [
       [{ text: '📚 Browse my courses', callback_data: 'courses', style: 'success' }],
       [{ text: '📅 Due this week', callback_data: 'due', style: 'success' },
         { text: '⚠️ Overdue' + (overdueCount ? ' (' + overdueCount + ')' : ''), callback_data: 'overdue', style: overdueCount ? 'danger' : 'success' }],
       [{ text: '🆕 New files', callback_data: 'new', style: 'success' }, { text: '🧠 Memory', callback_data: 'memory', style: 'success' }],
       [{ text: '🌐 Open SPeCTRUM', url: 'https://spectrum.um.edu.my/my/', style: 'primary' }]
+    ] : [
+      [{ text: '📚 Browse my courses', callback_data: 'courses', style: 'success' }],
+      [{ text: '🆕 New files', callback_data: 'new', style: 'success' }, { text: '🧠 Memory', callback_data: 'memory', style: 'success' }],
+      [{ text: '📅 Deadlines (Optional)', callback_data: 'due', style: 'primary' }, { text: '🌐 Open SPeCTRUM', url: 'https://spectrum.um.edu.my/my/', style: 'primary' }]
     ]
   };
 }
@@ -603,7 +623,11 @@ function sendFile_(args, ctx) {
 function listDeadlines_(args) {
   const calendar = CalendarApp.getCalendarsByName(CONFIG.CALENDAR_NAME)[0];
   if (!calendar) {
-    return { error: 'No "' + CONFIG.CALENDAR_NAME + '" calendar found. In UM Spec, connect Google Calendar and run Dates, Analyse dates.' };
+    return {
+      connected: false,
+      items: [],
+      error: 'Google Calendar is not connected. In UM Spec, connecting Google Calendar under Dates is optional to track deadlines.'
+    };
   }
   const now = Date.now();
   const ahead = clamp_(Number(args.days_ahead) || 7, 1, 120);
