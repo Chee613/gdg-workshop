@@ -332,53 +332,69 @@ test('Overdue lists only deadlines SPeCTRUM still shows as not done, not ones al
   assert.doesNotMatch(due, /Lab report \(OCC 1\)/, 'another OCC\'s deadline is not due for this student');
 });
 
-test('setup skips a registered webhook, and a rate limit schedules one retry without aborting or calling again early', () => {
-  const start = () => {
-    const loaded = load({ props: { WEB_APP_URL: 'https://script.google.com/macros/s/abc/exec', WEBHOOK_SECRET: 's' } });
-    let triggers = [], pending = '';
-    const builder = { timeBased: () => builder, everyDays: () => builder, everyMinutes: () => builder, atHour: () => builder,
-      inTimezone: () => builder, after: () => builder, create: () => { const n = pending; triggers.push({ getHandlerFunction: () => n }); } };
-    loaded.g.ScriptApp = { getProjectTriggers: () => triggers.slice(), deleteTrigger: t => { triggers = triggers.filter(x => x !== t); },
-      newTrigger: n => { pending = n; return builder; } };
-    const calls = [], state = { info: {}, hook: { ok: true, result: true } };
-    loaded.g.UrlFetchApp.fetch = url => {
-      const method = url.split('/').pop();
-      calls.push(method);
-      const body = method === 'getWebhookInfo' ? { ok: true, result: state.info } : method === 'setWebhook' ? state.hook
-        : { ok: true, result: method === 'getMe' ? { username: 'b' } : {} };
-      return { getContentText: () => JSON.stringify(body) };
-    };
-    return { g: loaded.g, store: loaded.store, calls, state, names: () => triggers.map(t => t.getHandlerFunction()).sort() };
+function setupHarness() {
+  const loaded = load({ props: { WEB_APP_URL: 'https://script.google.com/macros/s/abc/exec', WEBHOOK_SECRET: 's' } });
+  let triggers = [], pending = '';
+  const builder = { timeBased: () => builder, everyDays: () => builder, everyMinutes: () => builder, atHour: () => builder,
+    inTimezone: () => builder, after: () => builder, create: () => { const n = pending; triggers.push({ getHandlerFunction: () => n }); } };
+  loaded.g.ScriptApp = { getProjectTriggers: () => triggers.slice(), deleteTrigger: t => { triggers = triggers.filter(x => x !== t); },
+    newTrigger: n => { pending = n; return builder; } };
+  const calls = [], slept = [], state = { refusals: 0, info: {}, error: null };
+  loaded.g.Utilities.sleep = ms => slept.push(ms / 1000);
+  loaded.g.UrlFetchApp.fetch = url => {
+    const method = url.split('/').pop();
+    calls.push(method);
+    const body = state.refusals-- > 0
+      ? { ok: false, error_code: 429, description: 'Too Many Requests: retry after 32', parameters: { retry_after: 32 } }
+      : state.error || { ok: true, result: method === 'getWebhookInfo' ? state.info : method === 'getMe' ? { username: 'b' } : {} };
+    return { getContentText: () => JSON.stringify(body) };
   };
-  const limited = { ok: false, error_code: 429, description: 'Too Many Requests: retry after 32', parameters: { retry_after: 32 } };
-  const registered = { url: 'https://script.google.com/macros/s/abc/exec?secret=s', allowed_updates: ['message', 'callback_query'] };
+  return { g: loaded.g, calls, slept, state, names: () => triggers.map(t => t.getHandlerFunction()).sort() };
+}
 
-  const ready = start();
-  ready.state.info = registered;
+test('setup keeps a webhook that is already registered, and registers again when button taps are missing', () => {
+  const url = 'https://script.google.com/macros/s/abc/exec?secret=s';
+  const ready = setupHarness();
+  ready.state.info = { url, allowed_updates: ['message', 'callback_query'] };
   ready.g.setup();
-  assert.ok(!ready.calls.includes('setWebhook'), 'already registered');
-
-  const old = start();
-  old.state.info = { url: registered.url, allowed_updates: ['message'] };
+  assert.ok(!ready.calls.includes('setWebhook'));
+  const old = setupHarness();
+  old.state.info = { url, allowed_updates: ['message'] };
   old.g.setup();
-  assert.ok(old.calls.includes('setWebhook'), 'button taps missing, so it registers again');
+  assert.ok(old.calls.includes('setWebhook'));
+});
 
-  const busy = start();
-  busy.state.hook = limited;
+test('setup waits out a busy Telegram on its very first call, then connects', () => {
+  const busy = setupHarness();
+  busy.state.refusals = 2;
   busy.g.setup();
-  busy.g.setup();
-  assert.strictEqual(busy.calls.filter(c => c === 'setWebhook').length, 1, 'a second setup run does not call Telegram early');
-  assert.deepStrictEqual(busy.names(), ['dailyBriefing', 'finishWebhook', 'refreshIndex'], 'the rest of setup is done');
+  assert.deepStrictEqual(busy.slept, [33, 33]);
+  assert.ok(busy.calls.includes('setWebhook') && busy.calls.includes('setMyCommands'));
+  assert.deepStrictEqual(busy.names(), ['dailyBriefing', 'refreshIndex']);
+});
 
-  busy.store.WEBHOOK_RETRY_AT = String(NOW - 1);
-  busy.g.finishWebhook();
-  assert.strictEqual(busy.names().filter(n => n === 'finishWebhook').length, 1, 'still limited: one new timer replaces the old one');
-  busy.store.WEBHOOK_RETRY_AT = String(NOW - 1);
-  busy.state.hook = { ok: true, result: true };
-  busy.g.finishWebhook();
-  assert.ok(!busy.names().includes('finishWebhook') && !('WEBHOOK_RETRY_AT' in busy.store));
+test('if Telegram stays busy, setup finishes the rest and a timer connects later', () => {
+  const stuck = setupHarness();
+  stuck.state.refusals = 99;
+  stuck.g.setup();
+  assert.ok(stuck.slept.reduce((a, b) => a + b, 0) <= 150, 'well inside the 6 minute script limit');
+  assert.deepStrictEqual(stuck.names(), ['dailyBriefing', 'finishWebhook', 'refreshIndex']);
+  stuck.state.refusals = 99;
+  stuck.g.finishWebhook();
+  assert.strictEqual(stuck.names().filter(n => n === 'finishWebhook').length, 1, 'one new timer replaces the old one');
+  stuck.state.refusals = 0;
+  stuck.g.finishWebhook();
+  assert.deepStrictEqual(stuck.names(), ['dailyBriefing', 'refreshIndex']);
+  assert.strictEqual(stuck.calls.pop(), 'sendMessage', 'the owner is told');
+});
 
-  const bad = start();
-  bad.state.hook = { ok: false, error_code: 400, description: 'bad webhook' };
-  assert.throws(() => bad.g.setup(), /bad webhook/, 'other errors still show');
+test('a wrong token still fails at once, and chat replies never wait for a long pause', () => {
+  const wrong = setupHarness();
+  wrong.state.error = { ok: false, error_code: 401, description: 'Unauthorized' };
+  assert.throws(() => wrong.g.setup(), /Unauthorized/);
+  assert.deepStrictEqual(wrong.slept, []);
+  const chat = setupHarness();
+  chat.state.refusals = 1;
+  assert.throws(() => chat.g.telegram_('sendMessage', {}), /retry after 32/);
+  assert.deepStrictEqual(chat.slept, []);
 });
