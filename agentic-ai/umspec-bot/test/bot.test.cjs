@@ -205,14 +205,14 @@ test('setup sets the webhook with the secret and schedules one daily trigger', (
 });
 
 test('an OWNER_CHAT_ID copied with a full stop or spaces still works, and a mismatched /start explains why', () => {
-  const sloppy = load({ props: { OWNER_CHAT_ID: ' 1495884504. ' } });
-  post(sloppy.g, '/memory', 1495884504, 1);
+  const sloppy = load({ props: { OWNER_CHAT_ID: ' 1234567890. ' } });
+  post(sloppy.g, '/memory', 1234567890, 1);
   assert.match(sloppy.telegram[0].payload.text, /no saved notes/);
 
   const wrong = load({ props: { OWNER_CHAT_ID: '111' } });
-  post(wrong.g, '/start', 1495884504, 1);
-  assert.match(wrong.telegram[0].payload.text, /exactly:\n\n1495884504$/);
-  post(wrong.g, 'hello', 1495884504, 2);
+  post(wrong.g, '/start', 1234567890, 1);
+  assert.match(wrong.telegram[0].payload.text, /exactly:\n\n1234567890$/);
+  post(wrong.g, 'hello', 1234567890, 2);
   assert.strictEqual(wrong.telegram.length, 1, 'other messages from strangers get no reply');
 });
 
@@ -329,4 +329,21 @@ test('Overdue lists only deadlines SPeCTRUM still shows as not done, not ones al
   assert.match(due, /✅ <b>Due at: Poster \(OCC4\) is due/);
   assert.match(due, /🟢 <b>Due at: Tutorial 9 is due/);
   assert.doesNotMatch(due, /Lab report \(OCC 1\)/, 'another OCC\'s deadline is not due for this student');
+});
+
+test('a Telegram rate limit in setup is waited out once, but chat replies do not stall on a long one', () => {
+  const { g } = load();
+  const slept = [];
+  g.Utilities.sleep = ms => slept.push(ms);
+  let replies;
+  g.UrlFetchApp.fetch = () => ({ getContentText: () => JSON.stringify(replies.shift()) });
+  const limited = { ok: false, error_code: 429, description: 'Too Many Requests: retry after 32', parameters: { retry_after: 32 } };
+  replies = [limited, { ok: true, result: true }];
+  assert.strictEqual(g.telegram_('setWebhook', {}, 90), true);
+  assert.deepStrictEqual(slept, [33000]);
+  replies = [limited];
+  assert.throws(() => g.telegram_('sendMessage', {}), /retry after 32/);
+  replies = [limited, limited];
+  assert.throws(() => g.telegram_('setWebhook', {}, 90), /retry after 32/);
+  assert.strictEqual(slept.length, 2, 'only one retry per call');
 });

@@ -113,6 +113,7 @@ Typing `/` shows every command. Anything else you type goes to the agent:
 | It sent your chat ID, then went silent | `OWNER_CHAT_ID` doesn't match. Set it to the number alone, with no full stop or spaces, and click **Save script properties**. Send `/start`: if the ID still doesn't match, the bot replies with the exact number to use. |
 | The bot doesn't reply | Run **`webhookInfo`** and read `last_error_message`. Check that `WEB_APP_URL` is the `/exec` address and that you deployed a new version after your last edit. If it shows *302 Found* with `pending_update_count` above 0, you're running an older `Code.gs`. Paste the current one, deploy a **New version**, and run `setup` again to clear the stuck messages. |
 | The Execution log says "wrong or missing secret" | Expected if you clicked **Run** with `doPost` selected. That isn't a Telegram message. Test by messaging the bot instead. |
+| "Too Many Requests: retry after …" in `setup` | `setup` was run several times close together. Wait the number of seconds shown, then run it **once**. The current `Code.gs` waits and retries by itself. |
 | "Missing Script Property …" | Add the property it names under Project Settings, then try again. |
 | "No files found in the UM Spec Drive folder" | In UM Spec, connect Google Drive and run a sync. Use the same Google account as Apps Script. |
 | "No UM Spec calendar found" | In UM Spec, connect Google Calendar and run **Dates → Analyse dates**. |

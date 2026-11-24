@@ -16,7 +16,7 @@
  * Setup: see README.md next to this file.
  */
 
-const VERSION = '2026-11-23 submission status';   // shown when you open the web app URL, to check which code is live
+const VERSION = '2026-11-24 setup retry';   // shown when you open the web app URL, to check which code is live
 
 const CONFIG = {
   MODEL: 'gemini-3.5-flash-lite',        // fast and cheap; for harder questions try 'gemini-3.8-flash'
@@ -790,7 +790,7 @@ function setup() {
     url: url + '?secret=' + props.getProperty('WEBHOOK_SECRET'),
     allowed_updates: JSON.stringify(['message', 'callback_query']),   // callback_query = button taps
     drop_pending_updates: 'true'
-  });
+  }, 90);   // running setup several times in a row makes Telegram ask for a pause
   const me = telegram_('getMe', {});
   console.log('Telegram: connected to @' + me.username);
   // The menu that opens when you type "/" in the chat.
@@ -837,13 +837,22 @@ function webhookInfo() {
 // Helpers
 // ---------------------------------------------------------------------------
 
-function telegram_(method, payload) {
-  const res = UrlFetchApp.fetch('https://api.telegram.org/bot' + requireProp_('TELEGRAM_TOKEN') + '/' + method, {
-    method: 'post', payload: payload, muteHttpExceptions: true
-  });
-  const data = JSON.parse(res.getContentText());
-  if (!data.ok) throw new Error('Telegram ' + method + ' failed: ' + data.description);
-  return data.result;
+/** Calls Telegram. If it says "Too Many Requests", waits as long as Telegram asks (up to maxWaitSeconds) and tries once more. */
+function telegram_(method, payload, maxWaitSeconds) {
+  for (let attempt = 0; ; attempt++) {
+    const res = UrlFetchApp.fetch('https://api.telegram.org/bot' + requireProp_('TELEGRAM_TOKEN') + '/' + method, {
+      method: 'post', payload: payload, muteHttpExceptions: true
+    });
+    const data = JSON.parse(res.getContentText());
+    if (data.ok) return data.result;
+    const wait = Number(data.parameters && data.parameters.retry_after) || 0;
+    if (attempt === 0 && wait && wait <= (maxWaitSeconds || 3)) {
+      console.log('Telegram asked to wait ' + wait + ' seconds before ' + method + '. Waiting, then trying again...');
+      Utilities.sleep((wait + 1) * 1000);
+      continue;
+    }
+    throw new Error('Telegram ' + method + ' failed: ' + data.description);
+  }
 }
 
 /** Sends text; `extra` can add parse_mode and reply_markup (buttons), which go on the last piece. */
