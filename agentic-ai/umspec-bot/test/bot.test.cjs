@@ -263,7 +263,15 @@ test('/start shows a home screen gracefully when no UM Spec calendar exists yet'
   const home = telegram.pop();
   assert.strictEqual(home.payload.parse_mode, 'HTML');
   assert.match(home.payload.text, /Welcome back, Chee/);
-  assert.match(home.payload.text, /0 due this week · ⚠️ 0 overdue/);
+  assert.match(home.payload.text, /Google Calendar optional \/ not connected/);
+  assert.deepStrictEqual(labels(home), ['📚 Browse my courses', '🆕 New files', '🧠 Memory', '📅 Deadlines (Optional)', '🌐 Open SPeCTRUM']);
+
+  // Tapping deadlines explains that Calendar is optional
+  tap(g, 'due', 42, 1);
+  const screen = telegram.pop();
+  assert.strictEqual(screen.method, 'editMessageText');
+  assert.match(screen.payload.text, /Google Calendar is not connected/);
+  assert.deepStrictEqual(labels(screen), ['📚 Browse my courses', '🏠 Menu']);
 });
 
 test('buttons browse courses, types and files in place, and a file tap sends it', () => {
