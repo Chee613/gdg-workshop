@@ -16,7 +16,7 @@
  * Setup: see README.md next to this file.
  */
 
-const VERSION = '2026-11-24 setup retry';   // shown when you open the web app URL, to check which code is live
+const VERSION = '2026-11-24 setup resume';   // shown when you open the web app URL, to check which code is live
 
 const CONFIG = {
   MODEL: 'gemini-3.5-flash-lite',        // fast and cheap; for harder questions try 'gemini-3.8-flash'
@@ -786,11 +786,8 @@ function setup() {
   }
   if (!props.getProperty('WEBHOOK_SECRET')) props.setProperty('WEBHOOK_SECRET', Utilities.getUuid().replace(/-/g, ''));
 
-  telegram_('setWebhook', {
-    url: url + '?secret=' + props.getProperty('WEBHOOK_SECRET'),
-    allowed_updates: JSON.stringify(['message', 'callback_query']),   // callback_query = button taps
-    drop_pending_updates: 'true'
-  }, 90);   // running setup several times in a row makes Telegram ask for a pause
+  const webhook = connectWebhook_();
+  console.log(webhook.message);
   const me = telegram_('getMe', {});
   console.log('Telegram: connected to @' + me.username);
   // The menu that opens when you type "/" in the chat.
@@ -818,9 +815,63 @@ function setup() {
   ScriptApp.newTrigger('refreshIndex').timeBased().everyMinutes(CONFIG.INDEX_REFRESH_MINUTES).create();
   console.log('Briefing: every day around ' + CONFIG.BRIEFING_HOUR + ':00. Drive list refreshed every ' + CONFIG.INDEX_REFRESH_MINUTES + ' minutes.');
 
+  if (!webhook.connected) {
+    console.warn('Everything else is ready. Do NOT run setup again: the bot connects by itself.');
+    return;
+  }
   console.log(props.getProperty('OWNER_CHAT_ID')
     ? 'Done. Message @' + me.username + ' in Telegram.'
     : 'Next: message @' + me.username + ' in Telegram. It replies with your chat ID; save it as OWNER_CHAT_ID.');
+}
+
+/**
+ * Registers this web app with Telegram, but only when it isn't registered already: Telegram refuses the call if it is
+ * made too often, and trying again early can make the wait longer. If refused, a timer finishes the job later.
+ */
+function connectWebhook_() {
+  const props = PropertiesService.getScriptProperties();
+  const target = requireProp_('WEB_APP_URL') + '?secret=' + requireProp_('WEBHOOK_SECRET');
+  const info = telegram_('getWebhookInfo', {});
+  const updates = info.allowed_updates || [];
+  if (info.url === target && updates.indexOf('message') >= 0 && updates.indexOf('callback_query') >= 0) {
+    clearWebhookRetry_();
+    return { connected: true, message: 'Webhook: already connected, so nothing to change.' };
+  }
+  const retryAt = Number(prop_('WEBHOOK_RETRY_AT'));
+  if (retryAt > Date.now()) {
+    return { connected: false, message: 'Webhook: waiting for Telegram until ' + formatDate_(new Date(retryAt)) + '.' };
+  }
+  try {
+    telegram_('setWebhook', {
+      url: target,
+      allowed_updates: JSON.stringify(['message', 'callback_query']),   // callback_query = button taps
+      drop_pending_updates: 'true'
+    });
+    clearWebhookRetry_();
+    return { connected: true, message: 'Webhook: connected.' };
+  } catch (err) {
+    if (!err.retryAfter) throw err;
+    clearWebhookRetry_();
+    const minutes = Math.max(5, Math.ceil(err.retryAfter / 60) + 2);
+    props.setProperty('WEBHOOK_RETRY_AT', String(Date.now() + minutes * 60000));
+    ScriptApp.newTrigger('finishWebhook').timeBased().after((minutes + 1) * 60000).create();
+    return { connected: false, message: 'Webhook: Telegram asked for a pause. Trying again by itself in about ' + (minutes + 1) + ' minutes.' };
+  }
+}
+
+/** Run by the timer connectWebhook_() creates. */
+function finishWebhook() {
+  const result = connectWebhook_();
+  console.log(result.message);
+  const owner = prop_('OWNER_CHAT_ID').replace(/[^\d-]/g, '');
+  if (result.connected && owner) sendText_(owner, '✅ Setup finished. Send /start to open the menu.');
+}
+
+function clearWebhookRetry_() {
+  PropertiesService.getScriptProperties().deleteProperty('WEBHOOK_RETRY_AT');
+  ScriptApp.getProjectTriggers()
+    .filter(tr => tr.getHandlerFunction() === 'finishWebhook')
+    .forEach(tr => ScriptApp.deleteTrigger(tr));
 }
 
 /** Ask the agent a question from the editor and see the answer in the log. */
@@ -837,8 +888,8 @@ function webhookInfo() {
 // Helpers
 // ---------------------------------------------------------------------------
 
-/** Calls Telegram. If it says "Too Many Requests", waits as long as Telegram asks (up to maxWaitSeconds) and tries once more. */
-function telegram_(method, payload, maxWaitSeconds) {
+/** Calls Telegram. If it asks for a pause of 3 seconds or less, waits and tries once more. */
+function telegram_(method, payload) {
   for (let attempt = 0; ; attempt++) {
     const res = UrlFetchApp.fetch('https://api.telegram.org/bot' + requireProp_('TELEGRAM_TOKEN') + '/' + method, {
       method: 'post', payload: payload, muteHttpExceptions: true
@@ -846,12 +897,13 @@ function telegram_(method, payload, maxWaitSeconds) {
     const data = JSON.parse(res.getContentText());
     if (data.ok) return data.result;
     const wait = Number(data.parameters && data.parameters.retry_after) || 0;
-    if (attempt === 0 && wait && wait <= (maxWaitSeconds || 3)) {
-      console.log('Telegram asked to wait ' + wait + ' seconds before ' + method + '. Waiting, then trying again...');
+    if (attempt === 0 && wait && wait <= 3) {
       Utilities.sleep((wait + 1) * 1000);
       continue;
     }
-    throw new Error('Telegram ' + method + ' failed: ' + data.description);
+    const err = new Error('Telegram ' + method + ' failed: ' + data.description);
+    err.retryAfter = wait;
+    throw err;
   }
 }
 
