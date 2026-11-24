@@ -77,7 +77,7 @@ function load({ geminiReplies = [], props = {}, drive, events = [] } = {}) {
       getUuid: () => '1234-5678'
     },
     DriveApp: { getFoldersByName: name => iterator(name === 'UM Spec' ? roots.filter(r => r.getName() === 'UM Spec') : []), getFileById: id => byId[id] },
-    CalendarApp: { getCalendarsByName: name => (name === 'UM Spec' ? [{ getEvents: (from, to) => events.filter(e => {
+    CalendarApp: { getCalendarsByName: name => (name === 'UM Spec' && events !== null ? [{ getEvents: (from, to) => events.filter(e => {
       const t = e.getStartTime().getTime(); return t >= from.getTime() && t <= to.getTime();
     }) }] : []) },
     UrlFetchApp: { fetch(url, options) {
@@ -255,6 +255,15 @@ test('/start shows a home screen with counts, the next deadline and menu buttons
   assert.match(home.payload.text, /Next:<\/b> Quiz 3 closes · in 20 hours/);
   assert.deepStrictEqual(labels(home), ['📚 Browse my courses', '📅 Due this week', '⚠️ Overdue (1)', '🆕 New files', '🧠 Memory', '🌐 Open SPeCTRUM']);
   assert.strictEqual(markup(home)[1][1].style, 'danger', 'overdue turns red');
+});
+
+test('/start shows a home screen gracefully when no UM Spec calendar exists yet', () => {
+  const { g, telegram } = load({ events: null });
+  g.handleMessage_({ chat: { id: 42 }, from: { first_name: 'Chee' }, text: '/start' });
+  const home = telegram.pop();
+  assert.strictEqual(home.payload.parse_mode, 'HTML');
+  assert.match(home.payload.text, /Welcome back, Chee/);
+  assert.match(home.payload.text, /0 due this week · ⚠️ 0 overdue/);
 });
 
 test('buttons browse courses, types and files in place, and a file tap sends it', () => {

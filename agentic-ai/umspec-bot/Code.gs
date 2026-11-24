@@ -252,8 +252,10 @@ function buildView_(view, from) {
 
   // Home screen
   const name = from && from.first_name ? ', ' + esc_(from.first_name) : '';
-  const due = safe_(() => listDeadlines_({ days_ahead: 7, overdue_days: 30 }).items, []);
-  const fresh = safe_(() => findFiles_({ new_within_days: 7 }).total_matches, 0);
+  const dueResult = safe_(() => listDeadlines_({ days_ahead: 7, overdue_days: 30 }), null);
+  const due = (dueResult && Array.isArray(dueResult.items)) ? dueResult.items : [];
+  const filesResult = safe_(() => findFiles_({ new_within_days: 7 }), null);
+  const fresh = (filesResult && typeof filesResult.total_matches === 'number') ? filesResult.total_matches : 0;
   // Deadlines already submitted on SPeCTRUM still show in the list (with a tick) but do not count as due.
   const dueCount = due.filter(i => !i.past && !i.done && !i.other_occ).length;
   const overdueCount = due.filter(i => i.overdue).length;
