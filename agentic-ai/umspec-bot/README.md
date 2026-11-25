@@ -9,7 +9,7 @@ A small AI agent you message on Telegram:
 > **You:** send me the week 4 slides for WIA2001
 > **Bot:** 📎 W04 Normalization - Compact Notes.pptx
 
-It reads only what the [UM Spec extension](https://github.com/Chee613/UmSpec) has already synced: course files in your **UM Spec** Google Drive folder and dates in your **UM Spec** Google Calendar. It never sees your SPeCTRUM password, and its Google access is read-only.
+It reads only what the [UM Spec extension](https://github.com/Chee613/UmSpec) has already synced: course files in your **UM Spec** Google Drive folder and, if you connect it, dates in your **UM Spec** Google Calendar. It never sees your SPeCTRUM password, and its Google access is read-only.
 
 It runs free on Google Apps Script. There's no server to rent and nothing to install.
 
@@ -26,7 +26,7 @@ It runs free on Google Apps Script. There's no server to rent and nothing to ins
 
 ## What you need
 
-- **UM Spec**, with **Google Drive** connected and synced at least once, and **Google Calendar** connected (**Dates → Analyse dates**).
+- **UM Spec**, with **Google Drive** connected and synced at least once. **Google Calendar** (**Dates → Analyse dates**) is optional: connect it if you want deadlines.
 - **Telegram** on your phone or computer.
 - A **Gemini API key** from [Google AI Studio](https://aistudio.google.com/app/apikey). The workshop setup guide shows how to get one.
 - The same Google account for UM Spec and for Apps Script.
@@ -71,7 +71,7 @@ Script Properties keep the keys out of the code, so you can share the code safel
 2. Read the log. You should see:
    - `Telegram: connected to @your_bot`
    - `Drive: N files in the "UM Spec" folder`
-   - `Calendar: found "UM Spec"`
+   - `Calendar: found "UM Spec"` (or `NOT FOUND` if you skipped Calendar, which is fine)
    - `Briefing: every day around 8:00`
 
 ### 6. Claim the bot
@@ -84,7 +84,7 @@ Script Properties keep the keys out of the code, so you can share the code safel
 
 Send `/start` to open the home menu. Its buttons answer instantly from Drive and Calendar, without asking Gemini:
 
-- **📅 Due this week** and **⚠️ Overdue**: colour-coded deadlines with time left and a link to SPeCTRUM. Overdue lists only deadlines SPeCTRUM still shows as not submitted; UM Spec writes that status into each calendar event when it syncs dates.
+- **📅 Due this week** and **⚠️ Overdue**: colour-coded deadlines with time left and a link to SPeCTRUM. These need Google Calendar; without it you get one **📅 Deadlines (Optional)** button instead. Overdue lists only deadlines SPeCTRUM still shows as not submitted; UM Spec writes that status into each calendar event when it syncs dates.
 - **🆕 New files**: what synced in the last 7 days. Tap a file to get it.
 - **📚 My courses**: browse a course, then a type (slides, tutorials…), then tap a file.
 
@@ -116,7 +116,7 @@ Typing `/` shows every command. Anything else you type goes to the agent:
 | "Too Many Requests: retry after …" in `setup` | Usually a problem on Telegram's side, not in your setup. Since 23 Nov 2026, [many new bots get this on every call](https://github.com/tdlib/telegram-bot-api/issues/1105). A new token or another new bot does not help, and **do not revoke the token of a bot that works**: it can get stuck too. The current `Code.gs` finishes the rest and keeps trying by itself every 5 minutes or so. |
 | "Missing Script Property …" | Add the property it names under Project Settings, then try again. |
 | "No files found in the UM Spec Drive folder" | In UM Spec, connect Google Drive and run a sync. Use the same Google account as Apps Script. |
-| "No UM Spec calendar found" | In UM Spec, connect Google Calendar and run **Dates → Analyse dates**. |
+| "Google Calendar is not connected" | This is optional and only affects deadlines. To add it, connect Google Calendar in UM Spec and run **Dates → Analyse dates**. |
 | It answers with old information | Open SPeCTRUM in Chrome so UM Spec syncs, then wait up to 10 minutes. |
 | Test without Telegram | Run **`testAgent`**: it asks "What is due in the next 7 days?" and writes the answer to the log. |
 
